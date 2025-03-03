@@ -1,0 +1,9 @@
+.searchEngine div {
+  display: flex;
+  padding: "20px";
+}
+
+.searchEngine li:hover {
+  text-decoration: underline;
+  color: #3498db; /* Accent color on hover */
+}

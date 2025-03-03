@@ -14,6 +14,15 @@ const NavigationBar = () => {
         <li>
           <button
             onClick={() => {
+              navigate("/dashboard");
+            }}
+          >
+            Dashboard
+          </button>
+        </li>
+        <li>
+          <button
+            onClick={() => {
               navigate("/toevoegen");
             }}
           >

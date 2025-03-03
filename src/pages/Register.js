@@ -1,6 +1,7 @@
 import { useState } from "react";
 import API from "../api/api";
 import { useNavigate } from "react-router-dom";
+import "../components/css/auth.css"; // Import CSS
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -26,10 +27,10 @@ const Register = () => {
   };
 
   return (
-    <div>
-      <h2>Register</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
+    <div className="auth-container">
+      <h2 className="auth-title">Register</h2>
+      {error && <p className="error-message">{error}</p>}
+      <form className="auth-form" onSubmit={handleSubmit}>
         <input
           type="text"
           name="username"
@@ -53,6 +54,9 @@ const Register = () => {
         />
         <button type="submit">Register</button>
       </form>
+      <p className="auth-link" onClick={() => navigate("/login")}>
+        Already have an account? Login here
+      </p>
     </div>
   );
 };

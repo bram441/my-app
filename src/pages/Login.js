@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import API from "../api/api";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import "../components/css/auth.css"; // Import CSS
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -25,10 +26,10 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
+    <div className="auth-container">
+      <h2 className="auth-title">Login</h2>
+      {error && <p className="error-message">{error}</p>}
+      <form className="auth-form" onSubmit={handleSubmit}>
         <input
           type="email"
           name="email"
@@ -45,6 +46,9 @@ const Login = () => {
         />
         <button type="submit">Login</button>
       </form>
+      <p className="auth-link" onClick={() => navigate("/register")}>
+        Don't have an account? Register here
+      </p>
     </div>
   );
 };

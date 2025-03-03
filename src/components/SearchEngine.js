@@ -5,6 +5,7 @@ import "./css/SearchEngine.css";
 const SearchEngine = ({ onSelectFood }) => {
   const [foods, setFoods] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [filterTag, setFilterTag] = useState("");
 
   useEffect(() => {
     const fetchFoods = async () => {
@@ -18,8 +19,12 @@ const SearchEngine = ({ onSelectFood }) => {
     fetchFoods();
   }, []);
 
-  const filteredFoods = foods.filter((food) =>
-    food.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredFoods = foods.filter(
+    (food) =>
+      food.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      food.tags.some((tag) =>
+        tag.toLowerCase().includes(filterTag.toLowerCase())
+      )
   );
 
   return (
@@ -31,6 +36,12 @@ const SearchEngine = ({ onSelectFood }) => {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
+      <input
+        type="text"
+        placeholder="Filter by tag..."
+        value={filterTag}
+        onChange={(e) => setFilterTag(e.target.value)}
+      />
       <ul>
         {filteredFoods.length > 0 ? (
           filteredFoods.map((food) => (
@@ -39,7 +50,7 @@ const SearchEngine = ({ onSelectFood }) => {
               style={{ cursor: "pointer" }}
               onClick={() => onSelectFood(food)}
             >
-              {food.name} - {food.kcal_per_100} kcal/100g
+              {food.name} - {food.kcal_per_100} kcal/100{food.unit}
             </li>
           ))
         ) : (

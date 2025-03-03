@@ -1,0 +1,53 @@
+.navbar {
+  background-color: #fff; /* White background for the navbar */
+  color: #333;
+  padding: 0.5rem 1rem;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  z-index: 1000;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar li {
+  margin: 0 1rem;
+}
+
+.navbar a {
+  color: #333;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.2rem;
+  padding: 0.75rem 1.5rem;
+  display: inline-block;
+}
+
+.navbar a:hover {
+  text-decoration: underline;
+  color: #3498db; /* Accent color on hover */
+}
+
+.navbar button {
+  color: #333;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.2rem;
+  padding: 0.75rem 1.5rem;
+  display: inline-block;
+  outline-style: none;
+  background: none;
+  border: none;
+}
+
+.navbar button:hover {
+  text-decoration: underline;
+  color: #3498db; /* Accent color on hover */
+}

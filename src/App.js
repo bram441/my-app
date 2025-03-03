@@ -7,6 +7,7 @@ import {
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import ToevoegenEten from "./pages/ToevoegenEten";
 import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
 
@@ -26,6 +27,14 @@ function App() {
           element={
             <PrivateRoute>
               <Dashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/Toevoegen"
+          element={
+            <PrivateRoute>
+              <ToevoegenEten />
             </PrivateRoute>
           }
         />

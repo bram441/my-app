@@ -2,6 +2,7 @@ import { useState } from "react";
 import SearchEngine from "../components/SearchEngine";
 import AddForm from "../components/AddForm";
 import NavigationBar from "../components/NavigationBar";
+import "../components/css/toevoegenEten.css";
 
 const ToevoegenEten = () => {
   const [selectedFood, setSelectedFood] = useState(null);
@@ -11,12 +12,16 @@ const ToevoegenEten = () => {
       <header>
         <NavigationBar />
       </header>
-      <div style={{ display: "flex", gap: "20px", padding: "20px" }}>
+      <div className="toevoegen-container">
         {/* Left Side: Search Engine */}
-        <SearchEngine onSelectFood={setSelectedFood} />
+        <div className="left-section">
+          <SearchEngine onSelectFood={setSelectedFood} />
+        </div>
 
         {/* Right Side: Add Form */}
-        <AddForm selectedFood={selectedFood} />
+        <div className="right-section">
+          <AddForm selectedFood={selectedFood} />
+        </div>
       </div>
     </div>
   );

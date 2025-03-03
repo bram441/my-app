@@ -1,6 +1,7 @@
 import { useState } from "react";
 import API from "../api/api";
 import { useNavigate } from "react-router-dom";
+import "../components/css/toevoegenEten.css";
 
 const AddForm = ({ selectedFood }) => {
   const [portionType, setPortionType] = useState("portion"); // "custom" or "portion"

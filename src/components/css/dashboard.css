@@ -16,4 +16,8 @@
 .chart-container {
   width: 100%;
   height: 250px;
+  overflow: hidden; /* Ensures it stays inside the card */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

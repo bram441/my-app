@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import API from "../api/api";
-import "./css/SearchEngine.css";
+import "../components/css/toevoegenEten.css";
 
 const SearchEngine = ({ onSelectFood }) => {
   const [foods, setFoods] = useState([]);
@@ -19,13 +19,20 @@ const SearchEngine = ({ onSelectFood }) => {
     fetchFoods();
   }, []);
 
-  const filteredFoods = foods.filter(
-    (food) =>
-      food.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      food.tags.some((tag) =>
-        tag.toLowerCase().includes(filterTag.toLowerCase())
-      )
-  );
+  const filteredFoods = foods.filter((food) => {
+    const nameMatch = food.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+    const tagMatch =
+      filterTag.trim() === "" || // If no tag filter, return all foods
+      (Array.isArray(food.tags) &&
+        food.tags.some((tag) =>
+          tag.toLowerCase().trim().includes(filterTag.toLowerCase().trim())
+        ));
+
+    return nameMatch && tagMatch;
+  });
 
   return (
     <div className="searchEngine">
@@ -42,6 +49,7 @@ const SearchEngine = ({ onSelectFood }) => {
         value={filterTag}
         onChange={(e) => setFilterTag(e.target.value)}
       />
+      <h2>resultaten</h2>
       <ul>
         {filteredFoods.length > 0 ? (
           filteredFoods.map((food) => (

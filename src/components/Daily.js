@@ -21,10 +21,18 @@ const Daily = () => {
         let cumulativeKcal = 0;
         const progress = response.data.entriesSeperate.map((entry) => {
           cumulativeKcal += entry.total_kcal;
+
+          // Convert time to decimal format (e.g., 09:32 → 9.53)
+          const timeMoment = moment(entry.createdAt);
+          const hour = timeMoment.hours();
+          const minutes = timeMoment.minutes();
+          const decimalTime = hour + minutes / 60; // Convert to decimal hours
+
           return {
-            time: moment(entry.createdAt).format("HH:mm"), // Extract hour and minutes
+            time: decimalTime, // Store as a number for correct placement
             kcal: cumulativeKcal,
             label: `${entry.Food.name} x${entry.amount}`, // Tooltip label
+            displayTime: timeMoment.format("HH:mm"), // Store for tooltip
           };
         });
 
@@ -42,17 +50,17 @@ const Daily = () => {
   // Generate 2-hour interval labels
   const timeLabels = [];
   for (let i = 0; i <= 24; i += 2) {
-    timeLabels.push(i < 10 ? `0${i}:00` : `${i}:00`);
+    timeLabels.push(i); // Use numbers instead of strings
   }
 
   // Graph Data
   const chartData = {
-    labels: timeLabels, // X-Axis with 2-hour intervals
+    labels: timeLabels, // X-Axis in 2-hour intervals
     datasets: [
       {
         label: "Cumulative Kcal",
         data: calorieProgress.map((data) => ({
-          x: data.time, // Place data points at exact times
+          x: data.time, // Correct placement using decimal time
           y: data.kcal,
         })),
         borderColor: "#007bff",
@@ -70,9 +78,14 @@ const Daily = () => {
     responsive: true,
     scales: {
       x: {
-        type: "category",
+        type: "linear", // Change to linear for proper placement
+        min: 0,
+        max: 24,
         ticks: {
           stepSize: 2,
+          callback: function (value) {
+            return `${value}:00`; // Display as full hours
+          },
         },
       },
       y: {
@@ -86,9 +99,10 @@ const Daily = () => {
     plugins: {
       tooltip: {
         callbacks: {
+          title: () => null,
           label: function (tooltipItem) {
             const entry = calorieProgress[tooltipItem.dataIndex];
-            return `${entry.label} - ${tooltipItem.raw.y} kcal`;
+            return `${entry.label} - ${entry.displayTime} - ${tooltipItem.raw.y} kcal`;
           },
         },
       },
@@ -107,7 +121,8 @@ const Daily = () => {
         {dailyData.entries.length > 0 ? (
           dailyData.entries.map((entry) => (
             <li key={entry.id}>
-              {entry.amount}x {entry.name} ({entry.total_kcal} kcal)
+              {entry.amount}x <strong>{entry.name} </strong>(
+              {parseFloat(entry.total_kcal.toFixed(1))} kcal)
             </li>
           ))
         ) : (

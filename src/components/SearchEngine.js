@@ -55,10 +55,27 @@ const SearchEngine = ({ onSelectFood }) => {
           filteredFoods.map((food) => (
             <li
               key={food.id}
-              style={{ cursor: "pointer" }}
+              style={{
+                cursor: "pointer",
+                padding: "10px",
+                borderBottom: "1px solid #ddd",
+              }}
               onClick={() => onSelectFood(food)}
             >
-              {food.name} - {food.kcal_per_100} kcal/100{food.unit}
+              <strong>{food.name}</strong> - {food.kcal_per_100} kcal/100
+              {food.unit}
+              <p
+                style={{ fontSize: "14px", color: "gray", margin: "5px 0 0 0" }}
+              >
+                {food.brand ? `Merk: ${food.brand}` : "Merk: Onbekend"}
+              </p>
+              <p
+                style={{ fontSize: "12px", color: "gray", margin: "2px 0 0 0" }}
+              >
+                {food.tags && food.tags.length > 0
+                  ? `Tags: ${food.tags.join(", ")}`
+                  : "Geen tags beschikbaar"}
+              </p>
             </li>
           ))
         ) : (

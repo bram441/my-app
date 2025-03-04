@@ -1,6 +1,7 @@
 import { useState } from "react";
 import API from "../api/api";
 import { useNavigate } from "react-router-dom";
+import "./css/addFood.css"; // ✅ Import CSS
 
 const AddFood = () => {
   const [formData, setFormData] = useState({
@@ -39,10 +40,10 @@ const AddFood = () => {
   };
 
   return (
-    <div>
+    <div className="add-food-container">
       <h2>Add New Food</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
+      {error && <p className="error-message">{error}</p>}
+      <form className="add-food-form" onSubmit={handleSubmit}>
         <input
           type="text"
           name="name"
@@ -59,6 +60,8 @@ const AddFood = () => {
         </select>
         <input
           type="number"
+          step="0.1"
+          min="0.1"
           name="kcal_per_100"
           placeholder="Kcal per 100g/ml"
           onChange={handleChange}
@@ -66,6 +69,8 @@ const AddFood = () => {
         />
         <input
           type="number"
+          step="0.1"
+          min="0.1"
           name="kcal_per_portion"
           placeholder="Kcal per portion"
           onChange={handleChange}

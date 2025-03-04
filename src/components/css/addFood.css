@@ -1,0 +1,66 @@
+.add-food-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .add-food-container h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+  }
+  
+  .add-food-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .add-food-form input,
+  .add-food-form select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+  
+  .add-food-form input:focus,
+  .add-food-form select:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  .add-food-form button {
+    width: 100%;
+    padding: 12px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .add-food-form button:hover {
+    background: #0056b3;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 600px) {
+    .add-food-container {
+      width: 90%;
+    }
+  }
+  

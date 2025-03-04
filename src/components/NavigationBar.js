@@ -32,6 +32,15 @@ const NavigationBar = () => {
         <li>
           <button
             onClick={() => {
+              navigate("/DBChanges");
+            }}
+          >
+            Toevoegen eten aan DB
+          </button>
+        </li>
+        <li>
+          <button
+            onClick={() => {
               logout();
               navigate("/login");
             }}

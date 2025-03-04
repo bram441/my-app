@@ -8,6 +8,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import ToevoegenEten from "./pages/ToevoegenEten";
+import ToevoegenEtenDB from "./pages/ToevoegenEtenDB";
 import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
 
@@ -38,6 +39,14 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route
+          path="/DBChanges"
+          element={
+            <PrivateRoute>
+              <ToevoegenEtenDB />
+            </PrivateRoute>
+          }
+          />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </Router>

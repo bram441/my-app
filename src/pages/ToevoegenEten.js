@@ -20,7 +20,10 @@ const ToevoegenEten = () => {
 
         {/* Right Side: Add Form */}
         <div className="right-section">
-          <AddForm selectedFood={selectedFood} />
+          <AddForm
+            selectedFood={selectedFood}
+            setSelectedFood={setSelectedFood}
+          />
         </div>
       </div>
     </div>

@@ -1,0 +1,65 @@
+.daily-container {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  height: 100%; /* Ensure it takes full available height */
+}
+
+.left-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  border-right: 2px solid #ddd;
+}
+
+.right-section {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+}
+
+.food-list {
+  flex-grow: 1; /* ✅ Ensures the list grows to match the chart */
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+  background: #f9f9f9;
+}
+
+.food-item {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.food-item:last-child {
+  border-bottom: none;
+}
+
+.chart-container {
+  flex-grow: 1; /* ✅ Ensures the chart grows to match the list */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chart-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .daily-container {
+    flex-direction: column;
+  }
+
+  .left-section {
+    border-right: none;
+    border-bottom: 2px solid #ddd;
+  }
+}

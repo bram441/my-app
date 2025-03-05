@@ -13,6 +13,7 @@
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+/* ✅ Fix input fields overflow issue */
 .searchEngine input,
 .addForm input {
   width: 100%;
@@ -21,19 +22,29 @@
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 16px;
+  box-sizing: border-box; /* ✅ Prevents inputs from overflowing */
 }
 
 .searchEngine ul {
   list-style: none;
   padding: 0;
-}
-
-.searchEngine li {
-  padding: 10px;
+  max-height: 250px; /* ✅ Limits list height */
+  overflow-y: auto; /* ✅ Enables scrolling */
   border: 1px solid #ddd;
   border-radius: 5px;
+  background: #f9f9f9;
+}
+
+/* ✅ Ensure proper spacing and styling inside the list */
+.searchEngine li {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
   cursor: pointer;
   transition: background 0.3s;
+}
+
+.searchEngine li:last-child {
+  border-bottom: none;
 }
 
 .searchEngine li:hover {
@@ -63,9 +74,32 @@
   background: #0056b3;
 }
 
-/* Responsive Design */
+.food-list {
+  flex-grow: 1; /* ✅ Ensures the list grows to match the chart */
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+  background: #f9f9f9;
+}
+
+.food-item {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.food-item:last-child {
+  border-bottom: none;
+}
+
+/* ✅ Ensure consistency across different screen sizes */
 @media (max-width: 768px) {
   .toevoegen-container {
     flex-direction: column;
+  }
+
+  .searchEngine {
+    width: 100%;
+    max-width: none;
   }
 }

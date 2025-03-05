@@ -3,11 +3,12 @@ import API from "../api/api";
 import { useNavigate } from "react-router-dom";
 import "../components/css/toevoegenEten.css";
 
-const AddForm = ({ selectedFood }) => {
+const AddForm = ({ selectedFood, setSelectedFood }) => {
   const [portionType, setPortionType] = useState("portion"); // "custom" or "portion"
   const [portionSize, setPortionSize] = useState(""); // Custom input (grams/ml)
   const [portionCount, setPortionCount] = useState(""); // Portion selection
   const [error, setError] = useState(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -39,7 +40,12 @@ const AddForm = ({ selectedFood }) => {
         total_kcal: totalKcal,
         amount: amount,
       });
-      navigate("/dashboard");
+      setSelectedFood(null);
+      setPortionCount("");
+      setPortionSize("");
+      setPortionType("portion");
+      setShowConfirmation(true);
+      setTimeout(() => setShowConfirmation(false), 3000); // Hide after 3 seconds
     } catch (error) {
       console.error("Error adding daily entry:", error);
       setError("Fout bij het toevoegen van voedselinvoer.");
@@ -50,6 +56,9 @@ const AddForm = ({ selectedFood }) => {
     <div style={{ flex: 1, padding: "20px" }}>
       <h2>Voedsel Toevoegen</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
+      {showConfirmation && (
+        <p className="popup-message success">Voedsel succesvol toegevoegd!</p>
+      )}
       {selectedFood ? (
         <form onSubmit={handleSubmit}>
           <p>

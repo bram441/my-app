@@ -41,7 +41,7 @@ const WeeklyStats = () => {
       {loading ? <p>Loading...</p> : null}
       {error ? <p style={{ color: "red" }}>{error}</p> : null}
 
-      <div className="chart-container">
+      <div className=".weekly-chart-container">
         <h4>Total Kcal Last 7 Days</h4>
         <Bar data={chartData} />
       </div>

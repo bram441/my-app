@@ -4,6 +4,7 @@ import { AuthContext } from "../context/AuthContext";
 import { Line } from "react-chartjs-2";
 import "chart.js/auto"; // Import for charts
 import moment from "moment"; // Import moment.js for formatting timestamps
+import "./css/daily.css"; // ✅ Import the new CSS file
 
 const Daily = () => {
   const { user } = useContext(AuthContext);
@@ -26,13 +27,13 @@ const Daily = () => {
           const timeMoment = moment(entry.createdAt);
           const hour = timeMoment.hours();
           const minutes = timeMoment.minutes();
-          const decimalTime = hour + minutes / 60; // Convert to decimal hours
+          const decimalTime = hour + minutes / 60;
 
           return {
             time: decimalTime, // Store as a number for correct placement
             kcal: cumulativeKcal,
-            label: `${entry.Food.name} x${entry.amount}`, // Tooltip label
-            displayTime: timeMoment.format("HH:mm"), // Store for tooltip
+            label: `${entry.Food.name} x${entry.amount}`,
+            displayTime: timeMoment.format("HH:mm"),
           };
         });
 
@@ -50,7 +51,7 @@ const Daily = () => {
   // Generate 2-hour interval labels
   const timeLabels = [];
   for (let i = 0; i <= 24; i += 2) {
-    timeLabels.push(i); // Use numbers instead of strings
+    timeLabels.push(i);
   }
 
   // Graph Data
@@ -60,13 +61,13 @@ const Daily = () => {
       {
         label: "Cumulative Kcal",
         data: calorieProgress.map((data) => ({
-          x: data.time, // Correct placement using decimal time
+          x: data.time,
           y: data.kcal,
         })),
         borderColor: "#007bff",
         backgroundColor: "rgba(0, 123, 255, 0.2)",
         tension: 0.4,
-        pointRadius: 5, // Larger points for visibility
+        pointRadius: 5,
         pointHoverRadius: 8,
         pointHoverBackgroundColor: "#ff6384",
       },
@@ -78,13 +79,13 @@ const Daily = () => {
     responsive: true,
     scales: {
       x: {
-        type: "linear", // Change to linear for proper placement
+        type: "linear",
         min: 0,
         max: 24,
         ticks: {
           stepSize: 2,
           callback: function (value) {
-            return `${value}:00`; // Display as full hours
+            return `${value}:00`;
           },
         },
       },
@@ -102,7 +103,9 @@ const Daily = () => {
           title: () => null,
           label: function (tooltipItem) {
             const entry = calorieProgress[tooltipItem.dataIndex];
-            return `${entry.label} - ${entry.displayTime} - ${tooltipItem.raw.y} kcal`;
+            return `${entry.label} - ${
+              entry.displayTime
+            } - ${tooltipItem.raw.y.toFixed(1)} kcal`;
           },
         },
       },
@@ -110,30 +113,34 @@ const Daily = () => {
   };
 
   return (
-    <div>
-      <h2>Today's Consumption</h2>
-      {loading ? <p>Loading...</p> : null}
-      {error ? <p style={{ color: "red" }}>{error}</p> : null}
+    <div className="daily-container">
+      <div className="left-section">
+        <h3>Today's Consumption</h3>
+        <h4>
+          Total Calories: {parseFloat(dailyData.totalCalories).toFixed(2)} kcal
+        </h4>
+        {loading && <p>Loading...</p>}
+        {error && <p className="error">{error}</p>}
 
-      <h3>Total Calories: {dailyData.totalCalories} kcal</h3>
+        <div className="food-list">
+          {dailyData.entries.length > 0 ? (
+            dailyData.entries.map((entry) => (
+              <li key={entry.id} className="food-item">
+                {entry.amount}x <strong>{entry.name}</strong> (
+                {parseFloat(entry.total_kcal.toFixed(1))} kcal)
+              </li>
+            ))
+          ) : (
+            <p>No food logged for today</p>
+          )}
+        </div>
+      </div>
 
-      <ul>
-        {dailyData.entries.length > 0 ? (
-          dailyData.entries.map((entry) => (
-            <li key={entry.id}>
-              {entry.amount}x <strong>{entry.name} </strong>(
-              {parseFloat(entry.total_kcal.toFixed(1))} kcal)
-            </li>
-          ))
-        ) : (
-          <p>No food logged for today</p>
-        )}
-      </ul>
-
-      {/* Calorie Progress Graph */}
-      <div className="chart-container">
-        <h4>Kcal Progress Over the Day</h4>
-        <Line data={chartData} options={chartOptions} />
+      <div className="right-section">
+        <h3>Kcal Progress Over the Day</h3>
+        <div className="chart-container">
+          <Line data={chartData} options={chartOptions} />
+        </div>
       </div>
     </div>
   );

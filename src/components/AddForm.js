@@ -57,7 +57,7 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
       <h2>Voedsel Toevoegen</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
       {showConfirmation && (
-        <p className="popup-message success">Voedsel succesvol toegevoegd!</p>
+        <p className="popup-message-success">Voedsel succesvol toegevoegd!</p>
       )}
       {selectedFood ? (
         <form onSubmit={handleSubmit}>

@@ -22,6 +22,7 @@
 
 .food-list {
   flex-grow: 1; /* ✅ Ensures the list grows to match the chart */
+  max-height: 350px; /* ✅ Limits list height */
   overflow-y: auto;
   border: 1px solid #ddd;
   padding: 10px;

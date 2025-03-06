@@ -92,6 +92,11 @@
   border-bottom: none;
 }
 
+.popup-message-success {
+  color: green;
+  font-size: larger;
+}
+
 /* ✅ Ensure consistency across different screen sizes */
 @media (max-width: 768px) {
   .toevoegen-container {

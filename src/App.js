@@ -11,10 +11,21 @@ import ToevoegenEten from "./pages/ToevoegenEten";
 import ToevoegenEtenDB from "./pages/ToevoegenEtenDB";
 import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
+import useAuth from "./api/useAuth";
 
 const PrivateRoute = ({ children }) => {
   const { user } = useContext(AuthContext);
   return user ? children : <Navigate to="/login" />;
+};
+
+const AdminRoute = ({ children }) => {
+  const { role } = useAuth();
+
+  if (role !== "admin") {
+    return <Navigate to="/login" />;
+  }
+
+  return children;
 };
 
 function App() {
@@ -42,11 +53,11 @@ function App() {
         <Route
           path="/DBChanges"
           element={
-            <PrivateRoute>
+            <AdminRoute>
               <ToevoegenEtenDB />
-            </PrivateRoute>
+            </AdminRoute>
           }
-          />
+        />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </Router>

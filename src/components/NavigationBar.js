@@ -3,11 +3,13 @@ import { useContext } from "react";
 import "./css/NavigationBar.css";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import useAuth from "../api/useAuth";
 
 const NavigationBar = () => {
   const navigate = useNavigate();
   const { logout } = useContext(AuthContext);
   const [isMenuOpen, setMenuOpen] = useState(false);
+  const { role } = useAuth();
 
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen);
@@ -39,16 +41,18 @@ const NavigationBar = () => {
             Eten Toevoegen
           </button>
         </li>
-        <li>
-          <button
-            onClick={() => {
-              navigate("/DBChanges");
-              setMenuOpen(false); // Close menu on navigation
-            }}
-          >
-            Toevoegen eten aan DB
-          </button>
-        </li>
+        {role === "admin" && (
+          <li>
+            <button
+              onClick={() => {
+                navigate("/DBChanges");
+                setMenuOpen(false); // Close menu on navigation
+              }}
+            >
+              Toevoegen eten aan DB
+            </button>
+          </li>
+        )}
         <li>
           <button
             onClick={() => {

@@ -1,14 +1,51 @@
-import { useState, useEffect, useContext, use } from "react";
+import { useState, useEffect, useCallback } from "react";
 import API from "../api/api";
-import { AuthContext } from "../context/AuthContext";
 import { Line } from "react-chartjs-2";
 import "chart.js/auto"; // Import for charts
 import moment from "moment"; // Import moment.js for formatting timestamps
 import "./css/daily.css"; // ✅ Import the new CSS file
 import Popup from "./Popup.js";
+import DailyList from "./DailyList";
+import PopupList from "./PopupList";
 
-const Daily = () => {
-  const { user } = useContext(AuthContext);
+const fetchDailyConsumption = async (
+  setDailyData,
+  setCalorieProgress,
+  setLoading,
+  setError,
+  setTotalCalories
+) => {
+  try {
+    const response = await API.get(`/daily-entries`);
+    setDailyData(response.data);
+    setTotalCalories(response.data.totalCalories || 0);
+    let cumulativeKcal = 0;
+    const progress = response.data.entriesSeperate.map((entry) => {
+      cumulativeKcal += entry.total_kcal;
+
+      // Convert time to decimal format (e.g., 09:32 → 9.53)
+      const timeMoment = moment(entry.createdAt);
+      const hour = timeMoment.hours();
+      const minutes = timeMoment.minutes();
+      const decimalTime = hour + minutes / 60;
+
+      return {
+        time: decimalTime, // Store as a number for correct placement
+        kcal: cumulativeKcal,
+        label: `${entry.Food.name} x${entry.amount}`,
+        displayTime: timeMoment.format("HH:mm"),
+      };
+    });
+
+    setCalorieProgress(progress);
+  } catch (err) {
+    setError(err.response?.data?.message || "Failed to load data");
+  } finally {
+    setLoading(false);
+  }
+};
+
+const Daily = ({ setTotalCalories }) => {
   const [dailyData, setDailyData] = useState({
     totalCalories: 0,
     entries: [],
@@ -21,54 +58,40 @@ const Daily = () => {
   const [selectedEntry, setSelectedEntry] = useState(null);
   const [selectedEntryName, setSelectedEntryName] = useState("");
 
-  const fetchDailyConsumption = async () => {
-    try {
-      const response = await API.get(`/daily-entries`);
-      setDailyData(response.data);
-
-      let cumulativeKcal = 0;
-      const progress = response.data.entriesSeperate.map((entry) => {
-        cumulativeKcal += entry.total_kcal;
-
-        // Convert time to decimal format (e.g., 09:32 → 9.53)
-        const timeMoment = moment(entry.createdAt);
-        const hour = timeMoment.hours();
-        const minutes = timeMoment.minutes();
-        const decimalTime = hour + minutes / 60;
-        setCalorieProgress(progress);
-        return {
-          time: decimalTime, // Store as a number for correct placement
-          kcal: cumulativeKcal,
-          label: `${entry.Food.name} x${entry.amount}`,
-          displayTime: timeMoment.format("HH:mm"),
-        };
-      });
-    } catch (err) {
-      setError(err.response?.data?.message || "Failed to load data");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchDailyConsumption();
-  }, []);
+    fetchDailyConsumption(
+      setDailyData,
+      setCalorieProgress,
+      setLoading,
+      setError,
+      setTotalCalories
+    );
+  }, [setTotalCalories]);
 
-  const onClickDelete = async (entryId) => {
-    try {
-      await API.delete(`/daily-entries/${entryId}`);
-      await fetchDailyConsumption();
-      setPopupOpen(false);
-    } catch (err) {
-      setError(err.response?.data?.message || "Failed to delete entry");
-    }
-  };
+  const onClickDelete = useCallback(
+    async (entryId) => {
+      try {
+        await API.delete(`/daily-entries/${entryId}`);
+        await fetchDailyConsumption(
+          setDailyData,
+          setCalorieProgress,
+          setLoading,
+          setError,
+          setTotalCalories
+        );
+        setPopupOpen(false);
+      } catch (err) {
+        setError(err.response?.data?.message || "Failed to delete entry");
+      }
+    },
+    [setTotalCalories]
+  );
 
-  const onClickEdit = (foodId, foodName) => {
+  const onClickEdit = useCallback((foodId, foodName) => {
     setSelectedEntry(foodId);
     setSelectedEntryName(foodName);
     setPopupOpen(true);
-  };
+  }, []);
 
   // Generate 2-hour interval labels
   const timeLabels = [];
@@ -142,44 +165,17 @@ const Daily = () => {
           Total Calories: {parseFloat(dailyData.totalCalories).toFixed(2)} kcal
         </h4>
         {loading && <p>Loading...</p>}
+        {error && <p className="error">{error}</p>}
 
-        <div className="food-list">
-          {dailyData.entries.length > 0 ? (
-            dailyData.entries.map((entry) => (
-              <li key={entry.id} className="food-item">
-                {entry.amount}x <strong>{entry.name}</strong> (
-                {parseFloat(entry.total_kcal.toFixed(1))} kcal)
-                <button onClick={() => onClickEdit(entry.food_id, entry.name)}>
-                  Edit
-                </button>
-              </li>
-            ))
-          ) : (
-            <p>No food logged for today</p>
-          )}
-        </div>
+        <DailyList dailyData={dailyData} onClickEdit={onClickEdit} />
       </div>
       <Popup isOpen={isPopupOpen} onClose={() => setPopupOpen(false)}>
         <h2>Remove daily entries for {selectedEntryName}</h2>
-        <div className="food-list">
-          {dailyData.entriesSeperate.filter(
-            (entry) => entry.food_id === selectedEntry
-          ).length > 0 ? (
-            dailyData.entriesSeperate
-              .filter((entry) => entry.food_id === selectedEntry)
-              .map((entry) => (
-                <li key={entry.id} className="food-item">
-                  {entry.amount}x <strong>{entry.name}</strong> (
-                  {parseFloat(entry.total_kcal.toFixed(1))} kcal)
-                  <button onClick={() => onClickDelete(entry.id)}>
-                    Delete
-                  </button>
-                </li>
-              ))
-          ) : (
-            <p>Geen eten meer</p>
-          )}
-        </div>
+        <PopupList
+          dailyData={dailyData}
+          selectedEntry={selectedEntry}
+          onClickDelete={onClickDelete}
+        />
       </Popup>
 
       <div className="right-section">

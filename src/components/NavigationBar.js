@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useContext } from "react";
 import "./css/NavigationBar.css";
 import { useNavigate } from "react-router-dom";
@@ -7,14 +7,23 @@ import { AuthContext } from "../context/AuthContext";
 const NavigationBar = () => {
   const navigate = useNavigate();
   const { logout } = useContext(AuthContext);
+  const [isMenuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setMenuOpen(!isMenuOpen);
+  };
 
   return (
     <nav className="navbar">
-      <ul>
+      <div className="hamburger" onClick={toggleMenu}>
+        &#9776; {/* Hamburger icon */}
+      </div>
+      <ul className={isMenuOpen ? "active" : ""}>
         <li>
           <button
             onClick={() => {
               navigate("/dashboard");
+              setMenuOpen(false); // Close menu on navigation
             }}
           >
             Dashboard
@@ -24,6 +33,7 @@ const NavigationBar = () => {
           <button
             onClick={() => {
               navigate("/toevoegen");
+              setMenuOpen(false); // Close menu on navigation
             }}
           >
             Eten Toevoegen
@@ -33,6 +43,7 @@ const NavigationBar = () => {
           <button
             onClick={() => {
               navigate("/DBChanges");
+              setMenuOpen(false); // Close menu on navigation
             }}
           >
             Toevoegen eten aan DB
@@ -43,6 +54,7 @@ const NavigationBar = () => {
             onClick={() => {
               logout();
               navigate("/login");
+              setMenuOpen(false); // Close menu on navigation
             }}
           >
             Logout

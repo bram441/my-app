@@ -30,3 +30,32 @@
   background: #007bff;
   transition: width 0.5s ease-in-out;
 }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .progress-container {
+    padding: 8px;
+  }
+
+  .progress-labels {
+    font-size: 14px;
+  }
+
+  .progress-bar {
+    height: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .progress-container {
+    padding: 5px;
+  }
+
+  .progress-labels {
+    font-size: 12px;
+  }
+
+  .progress-bar {
+    height: 16px;
+  }
+}

@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
 import NavigationBar from "../components/NavigationBar";
 import Daily from "../components/Daily";
 import WeeklyStats from "../components/WeeklyStats";
@@ -40,7 +39,7 @@ const Dashboard = () => {
       <div className="dashboard-container">
         {/* ✅ Daily at the top */}
         <div className="full-width-panel">
-          <Daily />
+          <Daily setTotalCalories={setTotalCalories} />
         </div>
 
         {/* ✅ Weekly Stats below Daily */}

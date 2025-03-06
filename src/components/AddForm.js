@@ -1,6 +1,5 @@
 import { useState } from "react";
 import API from "../api/api";
-import { useNavigate } from "react-router-dom";
 import "../components/css/toevoegenEten.css";
 
 const AddForm = ({ selectedFood, setSelectedFood }) => {
@@ -9,7 +8,6 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
   const [portionCount, setPortionCount] = useState(""); // Portion selection
   const [error, setError] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();

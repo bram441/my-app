@@ -32,7 +32,7 @@ const Dashboard = () => {
       </header>
 
       {/* ✅ Progress Bar at the Top */}
-      <ProgressBar totalCalories={totalCalories} />
+      <ProgressBar totalCalories={totalCalories} goal={user.kcal_goal} />
 
       <h1>Welcome, {user?.username}!</h1>
 

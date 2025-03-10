@@ -28,6 +28,13 @@
   color: #61dafb;
 }
 
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

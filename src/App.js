@@ -12,14 +12,33 @@ import ToevoegenEtenDB from "./pages/ToevoegenEtenDB";
 import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
 import useAuth from "./api/useAuth";
-
+import { ClipLoader } from "react-spinners"; // Import the spinner component
+import "./App.css";
 const PrivateRoute = ({ children }) => {
-  const { user } = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
+
+  if (loading) {
+    return (
+      <div className="spinner-container">
+        <ClipLoader size={50} color={"#123abc"} loading={loading} />
+      </div>
+    ); // Or any other spinner component
+  }
+
   return user ? children : <Navigate to="/login" />;
 };
 
 const AdminRoute = ({ children }) => {
   const { role } = useAuth();
+  const { loading } = useContext(AuthContext);
+
+  if (loading) {
+    return (
+      <div className="spinner-container">
+        <ClipLoader size={50} color={"#123abc"} loading={loading} />
+      </div>
+    ); // Or any other spinner component
+  }
 
   if (role !== "admin") {
     return <Navigate to="/login" />;
@@ -29,6 +48,8 @@ const AdminRoute = ({ children }) => {
 };
 
 function App() {
+  const { user } = useContext(AuthContext);
+
   return (
     <Router>
       <Routes>
@@ -58,7 +79,12 @@ function App() {
             </AdminRoute>
           }
         />
-        <Route path="*" element={<Navigate to="/login" />} />
+        <Route
+          path="*"
+          element={
+            user ? <Navigate to="/dashboard" /> : <Navigate to="/login" />
+          }
+        />
       </Routes>
     </Router>
   );

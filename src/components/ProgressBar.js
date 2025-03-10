@@ -1,7 +1,7 @@
 import React from "react";
 import "./css/progressBar.css";
 
-const ProgressBar = ({ totalCalories, goal = 1600 }) => {
+const ProgressBar = ({ totalCalories, goal }) => {
   const progress = Math.min((totalCalories / goal) * 100, 100); // Cap at 100%
 
   return (

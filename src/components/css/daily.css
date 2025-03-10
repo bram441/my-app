@@ -31,12 +31,23 @@
 }
 
 .food-item {
+  display: flex; /* Use Flexbox */
+  align-items: center; /* Center items vertically */
   padding: 8px;
   border-bottom: 1px solid #ddd;
 }
 
 .food-item:last-child {
   border-bottom: none;
+}
+
+.food-item button {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: auto; /* Push the button to the right */
 }
 
 .chart-container {

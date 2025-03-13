@@ -39,6 +39,26 @@
   background: #0056b3;
 }
 
+.food-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.food-item h3 {
+  margin: 0;
+  flex: 1;
+  text-align: left;
+}
+
+.food-item p {
+  margin: 0;
+  text-align: right;
+  flex-shrink: 0;
+}
+
 @media (max-width: 768px) {
   .recipe-item {
     width: calc(50% - 20px);

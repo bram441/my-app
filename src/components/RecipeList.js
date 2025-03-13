@@ -1,7 +1,6 @@
-import React from "react";
 import API from "../api/api";
 
-const RecipeList = ({ recipes }) => {
+const RecipeList = ({ recipes, onClickFoodList }) => {
   const addRecipeToDailyEntry = async (recipe) => {
     try {
       const totalKcal = recipe.total_kcals;
@@ -27,6 +26,9 @@ const RecipeList = ({ recipes }) => {
             <p>Total Kcal: {recipe.total_kcals}</p>
             <button onClick={() => addRecipeToDailyEntry(recipe)}>
               Add to Daily Entries
+            </button>
+            <button onClick={() => onClickFoodList(recipe)}>
+              View Food List
             </button>
           </div>
         ))

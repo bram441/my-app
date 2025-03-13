@@ -1,6 +1,6 @@
 import React from "react";
 
-const FoodList = ({ foods }) => {
+const RecipeFoodList = ({ foods }) => {
   return (
     <div className="food-list">
       {foods.length > 0 ? (
@@ -17,4 +17,4 @@ const FoodList = ({ foods }) => {
   );
 };
 
-export default FoodList;
+export default RecipeFoodList;

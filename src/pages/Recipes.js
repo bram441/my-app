@@ -2,10 +2,11 @@ import { useState, useEffect, useCallback } from "react";
 import NavigationBar from "../components/NavigationBar";
 import RecipeSearch from "../components/RecipeSearch";
 import RecipeList from "../components/RecipeList";
+import { useNavigate } from "react-router-dom";
 import API from "../api/api";
 import "../components/css/recipes.css"; // Create this CSS file for styling
 import Popup from "../components/Popup";
-import FoodList from "../components/FoodList";
+import FoodList from "../components/RecipeFoodList";
 
 const Recipes = () => {
   const [recipes, setRecipes] = useState([]);
@@ -17,6 +18,7 @@ const Recipes = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [selectedRecipe, setSelectedRecipe] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -81,6 +83,7 @@ const Recipes = () => {
             <option value="shared">Shared Recipes</option>
             <option value="userShared">User Shared Recipes</option>
           </select>
+          <button onClick={() => navigate("/add-recipe")}>Add Recipe</button>
         </div>
         <RecipeSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         <RecipeList

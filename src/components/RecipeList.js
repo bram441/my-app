@@ -38,7 +38,7 @@ const RecipeList = ({ recipes, onClickFoodList }) => {
           </div>
         ))
       ) : (
-        <p>No recipes found</p>
+        <p className="non-found">No recipes found</p>
       )}
     </div>
   );

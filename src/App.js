@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import ToevoegenEten from "./pages/ToevoegenEten";
 import ToevoegenEtenDB from "./pages/ToevoegenEtenDB";
 import Recipes from "./pages/Recipes";
+import AddRecipe from "./pages/AddRecipe";
 import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
 import useAuth from "./api/useAuth";
@@ -77,6 +78,14 @@ function App() {
           element={
             <PrivateRoute>
               <Recipes />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/add-recipe"
+          element={
+            <PrivateRoute>
+              <AddRecipe />
             </PrivateRoute>
           }
         />

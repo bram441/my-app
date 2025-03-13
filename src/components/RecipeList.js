@@ -6,9 +6,11 @@ const RecipeList = ({ recipes }) => {
     try {
       const totalKcal = recipe.total_kcals;
       await API.post("/daily-entries", {
-        food_id: recipe.id,
+        food_id: null,
+        recipe_id: recipe.id,
         total_kcal: totalKcal,
         amount: 1,
+        entry_type: "recipe",
       });
       alert("Recipe added to daily entries!");
     } catch (error) {

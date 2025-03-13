@@ -1,4 +1,7 @@
+import React from "react";
 import API from "../api/api";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
 const RecipeList = ({ recipes, onClickFoodList }) => {
   const addRecipeToDailyEntry = async (recipe) => {
@@ -27,9 +30,11 @@ const RecipeList = ({ recipes, onClickFoodList }) => {
             <button onClick={() => addRecipeToDailyEntry(recipe)}>
               Add to Daily Entries
             </button>
-            <button onClick={() => onClickFoodList(recipe)}>
-              View Food List
-            </button>
+            <FontAwesomeIcon
+              icon={faInfoCircle}
+              onClick={() => onClickFoodList(recipe)}
+              className="info-icon"
+            />
           </div>
         ))
       ) : (

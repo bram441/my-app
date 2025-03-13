@@ -41,6 +41,16 @@ const NavigationBar = () => {
             Eten Toevoegen
           </button>
         </li>
+        <li>
+          <button
+            onClick={() => {
+              navigate("/recipes");
+              setMenuOpen(false); // Close menu on navigation
+            }}
+          >
+            Recipes
+          </button>
+        </li>
         {role === "admin" && (
           <li>
             <button

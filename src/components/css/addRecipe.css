@@ -55,6 +55,11 @@
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
+  max-height: calc(5 * 50px); /* Adjust 50px to the height of one result */
+  overflow-y: auto; /* Enable vertical scrolling */
+  border: 1px solid #ddd; /* Optional: Add a border for better visibility */
+  padding: 10px; /* Optional: Add padding for spacing */
+  border-radius: 5px; /* Optional: Add rounded corners */
 }
 
 .food-quantity {

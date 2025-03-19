@@ -68,13 +68,23 @@ const AddRecipe = () => {
   }, []);
 
   useEffect(() => {
-    const results = foods
-      .filter((food) =>
-        food.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-      .slice(0, 5);
+    const results = foods.filter((food) =>
+      food.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
     setFilteredFoods(results);
   }, [searchTerm, foods]);
+
+  const addedIngredients = Object.entries(formData.food_quantities).map(
+    ([id, qty]) => {
+      const food = foods.find((food) => food.id === parseInt(id));
+      return {
+        id,
+        name: food?.name || "Unknown Food",
+        amount: qty,
+        kcal: food ? (food.kcal_per_100 / 100) * qty : 0,
+      };
+    }
+  );
 
   return (
     <div>
@@ -112,11 +122,20 @@ const AddRecipe = () => {
                   >
                     {food.kcal_per_100}kcal per 100/{food.unit}
                   </p>
+                  <p
+                    style={{
+                      fontSize: "14px",
+                      color: "gray",
+                      margin: "5px 0 0 0",
+                    }}
+                  >
+                    {food.portion_description}
+                  </p>
                 </label>
                 <input
                   type="number"
                   min="0"
-                  placeholder="Quantity"
+                  placeholder="Quantity in grams"
                   onChange={(e) =>
                     handleFoodChange(food.id, parseInt(e.target.value))
                   }
@@ -134,6 +153,21 @@ const AddRecipe = () => {
           />
           <button type="submit">Add Recipe</button>
         </form>
+        <div className="added-ingredients">
+          <h3>Added Ingredients:</h3>
+          {addedIngredients.length > 0 ? (
+            <ul>
+              {addedIngredients.map((ingredient) => (
+                <li key={ingredient.id}>
+                  {ingredient.name} - {ingredient.amount}g -{" "}
+                  {ingredient.kcal.toFixed(2)} kcal
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No ingredients added yet.</p>
+          )}
+        </div>
       </div>
     </div>
   );

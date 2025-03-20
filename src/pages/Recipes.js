@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import NavigationBar from "../components/NavigationBar";
-import RecipeSearch from "../components/RecipeSearch";
-import RecipeList from "../components/RecipeList";
+import RecipeSearch from "../components/recipes/RecipeSearch";
+import RecipeList from "../components/recipes/RecipeList";
 import { useNavigate } from "react-router-dom";
 import API from "../api/api";
 import "../components/css/recipes.css"; // Create this CSS file for styling
-import Popup from "../components/Popup";
-import FoodList from "../components/RecipeFoodList";
+import Popup from "../components/common/Popup";
+import FoodList from "../components/recipes/RecipeFoodList";
 
 const Recipes = () => {
   const [recipes, setRecipes] = useState([]);

@@ -1,5 +1,5 @@
 import React from "react";
-import API from "../api/api";
+import API from "../../api/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 

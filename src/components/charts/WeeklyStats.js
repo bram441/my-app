@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import API from "../api/api";
+import API from "../../api/api";
 import { Bar } from "react-chartjs-2";
 import "chart.js/auto"; // Import for charts
 

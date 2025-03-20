@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
-import API from "../api/api";
+import API from "../../api/api.js";
 import { Line } from "react-chartjs-2";
 import "chart.js/auto"; // Import for charts
 import moment from "moment"; // Import moment.js for formatting timestamps
 import "./css/daily.css"; // ✅ Import the new CSS file
-import Popup from "./Popup.js";
-import DailyList from "./DailyList";
-import PopupList from "./PopupList";
+import Popup from "../common/Popup.js";
+import DailyList from "./DailyList.js";
+import PopupList from "./PopupList.js";
 
 const fetchDailyConsumption = async (
   setDailyData,

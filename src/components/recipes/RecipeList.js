@@ -65,7 +65,7 @@ const RecipeList = ({ recipes, onClickFoodList, userId, role, navigate }) => {
                   try {
                     await API.delete(`/recipes/${recipe.id}`);
                     setPopupOpen(false);
-                    navigate("/recipes");
+                    navigate("/dashboard");
                   } catch (error) {
                     console.error("Error deleting recipe:", error);
                   }

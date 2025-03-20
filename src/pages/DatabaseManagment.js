@@ -1,6 +1,6 @@
 import NavigationBar from "../components/common/NavigationBar";
 import AddFood from "../components/admin_db/AddFood";
-const ToevoegenEtenDB = () => {
+const DatabaseManagment = () => {
   return (
     <div>
       <header>
@@ -13,4 +13,4 @@ const ToevoegenEtenDB = () => {
   );
 };
 
-export default ToevoegenEtenDB;
+export default DatabaseManagment;

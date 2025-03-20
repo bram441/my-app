@@ -59,7 +59,7 @@ const NavigationBar = () => {
                 setMenuOpen(false); // Close menu on navigation
               }}
             >
-              Toevoegen eten aan DB
+              DB management
             </button>
           </li>
         )}

@@ -8,9 +8,10 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import ToevoegenEten from "./pages/ToevoegenEten";
-import ToevoegenEtenDB from "./pages/ToevoegenEtenDB";
+import DatabaseManagment from "./pages/DatabaseManagment";
 import Recipes from "./pages/Recipes";
 import AddRecipe from "./pages/AddRecipe";
+import EditRecipe from "./pages/EditRecipe";
 import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
 import useAuth from "./api/useAuth";
@@ -93,8 +94,16 @@ function App() {
           path="/DBChanges"
           element={
             <AdminRoute>
-              <ToevoegenEtenDB />
+              <DatabaseManagment />
             </AdminRoute>
+          }
+        />
+        <Route
+          path="/edit-recipe/:id"
+          element={
+            <PrivateRoute>
+              <EditRecipe />
+            </PrivateRoute>
           }
         />
         <Route

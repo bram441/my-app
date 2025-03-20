@@ -50,6 +50,44 @@
   background: #0056b3;
 }
 
+/* Ensure specificity for delete buttons */
+.delete-button-confirm {
+  background: #ca1139 !important; /* Use !important if necessary */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.delete-button-confirm:hover {
+  background: #9d033e !important; /* Use !important if necessary */
+}
+
+.delete-button-deny {
+  background: #6c757d !important; /* Use !important if necessary */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.delete-button-deny:hover {
+  background: #5a6268 !important; /* Use !important if necessary */
+}
+
+.delete-button-confirm,
+.delete-button-deny {
+  margin-right: 10px; /* Add spacing between buttons */
+}
+
+.delete-button-deny {
+  margin-right: 0; /* Ensure the last button doesn't have extra margin */
+}
+
 .food-item {
   display: flex;
   justify-content: space-between;
@@ -96,6 +134,30 @@
 
 .info-icon:hover {
   color: #0056b3;
+}
+
+.edit-icon {
+  color: #eedc15;
+  cursor: pointer;
+  margin-left: 10px;
+  font-size: 1.5rem;
+  transition: color 0.3s;
+}
+
+.edit-icon:hover {
+  color: #afb718;
+}
+
+.trash-icon {
+  color: #ca1139;
+  cursor: pointer;
+  margin-left: 10px;
+  font-size: 1.5rem;
+  transition: color 0.3s;
+}
+
+.trash-icon:hover {
+  color: #9d033e;
 }
 
 .non-found {

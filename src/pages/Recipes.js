@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import NavigationBar from "../components/common/NavigationBar";
 import RecipeSearch from "../components/recipes/RecipeSearch";
 import RecipeList from "../components/recipes/RecipeList";
@@ -7,6 +7,7 @@ import API from "../api/api";
 import "../components/css/recipes.css"; // Create this CSS file for styling
 import Popup from "../components/common/Popup";
 import FoodList from "../components/recipes/RecipeFoodList";
+import { AuthContext } from "../context/AuthContext";
 
 const Recipes = () => {
   const [recipes, setRecipes] = useState([]);
@@ -19,6 +20,7 @@ const Recipes = () => {
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [selectedRecipe, setSelectedRecipe] = useState({});
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -89,6 +91,9 @@ const Recipes = () => {
         <RecipeList
           recipes={filteredRecipes}
           onClickFoodList={onClickFoodList}
+          userId={user?.id}
+          role={user?.role}
+          navigate={navigate}
         />
       </div>
       <div>

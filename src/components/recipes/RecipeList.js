@@ -1,9 +1,16 @@
-import React from "react";
+import { useState } from "react";
 import API from "../../api/api";
+import Popup from "../common/Popup.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faInfoCircle,
+  faEdit,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 
-const RecipeList = ({ recipes, onClickFoodList }) => {
+const RecipeList = ({ recipes, onClickFoodList, userId, role, navigate }) => {
+  const [isPopupOpen, setPopupOpen] = useState(false);
+
   const addRecipeToDailyEntry = async (recipe) => {
     try {
       const totalKcal = recipe.total_kcals;
@@ -35,6 +42,45 @@ const RecipeList = ({ recipes, onClickFoodList }) => {
               onClick={() => onClickFoodList(recipe)}
               className="info-icon"
             />
+            {(userId === recipe.user_id || role == "admin") && (
+              <FontAwesomeIcon
+                icon={faEdit}
+                onClick={() => navigate(`/edit-recipe/${recipe.id}`)}
+                className="edit-icon"
+              />
+            )}
+            {(userId === recipe.user_id || role == "admin") && (
+              <FontAwesomeIcon
+                icon={faTrash}
+                onClick={() => setPopupOpen(true)}
+                className="trash-icon"
+              />
+            )}
+            <Popup isOpen={isPopupOpen} onClose={() => setPopupOpen(false)}>
+              <h2 style={{ "padding-top": "20px" }}>
+                Are you sure you want to delete this recipe?
+              </h2>
+              <button
+                onClick={async () => {
+                  try {
+                    await API.delete(`/recipes/${recipe.id}`);
+                    setPopupOpen(false);
+                    navigate("/recipes");
+                  } catch (error) {
+                    console.error("Error deleting recipe:", error);
+                  }
+                }}
+                className="delete-button-confirm"
+              >
+                Yes
+              </button>
+              <button
+                className="delete-button-deny"
+                onClick={() => setPopupOpen(false)}
+              >
+                No
+              </button>
+            </Popup>
           </div>
         ))
       ) : (

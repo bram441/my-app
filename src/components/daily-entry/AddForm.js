@@ -1,6 +1,6 @@
 import { useState } from "react";
 import API from "../../api/api";
-import "../components/css/toevoegenEten.css";
+import "../../components/css/toevoegenEten.css";
 
 const AddForm = ({ selectedFood, setSelectedFood }) => {
   const [portionType, setPortionType] = useState("portion"); // "custom" or "portion"

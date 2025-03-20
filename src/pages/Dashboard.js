@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
-import NavigationBar from "../components/NavigationBar";
-import Daily from "../components/Daily";
-import WeeklyStats from "../components/WeeklyStats";
-import ProgressBar from "../components/ProgressBar"; // ✅ Import ProgressBar
+import NavigationBar from "../components/common/NavigationBar";
+import Daily from "../components/daily/Daily";
+import WeeklyStats from "../components/charts/WeeklyStats";
+import ProgressBar from "../components/common/ProgressBar"; // ✅ Import ProgressBar
 import API from "../api/api";
 import "../components/css/dashboard.css";
 

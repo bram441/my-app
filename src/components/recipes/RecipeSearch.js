@@ -1,5 +1,5 @@
 import React from "react";
-import "./css/recipeSearch.css"; // Import the new CSS file
+import "../css/recipeSearch.css"; // Import the new CSS file
 
 const RecipeSearch = ({ searchTerm, setSearchTerm }) => {
   return (

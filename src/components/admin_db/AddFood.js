@@ -1,7 +1,7 @@
 import { useState } from "react";
 import API from "../../api/api";
 import { useNavigate } from "react-router-dom";
-import "./css/addFood.css"; // ✅ Import CSS
+import "../css/addFood.css"; // ✅ Import CSS
 
 const AddFood = () => {
   const [formData, setFormData] = useState({

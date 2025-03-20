@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import NavigationBar from "../components/NavigationBar";
+import NavigationBar from "../components/common/NavigationBar";
 import RecipeSearch from "../components/recipes/RecipeSearch";
 import RecipeList from "../components/recipes/RecipeList";
 import { useNavigate } from "react-router-dom";

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import API from "../api/api";
-import NavigationBar from "../components/NavigationBar";
+import NavigationBar from "../components/common/NavigationBar";
 import "../components/css/addRecipe.css"; // Create this CSS file for styling
 import { useNavigate } from "react-router-dom";
 

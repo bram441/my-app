@@ -1,7 +1,7 @@
 import { useState } from "react";
-import SearchEngine from "../components/SearchEngine";
-import AddForm from "../components/AddForm";
-import NavigationBar from "../components/NavigationBar";
+import SearchEngine from "../components/daily-entry/SearchEngine";
+import AddForm from "../components/daily-entry/AddForm";
+import NavigationBar from "../components/common/NavigationBar";
 import "../components/css/toevoegenEten.css";
 
 const ToevoegenEten = () => {

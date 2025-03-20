@@ -1,5 +1,5 @@
 import React from "react";
-import "./css/popup.css"; // ✅ Import CSS for styling
+import "../css/popup.css"; // ✅ Import CSS for styling
 
 const Popup = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null; // Don't render if not open

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useContext } from "react";
-import "./css/NavigationBar.css";
+import "../css/NavigationBar.css";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
-import useAuth from "../api/useAuth";
+import { AuthContext } from "../../context/AuthContext";
+import useAuth from "../../api/useAuth";
 
 const NavigationBar = () => {
   const navigate = useNavigate();

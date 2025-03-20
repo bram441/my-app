@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import API from "../../api/api";
-import "../components/css/toevoegenEten.css";
+import "../../components/css/toevoegenEten.css";
 
 const SearchEngine = ({ onSelectFood }) => {
   const [foods, setFoods] = useState([]);

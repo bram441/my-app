@@ -31,7 +31,7 @@ const EditRecipe = () => {
     };
 
     fetchRecipe();
-  }, [id]);
+  }, [id, formData]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

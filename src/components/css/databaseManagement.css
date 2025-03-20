@@ -1,0 +1,152 @@
+.database-management {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.database-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.add-food-container,
+.food-management {
+  width: 100%;
+}
+
+.add-food-form,
+.food-list {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.food-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.food-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.food-item:last-child {
+  border-bottom: none;
+}
+
+.food-item button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.edit-button {
+  background: #007bff;
+  color: white;
+}
+
+.edit-button:hover {
+  background: #0056b3;
+}
+
+.delete-button {
+  background: #ca1139;
+  color: white;
+}
+
+.delete-button:hover {
+  background: #9d033e;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.edit-food-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Add spacing between form groups */
+}
+
+.edit-food-form .form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-food-form label {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px; /* Add spacing between label and input */
+}
+
+.edit-food-form input,
+.edit-food-form select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.edit-food-form input:focus,
+.edit-food-form select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.edit-food-form .form-actions {
+  display: flex;
+  gap: 10px; /* Add spacing between buttons */
+}
+
+.edit-food-form button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.edit-food-form button[type="submit"] {
+  background: #007bff;
+  color: white;
+}
+
+.edit-food-form button[type="submit"]:hover {
+  background: #0056b3;
+}
+
+.edit-food-form button[type="button"] {
+  background: #6c757d;
+  color: white;
+}
+
+.edit-food-form button[type="button"]:hover {
+  background: #5a6268;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .database-management {
+    flex-direction: column;
+  }
+}

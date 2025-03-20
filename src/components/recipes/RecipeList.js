@@ -42,14 +42,14 @@ const RecipeList = ({ recipes, onClickFoodList, userId, role, navigate }) => {
               onClick={() => onClickFoodList(recipe)}
               className="info-icon"
             />
-            {(userId === recipe.user_id || role == "admin") && (
+            {(userId === recipe.user_id || role === "admin") && (
               <FontAwesomeIcon
                 icon={faEdit}
                 onClick={() => navigate(`/edit-recipe/${recipe.id}`)}
                 className="edit-icon"
               />
             )}
-            {(userId === recipe.user_id || role == "admin") && (
+            {(userId === recipe.user_id || role === "admin") && (
               <FontAwesomeIcon
                 icon={faTrash}
                 onClick={() => setPopupOpen(true)}

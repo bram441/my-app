@@ -58,7 +58,7 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
         <p className="popup-message-success">Voedsel succesvol toegevoegd!</p>
       )}
       {selectedFood ? (
-        <form onSubmit={handleSubmit}>
+        <form className="addForm" onSubmit={handleSubmit}>
           <p>
             <strong>Geselecteerd:</strong> {selectedFood.name}
           </p>

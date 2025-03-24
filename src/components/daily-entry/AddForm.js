@@ -25,7 +25,7 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
     } else if (portionType === "custom" && portionSize) {
       totalKcal = (portionSize / 100) * selectedFood.kcal_per_100;
       amount = parseFloat(
-        (totalKcal / selectedFood.kcal_per_portion).toFixed(1)
+        (totalKcal / selectedFood.kcal_per_portion).toFixed(2)
       );
     } else {
       setError("Vul een geldige hoeveelheid in.");
@@ -93,7 +93,7 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
               <label>Aantal porties: </label>
               <input
                 type="number"
-                step="0.1"
+                step="0.01"
                 min="0.1"
                 value={portionCount}
                 onChange={(e) => setPortionCount(e.target.value)}
@@ -120,10 +120,10 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
             Totaal:{" "}
             {portionType === "portion"
               ? parseFloat(
-                  (portionCount * selectedFood.kcal_per_portion).toFixed(1)
+                  (portionCount * selectedFood.kcal_per_portion).toFixed(2)
                 ) || 0
               : parseFloat(
-                  ((portionSize / 100) * selectedFood.kcal_per_100).toFixed(1)
+                  ((portionSize / 100) * selectedFood.kcal_per_100).toFixed(2)
                 ) || 0}{" "}
             kcal
           </p>

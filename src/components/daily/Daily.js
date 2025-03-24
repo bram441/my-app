@@ -29,10 +29,15 @@ const fetchDailyConsumption = async (
       const minutes = timeMoment.minutes();
       const decimalTime = hour + minutes / 60;
 
+      // Determine the label based on whether it's a recipe or food
+      const label = entry.food_id
+        ? `${entry.Food.name} x${entry.amount}` // Food entry
+        : `${entry.Recipe.name} x${entry.amount}`; // Recipe entry
+
       return {
         time: decimalTime, // Store as a number for correct placement
         kcal: cumulativeKcal,
-        label: `${entry.Food.name} x${entry.amount}`,
+        label: label,
         displayTime: timeMoment.format("HH:mm"),
       };
     });

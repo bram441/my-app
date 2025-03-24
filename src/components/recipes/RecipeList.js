@@ -131,7 +131,7 @@ const RecipeList = ({ recipes, onClickFoodList, userId, role, navigate }) => {
         <button
           className="confirm-button"
           onClick={() => {
-            if (portion) {
+            if (portion && portion > 0) {
               addRecipeToDailyEntry();
             } else {
               alert("Please enter a valid portion size.");

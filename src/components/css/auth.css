@@ -95,6 +95,13 @@
   margin-bottom: 10px;
 }
 
+/* Error message styles */
+.login-page .success-message {
+  color: green;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
 /* Ensure the register page has a background color */
 .register-page {
   background: linear-gradient(135deg, #007bff, #6c757d);
@@ -222,4 +229,14 @@
 
 .success-popup .login-button:hover {
   background-color: #0056b3;
+}
+
+/* Secondary Button Style */
+.button-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.button-secondary:hover {
+  background: #5a6268;
 }

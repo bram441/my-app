@@ -12,6 +12,8 @@ import DatabaseManagment from "./pages/DatabaseManagment";
 import Recipes from "./pages/Recipes";
 import AddRecipe from "./pages/AddRecipe";
 import EditRecipe from "./pages/EditRecipe";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
 import useAuth from "./api/useAuth";
@@ -106,6 +108,8 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route
           path="*"
           element={

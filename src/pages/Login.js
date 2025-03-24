@@ -54,6 +54,9 @@ const Login = () => {
         <p className="auth-link" onClick={() => navigate("/register")}>
           Don't have an account? Register here
         </p>
+        <p className="auth-link" onClick={() => navigate("/forgot-password")}>
+          Forgot your password? Reset it here
+        </p>
       </div>
     </div>
   );

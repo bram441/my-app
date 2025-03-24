@@ -66,6 +66,16 @@ const NavigationBar = () => {
         <li>
           <button
             onClick={() => {
+              navigate("/profile");
+              setMenuOpen(false); // Close menu on navigation
+            }}
+          >
+            Profile
+          </button>
+        </li>
+        <li>
+          <button
+            onClick={() => {
               logout();
               navigate("/login");
               setMenuOpen(false); // Close menu on navigation

@@ -14,6 +14,7 @@ import AddRecipe from "./pages/AddRecipe";
 import EditRecipe from "./pages/EditRecipe";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import Profile from "./pages/Profile";
 import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
 import useAuth from "./api/useAuth";
@@ -105,6 +106,14 @@ function App() {
           element={
             <PrivateRoute>
               <EditRecipe />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
             </PrivateRoute>
           }
         />

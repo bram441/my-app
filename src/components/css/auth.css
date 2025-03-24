@@ -1,34 +1,66 @@
-.auth-container {
+/* Ensure the login page has a background color */
+.login-page {
+  background: linear-gradient(135deg, #007bff, #6c757d);
+  color: #fff;
+  font-family: Arial, sans-serif;
+  min-height: 100vh; /* Ensure it covers the full viewport height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px; /* Add padding for spacing on smaller screens */
+}
+
+/* Adjust the container styles */
+.login-page .auth-container {
   max-width: 400px;
-  margin: 80px auto;
+  margin: 0 auto;
   padding: 20px;
   background: white;
   border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
+  overflow: hidden;
 }
 
-.auth-title {
+/* Add spacing between input fields and buttons */
+.login-page .auth-form input,
+.login-page .auth-form button {
+  margin-bottom: 15px; /* Add spacing between elements */
+}
+
+/* Ensure the logo is properly spaced */
+.login-page .auth-logo {
+  max-width: 100px;
+  margin: 0 auto 20px;
+  display: block;
+}
+
+/* Title and subtitle styles */
+.login-page .auth-title {
   font-size: 24px;
   font-weight: bold;
-  margin-bottom: 15px;
+  color: #333;
+  margin-bottom: 10px;
 }
 
-.auth-form {
-  display: flex;
-  flex-direction: column;
+.login-page .auth-subtitle {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 20px;
 }
 
-.auth-form input {
+/* Input field styles */
+.login-page .auth-form input {
   width: 100%;
   padding: 12px;
-  margin-bottom: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 16px;
+  box-sizing: border-box;
 }
 
-.auth-form button {
+/* Button styles */
+.login-page .auth-form button {
   width: 100%;
   padding: 12px;
   background: #007bff;
@@ -40,23 +72,154 @@
   transition: background 0.3s;
 }
 
-.auth-form button:hover {
+.login-page .auth-form button:hover {
   background: #0056b3;
 }
 
-.auth-link {
+/* Link styles */
+.login-page .auth-link {
   margin-top: 15px;
   color: #007bff;
   cursor: pointer;
   text-decoration: underline;
 }
 
-.auth-link:hover {
+.login-page .auth-link:hover {
   color: #0056b3;
 }
 
-.error-message {
+/* Error message styles */
+.login-page .error-message {
   color: red;
   font-size: 14px;
   margin-bottom: 10px;
+}
+
+/* Ensure the register page has a background color */
+.register-page {
+  background: linear-gradient(135deg, #007bff, #6c757d);
+  color: #fff;
+  font-family: Arial, sans-serif;
+  min-height: 100vh; /* Ensure it covers the full viewport height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px; /* Add padding for spacing on smaller screens */
+}
+
+/* Adjust the container styles */
+.register-page .auth-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Add spacing between input fields and buttons */
+.register-page .auth-form input,
+.register-page .auth-form button {
+  margin-bottom: 15px; /* Add spacing between elements */
+}
+
+/* Ensure the logo is properly spaced */
+.register-page .auth-logo {
+  max-width: 100px;
+  margin: 0 auto 20px;
+  display: block;
+}
+
+/* Title and subtitle styles */
+.register-page .auth-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.register-page .auth-subtitle {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* Input field styles */
+.register-page .auth-form input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+/* Button styles */
+.register-page .auth-form button {
+  width: 100%;
+  padding: 12px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.register-page .auth-form button:hover {
+  background: #0056b3;
+}
+
+/* Link styles */
+.register-page .auth-link {
+  margin-top: 15px;
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.register-page .auth-link:hover {
+  color: #0056b3;
+}
+
+/* Error message styles */
+.register-page .error-message {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* Success popup styles */
+.success-popup {
+  text-align: center;
+  padding: 20px;
+}
+
+.success-popup .checkmark {
+  font-size: 50px;
+  color: green;
+  margin-bottom: 20px;
+}
+
+.success-popup h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.success-popup .login-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.success-popup .login-button:hover {
+  background-color: #0056b3;
 }

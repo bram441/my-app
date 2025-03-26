@@ -22,35 +22,9 @@
   width: 100%;
 }
 
-.add-food-form,
-.food-list {
+.add-food-form {
   flex-grow: 1;
   overflow-y: auto;
-}
-
-.food-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.food-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-}
-
-.food-item:last-child {
-  border-bottom: none;
-}
-
-.food-item button {
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
 }
 
 .edit-button {

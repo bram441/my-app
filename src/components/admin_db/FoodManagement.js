@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import API from "../../api/api";
 import "../css/databaseManagement.css";
+import "../css/global.css";
 
 const FoodManagement = ({ searchTerm }) => {
   const [foods, setFoods] = useState([]);
@@ -115,7 +116,7 @@ const EditFoodForm = ({ food, onUpdate, onCancel }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="add-food-form">
+    <form onSubmit={handleSubmit}>
       <div className="form-group">
         <label htmlFor="name">
           <strong>Name</strong>

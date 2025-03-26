@@ -50,6 +50,7 @@
 .navbar button:hover {
   text-decoration: underline;
   color: #3498db; /* Accent color on hover */
+  background: none;
 }
 
 /* Responsive adjustments */

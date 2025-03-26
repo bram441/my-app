@@ -62,49 +62,6 @@ h2 {
   margin-bottom: 10px;
 }
 
-.food-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.food-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-  width: 98%; /* Ensure it matches the width of the container */
-}
-
-.food-item div {
-  flex: 1; /* Distribute space evenly */
-  text-align: left;
-}
-
-.food-item .food-name {
-  flex: 1; /* 1/3 of the space */
-}
-
-.food-item .food-kcal {
-  flex: 1; /* 1/3 of the space */
-  text-align: center;
-}
-
-.food-item .food-actions {
-  flex: 1; /* 1/3 of the space */
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px; /* Add spacing between buttons */
-}
-
-.food-item button {
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
 .edit-button {
   background: #007bff;
   color: white;

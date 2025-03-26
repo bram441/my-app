@@ -1,4 +1,5 @@
 import React from "react";
+import "../css/global.css";
 
 const RecipeFoodList = ({ foods }) => {
   return (
@@ -6,8 +7,10 @@ const RecipeFoodList = ({ foods }) => {
       {foods.length > 0 ? (
         foods.map((food) => (
           <div key={food.id} className="food-item">
-            <h3>{food.name}</h3>
-            <p> {food.RecipeFood.quantity} gr/ml</p>
+            <div className="food-name">
+              <h3>{food.name}</h3>
+            </div>
+            <div className="food-kcal">{food.RecipeFood.quantity} gr/ml</div>
           </div>
         ))
       ) : (

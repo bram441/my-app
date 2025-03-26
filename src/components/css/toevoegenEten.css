@@ -74,24 +74,6 @@
   background: #0056b3;
 }
 
-.food-list {
-  flex-grow: 1; /* ✅ Ensures the list grows to match the chart */
-  overflow-y: auto;
-  border: 1px solid #ddd;
-  padding: 10px;
-  border-radius: 5px;
-  background: #f9f9f9;
-}
-
-.food-item {
-  padding: 8px;
-  border-bottom: 1px solid #ddd;
-}
-
-.food-item:last-child {
-  border-bottom: none;
-}
-
 .popup-message-success {
   color: green;
   font-size: larger;

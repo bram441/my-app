@@ -2,6 +2,7 @@ import { useState } from "react";
 import API from "../../api/api";
 import "../css/databaseManagement.css";
 import "../css/addFood.css";
+import "../css/global.css";
 
 const AddFood = () => {
   const [formData, setFormData] = useState({

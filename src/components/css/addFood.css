@@ -74,7 +74,7 @@ h2 {
   align-items: center;
   padding: 10px;
   border-bottom: 1px solid #ddd;
-  width: 100%; /* Ensure it matches the width of the container */
+  width: 98%; /* Ensure it matches the width of the container */
 }
 
 .food-item div {

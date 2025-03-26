@@ -17,13 +17,34 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
     }
 
     let totalKcal = 0;
+    let totalProteine = 0;
+    let totalFats = 0;
+    let totalSugar = 0;
     let amount = 1;
 
     if (portionType === "portion" && portionCount) {
       totalKcal = portionCount * selectedFood.kcal_per_portion;
+      totalProteine =
+        (portionCount *
+          selectedFood.grams_per_portion *
+          selectedFood.proteine_per_100) /
+        100;
+      totalFats =
+        (portionCount *
+          selectedFood.grams_per_portion *
+          selectedFood.fats_per_100) /
+        100;
+      totalSugar =
+        (portionCount *
+          selectedFood.grams_per_portion *
+          selectedFood.sugar_per_100) /
+        100;
       amount = portionCount;
     } else if (portionType === "custom" && portionSize) {
       totalKcal = (portionSize / 100) * selectedFood.kcal_per_100;
+      totalProteine = (portionSize / 100) * selectedFood.proteine_per_100;
+      totalFats = (portionSize / 100) * selectedFood.fats_per_100;
+      totalSugar = (portionSize / 100) * selectedFood.sugar_per_100;
       amount = parseFloat(
         (totalKcal / selectedFood.kcal_per_portion).toFixed(2)
       );
@@ -36,6 +57,9 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
       await API.post("/daily-entries", {
         food_id: selectedFood.id,
         total_kcal: totalKcal,
+        total_proteine: totalProteine,
+        total_fats: totalFats,
+        total_sugar: totalSugar,
         amount: amount,
       });
       setSelectedFood(null);
@@ -115,9 +139,9 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
             </>
           )}
 
-          {/* Display calculated total kcal */}
+          {/* Display calculated totals */}
           <p>
-            Totaal:{" "}
+            Totaal kcal:{" "}
             {portionType === "portion"
               ? parseFloat(
                   (portionCount * selectedFood.kcal_per_portion).toFixed(2)
@@ -126,6 +150,56 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
                   ((portionSize / 100) * selectedFood.kcal_per_100).toFixed(2)
                 ) || 0}{" "}
             kcal
+          </p>
+          <p>
+            Totaal proteine:{" "}
+            {portionType === "portion"
+              ? parseFloat(
+                  (
+                    (portionCount *
+                      selectedFood.grams_per_portion *
+                      selectedFood.proteine_per_100) /
+                    100
+                  ).toFixed(2)
+                ) || 0
+              : parseFloat(
+                  ((portionSize / 100) * selectedFood.proteine_per_100).toFixed(
+                    2
+                  )
+                ) || 0}{" "}
+            g
+          </p>
+          <p>
+            Totaal vet:{" "}
+            {portionType === "portion"
+              ? parseFloat(
+                  (
+                    (portionCount *
+                      selectedFood.grams_per_portion *
+                      selectedFood.fats_per_100) /
+                    100
+                  ).toFixed(2)
+                ) || 0
+              : parseFloat(
+                  ((portionSize / 100) * selectedFood.fats_per_100).toFixed(2)
+                ) || 0}{" "}
+            g
+          </p>
+          <p>
+            Totaal suiker:{" "}
+            {portionType === "portion"
+              ? parseFloat(
+                  (
+                    (portionCount *
+                      selectedFood.grams_per_portion *
+                      selectedFood.sugar_per_100) /
+                    100
+                  ).toFixed(2)
+                ) || 0
+              : parseFloat(
+                  ((portionSize / 100) * selectedFood.sugar_per_100).toFixed(2)
+                ) || 0}{" "}
+            g
           </p>
 
           <button type="submit">Toevoegen</button>

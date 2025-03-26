@@ -9,6 +9,10 @@ const AddFood = () => {
     type: "ochtend",
     kcal_per_100: "",
     kcal_per_portion: "",
+    grams_per_portion: "",
+    proteine_per_100: "",
+    fats_per_100: "",
+    sugar_per_100: "",
     brand: "",
     unit: "gr",
     portion_description: "",
@@ -27,6 +31,10 @@ const AddFood = () => {
         ...formData,
         kcal_per_100: parseFloat(formData.kcal_per_100),
         kcal_per_portion: parseFloat(formData.kcal_per_portion),
+        grams_per_portion: parseFloat(formData.grams_per_portion),
+        proteine_per_100: parseFloat(formData.proteine_per_100),
+        fats_per_100: parseFloat(formData.fats_per_100),
+        sugar_per_100: parseFloat(formData.sugar_per_100),
         tags: formData.tags.split(",").map((tag) => tag.trim()),
       };
 
@@ -36,6 +44,10 @@ const AddFood = () => {
         type: "ochtend",
         kcal_per_100: "",
         kcal_per_portion: "",
+        grams_per_portion: "",
+        proteine_per_100: "",
+        fats_per_100: "",
+        sugar_per_100: "",
         brand: "",
         unit: "gr",
         portion_description: "",
@@ -69,7 +81,7 @@ const AddFood = () => {
         <input
           type="number"
           step="0.1"
-          min="0.1"
+          min="0"
           name="kcal_per_100"
           placeholder="Kcal per 100g/ml"
           value={formData.kcal_per_100}
@@ -79,12 +91,48 @@ const AddFood = () => {
         <input
           type="number"
           step="0.1"
-          min="0.1"
+          min="0"
           name="kcal_per_portion"
           placeholder="Kcal per portion"
           value={formData.kcal_per_portion}
           onChange={handleChange}
           required
+        />
+        <input
+          type="number"
+          step="0.1"
+          min="0"
+          name="grams_per_portion"
+          placeholder="Grams per portion"
+          value={formData.grams_per_portion}
+          onChange={handleChange}
+        />
+        <input
+          type="number"
+          step="0.1"
+          min="0"
+          name="proteine_per_100"
+          placeholder="Proteine per 100g/ml"
+          value={formData.proteine_per_100}
+          onChange={handleChange}
+        />
+        <input
+          type="number"
+          step="0.1"
+          min="0"
+          name="fats_per_100"
+          placeholder="Fats per 100g/ml"
+          value={formData.fats_per_100}
+          onChange={handleChange}
+        />
+        <input
+          type="number"
+          step="0.1"
+          min="0"
+          name="sugar_per_100"
+          placeholder="Sugar per 100g/ml"
+          value={formData.sugar_per_100}
+          onChange={handleChange}
         />
         <input
           type="text"

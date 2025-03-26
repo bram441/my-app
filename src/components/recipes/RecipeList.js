@@ -18,19 +18,31 @@ const RecipeList = ({ recipes, onClickFoodList, userId, role, navigate }) => {
     if (!selectedRecipe) return;
 
     try {
-      const totalKcal = selectedRecipe.total_kcals * portion;
+      const totalKcal = selectedRecipe.total_kcals * (portion || 1);
+      const totalProteins = selectedRecipe.total_proteins * (portion || 1);
+      const totalFats = selectedRecipe.total_fats * (portion || 1);
+      const totalSugars = selectedRecipe.total_sugars * (portion || 1);
+
       await API.post("/daily-entries", {
         food_id: null,
         recipe_id: selectedRecipe.id,
         total_kcal: totalKcal,
-        amount: portion,
+        total_proteins: totalProteins,
+        total_fats: totalFats,
+        total_sugars: totalSugars,
+        amount: portion || 1,
         entry_type: "recipe",
       });
+
       alert("Recipe added to daily entries!");
       setAddPopupOpen(false); // Close the popup after adding
     } catch (error) {
       console.error("Error adding recipe to daily entries:", error);
     }
+  };
+  const onClickDelete = async (recipe) => {
+    setSelectedRecipe(recipe);
+    setDeletePopupOpen(true);
   };
 
   return (
@@ -40,6 +52,11 @@ const RecipeList = ({ recipes, onClickFoodList, userId, role, navigate }) => {
           <div key={recipe.id} className="recipe-item">
             <h3>{recipe.name}</h3>
             <p>Total Kcal: {recipe.total_kcals}</p>
+            <p>
+              Proteins: {(recipe.total_proteins ?? 0).toFixed(2)} g | Fats:{" "}
+              {(recipe.total_fats ?? 0).toFixed(2)} g | Sugars:{" "}
+              {(recipe.total_sugars ?? 0).toFixed(2)} g
+            </p>
             <button
               onClick={() => {
                 setSelectedRecipe(recipe);
@@ -63,7 +80,7 @@ const RecipeList = ({ recipes, onClickFoodList, userId, role, navigate }) => {
             {(userId === recipe.user_id || role === "admin") && (
               <FontAwesomeIcon
                 icon={faTrash}
-                onClick={() => setDeletePopupOpen(true)}
+                onClick={() => onClickDelete(recipe)}
                 className="trash-icon"
               />
             )}

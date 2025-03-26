@@ -13,9 +13,9 @@ const DailyList = ({ dailyData, onClickEdit }) => {
               {entry.amount}x <strong>{entry.name}</strong>
             </div>
             <div className="food-nutrients">
-              Proteins: {parseFloat(entry.total_proteine).toFixed(2)} g | Fats:{" "}
+              Proteins: {parseFloat(entry.total_proteins).toFixed(2)} g | Fats:{" "}
               {parseFloat(entry.total_fats).toFixed(2)} g | Sugars:{" "}
-              {parseFloat(entry.total_sugar).toFixed(2)} g
+              {parseFloat(entry.total_sugars).toFixed(2)} g
             </div>
             <div className="food-kcal">
               {parseFloat(entry.total_kcal.toFixed(1))} kcal

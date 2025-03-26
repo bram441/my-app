@@ -62,8 +62,25 @@ const SearchEngine = ({ onSelectFood }) => {
               }}
               onClick={() => onSelectFood(food)}
             >
-              <strong>{food.name}</strong> - {food.kcal_per_100} kcal/100
-              {food.unit}
+              <strong>{food.name}</strong> -{"   "}
+              {food.kcal_per_100 !== null && food.kcal_per_100 !== undefined
+                ? food.kcal_per_100
+                : "?"}{" "}
+              kcal/100,{"   "}
+              {food.proteine_per_100 !== null &&
+              food.proteine_per_100 !== undefined
+                ? food.proteine_per_100
+                : "?"}{" "}
+              proteine/100,{"   "}
+              {food.fats_per_100 !== null && food.fats_per_100 !== undefined
+                ? food.fats_per_100
+                : "?"}{" "}
+              vet/100,{"   "}
+              {food.sugar_per_100 !== null && food.sugar_per_100 !== undefined
+                ? food.sugar_per_100
+                : "?"}{" "}
+              koolhydraten/100 {"   "}
+              {food.unit || "?"}
               <p
                 style={{ fontSize: "14px", color: "gray", margin: "5px 0 0 0" }}
               >

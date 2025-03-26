@@ -3,6 +3,7 @@ import SearchEngine from "../components/daily-entry/SearchEngine";
 import AddForm from "../components/daily-entry/AddForm";
 import NavigationBar from "../components/common/NavigationBar";
 import "../components/css/toevoegenEten.css";
+import "../components/css/global.css";
 
 const ToevoegenEten = () => {
   const [selectedFood, setSelectedFood] = useState(null);

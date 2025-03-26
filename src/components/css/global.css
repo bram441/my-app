@@ -1,0 +1,235 @@
+/* Prevent horizontal scrolling */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Disable horizontal scrolling */
+  width: 100%; /* Ensure the width is constrained to the viewport */
+  box-sizing: border-box; /* Include padding and border in width calculations */
+}
+
+/* Ensure tables or lists fit within the screen */
+table,
+.food-list {
+  width: 100%;
+  overflow-x: auto;
+  display: block; /* Allow horizontal scrolling for wide content */
+}
+
+/* General styles for food-list */
+.food-list {
+  flex-grow: 1;
+  max-height: 350px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+  background: #f9f9f9;
+  list-style: none;
+  margin: 0;
+}
+
+/* General styles for food-item */
+.food-item {
+  display: grid;
+  grid-template-columns: 2fr 3fr 1fr 0.5fr; /* Adjust column widths */
+  align-items: center; /* Vertically align all items */
+  gap: 10px; /* Add spacing between columns */
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.food-item:last-child {
+  border-bottom: none;
+}
+
+/* Style for food-name */
+.food-name {
+  font-weight: bold;
+  font-size: 1rem;
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add ellipsis for long text */
+}
+
+/* Style for food-nutrients */
+.food-nutrients {
+  font-size: 0.9rem; /* Smaller font size */
+  color: #555; /* Subtle color */
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add ellipsis for long text */
+}
+
+/* Style for food-kcal */
+.food-kcal {
+  text-align: right; /* Align kcal to the right */
+  font-size: 1rem;
+  color: #333;
+  white-space: nowrap; /* Prevent text wrapping */
+}
+
+/* Style for food-actions */
+.food-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.food-actions button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Style for nutrients section in DailyList */
+.food-nutrients {
+  font-size: 0.9rem; /* Smaller font size */
+  color: #555; /* Subtle color */
+  margin-top: 5px; /* Add spacing between kcal and nutrients */
+}
+
+.edit-button {
+  background: #007bff;
+  color: white;
+}
+
+.edit-button:hover {
+  background: #0056b3;
+}
+
+.delete-button {
+  background: #ca1139;
+  color: white;
+}
+
+.delete-button:hover {
+  background: #9d033e;
+}
+
+/* Specific styles for PopupList */
+.popup-list .food-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.popup-list .food-item:last-child {
+  border-bottom: none;
+}
+
+.popup-list .food-name {
+  flex: 2;
+}
+
+.popup-list .food-kcal {
+  flex: 1;
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+}
+
+.popup-list .food-actions {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* General styles for search inputs */
+.search-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+/* General styles for forms */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* General button styles */
+button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: #0056b3;
+  color: white;
+}
+
+/* General container styles */
+.container {
+  max-width: 100%; /* Prevent containers from exceeding the screen width */
+  padding: 0 15px; /* Add padding for spacing */
+  margin: 0 auto; /* Center the container */
+  box-sizing: border-box;
+}
+
+.container .section {
+  flex: 1;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Add spacing between buttons in form-actions */
+.form-actions {
+  display: flex;
+  justify-content: flex-start; /* Align buttons to the left */
+  gap: 10px; /* Add spacing between buttons */
+}
+
+.form-actions button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s;
+}
+
+.form-actions button:hover {
+  background: #0056b3;
+  color: white;
+}
+
+/* Apply box-sizing globally */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}

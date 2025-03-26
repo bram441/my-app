@@ -4,6 +4,7 @@ import RecipeSearch from "../components/recipes/RecipeSearch";
 import RecipeList from "../components/recipes/RecipeList";
 import { useNavigate } from "react-router-dom";
 import API from "../api/api";
+import "../components/css/global.css";
 import "../components/css/recipes.css"; // Create this CSS file for styling
 import Popup from "../components/common/Popup";
 import FoodList from "../components/recipes/RecipeFoodList";

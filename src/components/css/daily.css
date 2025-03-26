@@ -20,36 +20,6 @@
   padding: 15px;
 }
 
-.food-list {
-  flex-grow: 1; /* ✅ Ensures the list grows to match the chart */
-  max-height: 350px; /* ✅ Limits list height */
-  overflow-y: auto;
-  border: 1px solid #ddd;
-  padding: 10px;
-  border-radius: 5px;
-  background: #f9f9f9;
-}
-
-.food-item {
-  display: flex; /* Use Flexbox */
-  align-items: center; /* Center items vertically */
-  padding: 8px;
-  border-bottom: 1px solid #ddd;
-}
-
-.food-item:last-child {
-  border-bottom: none;
-}
-
-.food-item button {
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-left: auto; /* Push the button to the right */
-}
-
 .chart-container {
   flex-grow: 1; /* ✅ Ensures the chart grows to match the list */
   width: 100%;

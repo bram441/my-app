@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import API from "../../api/api";
 import "../css/databaseManagement.css";
+import "../css/global.css";
 
 const FoodManagement = ({ searchTerm }) => {
   const [foods, setFoods] = useState([]);
@@ -60,6 +61,11 @@ const FoodManagement = ({ searchTerm }) => {
         {filteredFoods.map((food) => (
           <li key={food.id} className="food-item">
             <div className="food-name">{food.name}</div>
+            <div className="food-nutrients">
+              Proteins: {parseFloat(food.proteine_per_100).toFixed(2)} g | Fats:{" "}
+              {parseFloat(food.fats_per_100).toFixed(2)} g | Sugars:{" "}
+              {parseFloat(food.sugar_per_100).toFixed(2)} g
+            </div>
             <div className="food-kcal">
               {food.kcal_per_100} kcal/100 {food.unit}
             </div>
@@ -89,7 +95,11 @@ const FoodManagement = ({ searchTerm }) => {
 };
 
 const EditFoodForm = ({ food, onUpdate, onCancel }) => {
-  const [formData, setFormData] = useState(food);
+  // Convert tags array to a comma-separated string for the input field
+  const [formData, setFormData] = useState({
+    ...food,
+    tags: Array.isArray(food.tags) ? food.tags.join(", ") : "",
+  });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -97,13 +107,25 @@ const EditFoodForm = ({ food, onUpdate, onCancel }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onUpdate(formData);
+    onUpdate({
+      ...formData,
+      kcal_per_100: parseFloat(formData.kcal_per_100),
+      kcal_per_portion: parseFloat(formData.kcal_per_portion),
+      grams_per_portion: parseFloat(formData.grams_per_portion),
+      proteine_per_100: parseFloat(formData.proteine_per_100),
+      fats_per_100: parseFloat(formData.fats_per_100),
+      sugar_per_100: parseFloat(formData.sugar_per_100),
+      // Convert tags back to an array
+      tags: formData.tags.split(",").map((tag) => tag.trim()),
+    });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="edit-food-form">
+    <form onSubmit={handleSubmit}>
       <div className="form-group">
-        <label htmlFor="name">Name</label>
+        <label htmlFor="name">
+          <strong>Name</strong>
+        </label>
         <input
           type="text"
           name="name"
@@ -113,7 +135,9 @@ const EditFoodForm = ({ food, onUpdate, onCancel }) => {
         />
       </div>
       <div className="form-group">
-        <label htmlFor="kcal_per_100">Kcal per 100</label>
+        <label htmlFor="kcal_per_100">
+          <strong>Kcal per 100</strong>
+        </label>
         <input
           type="number"
           name="kcal_per_100"
@@ -123,35 +147,9 @@ const EditFoodForm = ({ food, onUpdate, onCancel }) => {
         />
       </div>
       <div className="form-group">
-        <label htmlFor="portion_description">Portion description</label>
-        <input
-          type="text"
-          name="portion_description"
-          value={formData.portion_description}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="tags">Tags</label>
-        <input
-          type="text"
-          name="tags"
-          value={formData.tags}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="brand">Brand</label>
-        <input
-          type="text"
-          name="brand"
-          value={formData.brand}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="kcal_per_portion">Kcal per portion</label>
+        <label htmlFor="kcal_per_portion">
+          <strong>Kcal per portion</strong>
+        </label>
         <input
           type="number"
           name="kcal_per_portion"
@@ -161,7 +159,86 @@ const EditFoodForm = ({ food, onUpdate, onCancel }) => {
         />
       </div>
       <div className="form-group">
-        <label htmlFor="unit">Unit</label>
+        <label htmlFor="grams_per_portion">
+          <strong>Grams per portion</strong>
+        </label>
+        <input
+          type="number"
+          name="grams_per_portion"
+          value={formData.grams_per_portion}
+          onChange={handleChange}
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="proteine_per_100">
+          <strong>Proteine per 100</strong>
+        </label>
+        <input
+          type="number"
+          name="proteine_per_100"
+          value={formData.proteine_per_100}
+          onChange={handleChange}
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="fats_per_100">
+          <strong>Fats per 100</strong>
+        </label>
+        <input
+          type="number"
+          name="fats_per_100"
+          value={formData.fats_per_100}
+          onChange={handleChange}
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="sugar_per_100">
+          <strong>Sugar per 100</strong>
+        </label>
+        <input
+          type="number"
+          name="sugar_per_100"
+          value={formData.sugar_per_100}
+          onChange={handleChange}
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="portion_description">
+          <strong>Portion description</strong>
+        </label>
+        <input
+          type="text"
+          name="portion_description"
+          value={formData.portion_description}
+          onChange={handleChange}
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="tags">
+          <strong>Tags</strong>
+        </label>
+        <input
+          type="text"
+          name="tags"
+          value={formData.tags}
+          onChange={handleChange}
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="brand">
+          <strong>Brand</strong>
+        </label>
+        <input
+          type="text"
+          name="brand"
+          value={formData.brand}
+          onChange={handleChange}
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="unit">
+          <strong>Unit</strong>
+        </label>
         <select
           name="unit"
           value={formData.unit}

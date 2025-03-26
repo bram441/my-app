@@ -9,6 +9,9 @@ const AddRecipe = () => {
     name: "",
     food_quantities: {},
     total_kcals: 0,
+    total_proteins: 0,
+    total_fats: 0,
+    total_sugars: 0,
     user_ids: [],
   });
   const [foods, setFoods] = useState([]);
@@ -23,30 +26,50 @@ const AddRecipe = () => {
 
   const handleFoodChange = (foodId, quantity) => {
     setFormData((prevData) => {
-      const newFoodQuantities = {
-        ...prevData.food_quantities,
-        [foodId]: quantity,
-      };
+      const newFoodQuantities = { ...prevData.food_quantities };
 
-      const totalKcals = Object.entries(newFoodQuantities).reduce(
-        (total, [id, qty]) => {
+      if (quantity > 0) {
+        // Add or update the food quantity
+        newFoodQuantities[foodId] = quantity;
+      } else {
+        // Remove the food from the list if quantity is 0
+        delete newFoodQuantities[foodId];
+      }
+
+      const totals = Object.entries(newFoodQuantities).reduce(
+        (totals, [id, qty]) => {
           const food = foods.find((food) => food.id === parseInt(id));
-          return total + (food ? (food.kcal_per_100 / 100) * qty : 0);
+          if (food) {
+            totals.kcals += (food.kcal_per_100 / 100) * qty;
+            totals.proteins += (food.proteine_per_100 / 100) * qty;
+            totals.fats += (food.fats_per_100 / 100) * qty;
+            totals.sugars += (food.sugar_per_100 / 100) * qty;
+          }
+          return totals;
         },
-        0
+        { kcals: 0, proteins: 0, fats: 0, sugars: 0 }
       );
 
+      console.log("totals:", totals);
       return {
         ...prevData,
         food_quantities: newFoodQuantities,
-        total_kcals: totalKcals,
+        total_kcals: totals.kcals,
+        total_proteins: totals.proteins,
+        total_fats: totals.fats,
+        total_sugars: totals.sugars,
       };
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (Object.keys(formData.food_quantities).length === 0) {
+      setError("Please add at least one ingredient.");
+      return;
+    }
     try {
+      console.log("formData:", formData);
       await API.post("/recipes", formData);
       navigate("/dashboard");
     } catch (error) {
@@ -82,6 +105,9 @@ const AddRecipe = () => {
         name: food?.name || "Unknown Food",
         amount: qty,
         kcal: food ? (food.kcal_per_100 / 100) * qty : 0,
+        proteins: food ? (food.proteine_per_100 / 100) * qty : 0,
+        fats: food ? (food.fats_per_100 / 100) * qty : 0,
+        sugars: food ? (food.sugar_per_100 / 100) * qty : 0,
       };
     }
   );
@@ -120,7 +146,7 @@ const AddRecipe = () => {
                       margin: "5px 0 0 0",
                     }}
                   >
-                    {food.kcal_per_100}kcal per 100/{food.unit}
+                    {food.kcal_per_100} kcal per 100/{food.unit}
                   </p>
                   <p
                     style={{
@@ -143,14 +169,13 @@ const AddRecipe = () => {
               </div>
             ))}
           </div>
-          <h3>Recipe Total Kcal: </h3>
-          <input
-            type="number"
-            name="total_kcals"
-            placeholder="Total Kcal"
-            value={parseFloat(formData.total_kcals).toFixed(2)}
-            readOnly
-          />
+          <h3>Recipe Totals:</h3>
+          <p>Total Kcal: {parseFloat(formData.total_kcals).toFixed(2)} kcal</p>
+          <p>
+            Proteins: {parseFloat(formData.total_proteins).toFixed(2)} g | Fats:{" "}
+            {parseFloat(formData.total_fats).toFixed(2)} g | Sugars:{" "}
+            {parseFloat(formData.total_sugars).toFixed(2)} g
+          </p>
           <button type="submit">Add Recipe</button>
         </form>
         <div className="added-ingredients">
@@ -160,7 +185,10 @@ const AddRecipe = () => {
               {addedIngredients.map((ingredient) => (
                 <li key={ingredient.id}>
                   {ingredient.name} - {ingredient.amount}g -{" "}
-                  {ingredient.kcal.toFixed(2)} kcal
+                  {ingredient.kcal.toFixed(2)} kcal | Proteins:{" "}
+                  {ingredient.proteins.toFixed(2)} g | Fats:{" "}
+                  {ingredient.fats.toFixed(2)} g | Sugars:{" "}
+                  {ingredient.sugars.toFixed(2)} g
                 </li>
               ))}
             </ul>

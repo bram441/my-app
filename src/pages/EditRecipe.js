@@ -10,6 +10,9 @@ const EditRecipe = () => {
     name: "",
     food_quantities: [], // Updated to handle an array of food objects
     total_kcals: 0,
+    total_proteins: 0,
+    total_fats: 0,
+    total_sugars: 0,
   });
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -23,6 +26,9 @@ const EditRecipe = () => {
           name: recipe.name,
           food_quantities: recipe.foods,
           total_kcals: recipe.total_kcals,
+          total_proteins: recipe.total_proteins,
+          total_fats: recipe.total_fats,
+          total_sugars: recipe.total_sugars,
         });
         console.log("formData", formData);
       } catch (error) {
@@ -56,10 +62,25 @@ const EditRecipe = () => {
         return total + (food.RecipeFood.quantity * food.kcal_per_100) / 100;
       }, 0);
 
+      const totalProteins = updatedFoodQuantities.reduce((total, food) => {
+        return total + (food.RecipeFood.quantity * food.proteine_per_100) / 100;
+      }, 0);
+
+      const totalFats = updatedFoodQuantities.reduce((total, food) => {
+        return total + (food.RecipeFood.quantity * food.fats_per_100) / 100;
+      }, 0);
+
+      const totalSugars = updatedFoodQuantities.reduce((total, food) => {
+        return total + (food.RecipeFood.quantity * food.sugar_per_100) / 100;
+      }, 0);
+
       return {
         ...prevData,
         food_quantities: updatedFoodQuantities,
         total_kcals: totalKcals,
+        total_proteins: totalProteins,
+        total_fats: totalFats,
+        total_sugars: totalSugars,
       };
     });
   };
@@ -74,6 +95,9 @@ const EditRecipe = () => {
           quantity: food.RecipeFood.quantity,
         })),
         total_kcals: formData.total_kcals,
+        total_proteins: formData.total_proteins,
+        total_fats: formData.total_fats,
+        total_sugars: formData.total_sugars,
       };
 
       await API.put(`/recipes/${id}`, updatedRecipe);
@@ -144,7 +168,13 @@ const EditRecipe = () => {
               </div>
             ))}
           </div>
-          <h3>Recipe Total Kcal: {formData.total_kcals.toFixed(2)}</h3>
+          <h3>Recipe Totals:</h3>
+          <p>Total Kcal: {parseFloat(formData.total_kcals).toFixed(2)} kcal</p>
+          <p>
+            Proteins: {parseFloat(formData.total_proteins).toFixed(2)} g | Fats:{" "}
+            {parseFloat(formData.total_fats).toFixed(2)} g | Sugars:{" "}
+            {parseFloat(formData.total_sugars).toFixed(2)} g
+          </p>
           <button type="submit">Update Recipe</button>
         </form>
       </div>

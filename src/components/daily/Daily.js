@@ -169,6 +169,12 @@ const Daily = ({ setTotalCalories }) => {
         <h4>
           Total Calories: {parseFloat(dailyData.totalCalories).toFixed(2)} kcal
         </h4>
+        {/* Add smaller totals for proteins, fats, and sugars */}
+        <p className="totals-small">
+          Proteins: {parseFloat(dailyData.totalProteine).toFixed(2)} g | Fats:{" "}
+          {parseFloat(dailyData.totalFats).toFixed(2)} g | Sugars:{" "}
+          {parseFloat(dailyData.totalSugar).toFixed(2)} g
+        </p>
         {loading && <p>Loading...</p>}
         {error && <p className="error">{error}</p>}
 

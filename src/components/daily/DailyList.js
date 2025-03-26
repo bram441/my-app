@@ -5,12 +5,17 @@ import "../css/global.css";
 
 const DailyList = ({ dailyData, onClickEdit }) => {
   return (
-    <ul className="food-list">
+    <ul className="food-list daily-list">
       {dailyData.entries.length > 0 ? (
         dailyData.entries.map((entry) => (
           <li key={entry.id} className="food-item">
             <div className="food-name">
               {entry.amount}x <strong>{entry.name}</strong>
+            </div>
+            <div className="food-nutrients">
+              Proteins: {parseFloat(entry.total_proteine).toFixed(2)} g | Fats:{" "}
+              {parseFloat(entry.total_fats).toFixed(2)} g | Sugars:{" "}
+              {parseFloat(entry.total_sugar).toFixed(2)} g
             </div>
             <div className="food-kcal">
               {parseFloat(entry.total_kcal.toFixed(1))} kcal

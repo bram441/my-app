@@ -32,8 +32,9 @@ table,
 /* General styles for food-item */
 .food-item {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr; /* Adjust column widths as needed */
-  align-items: center;
+  grid-template-columns: 2fr 3fr 1fr 0.5fr; /* Adjust column widths */
+  align-items: center; /* Vertically align all items */
+  gap: 10px; /* Add spacing between columns */
   padding: 10px;
   border-bottom: 1px solid #ddd;
 }
@@ -42,26 +43,35 @@ table,
   border-bottom: none;
 }
 
-.food-item button {
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
+/* Style for food-name */
 .food-name {
   font-weight: bold;
+  font-size: 1rem;
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add ellipsis for long text */
 }
 
+/* Style for food-nutrients */
+.food-nutrients {
+  font-size: 0.9rem; /* Smaller font size */
+  color: #555; /* Subtle color */
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add ellipsis for long text */
+}
+
+/* Style for food-kcal */
 .food-kcal {
-  text-align: right; /* Align kcal values to the right */
-  font-size: 18px;
-  color: #555;
+  text-align: right; /* Align kcal to the right */
+  font-size: 1rem;
+  color: #333;
+  white-space: nowrap; /* Prevent text wrapping */
 }
 
+/* Style for food-actions */
 .food-actions {
   display: flex;
-  gap: 10px;
   justify-content: flex-end;
 }
 
@@ -70,6 +80,13 @@ table,
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+/* Style for nutrients section in DailyList */
+.food-nutrients {
+  font-size: 0.9rem; /* Smaller font size */
+  color: #555; /* Subtle color */
+  margin-top: 5px; /* Add spacing between kcal and nutrients */
 }
 
 .edit-button {

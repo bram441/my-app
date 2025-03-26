@@ -61,6 +61,11 @@ const FoodManagement = ({ searchTerm }) => {
         {filteredFoods.map((food) => (
           <li key={food.id} className="food-item">
             <div className="food-name">{food.name}</div>
+            <div className="food-nutrients">
+              Proteins: {parseFloat(food.total_proteine).toFixed(2)} g | Fats:{" "}
+              {parseFloat(food.total_fats).toFixed(2)} g | Sugars:{" "}
+              {parseFloat(food.total_sugar).toFixed(2)} g
+            </div>
             <div className="food-kcal">
               {food.kcal_per_100} kcal/100 {food.unit}
             </div>

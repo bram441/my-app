@@ -184,6 +184,43 @@
 .close-button:hover {
   background: #5a6268;
 }
+
+/* Style for the recipe food list */
+.recipe-food-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Add spacing between food items */
+  padding: 10px;
+}
+
+.recipe-food-list .food-item {
+  display: flex;
+  justify-content: space-between; /* Align name and quantity on the same line */
+  align-items: center; /* Vertically align items */
+  padding: 10px;
+  border-bottom: 1px solid #ddd; /* Add a separator between items */
+}
+
+.recipe-food-list .food-item:last-child {
+  border-bottom: none; /* Remove the border for the last item */
+}
+
+.recipe-food-list .food-name {
+  flex: 2; /* Allocate more space for the name */
+  font-size: 1rem;
+  font-weight: bold;
+  overflow: hidden; /* Prevent overflow */
+  text-overflow: ellipsis; /* Add ellipsis for long names */
+  white-space: nowrap; /* Prevent text wrapping */
+}
+
+.recipe-food-list .food-kcal {
+  flex: 1; /* Allocate space for the quantity */
+  text-align: right; /* Align quantity to the right */
+  font-size: 0.9rem;
+  color: #555;
+}
+
 @media (max-width: 768px) {
   .recipe-item {
     width: calc(50% - 20px);

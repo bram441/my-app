@@ -79,6 +79,42 @@
   font-size: larger;
 }
 
+/* Styling for portion description */
+.portion-description {
+  margin-bottom: 15px;
+  font-size: 14px;
+  color: #555;
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+/* Styling for calculated totals */
+.calculated-totals {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f1f1f1;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.calculated-totals h4 {
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #333;
+}
+
+.calculated-totals p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #444;
+}
+
+.calculated-totals p strong {
+  color: #000;
+}
+
 /* ✅ Ensure consistency across different screen sizes */
 @media (max-width: 768px) {
   .toevoegen-container {

@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import "../css/global.css";
 
-const DailyList = ({ dailyData, onClickEdit }) => {
+const DailyList = ({ dailyData, onClickEdit, selectedDate }) => {
   return (
     <ul className="food-list daily-list">
       {dailyData.entries.length > 0 ? (
@@ -28,7 +28,7 @@ const DailyList = ({ dailyData, onClickEdit }) => {
           </li>
         ))
       ) : (
-        <p>No food logged for today</p>
+        <p>No food logged for {selectedDate.toISOString().split("T")[0]}</p>
       )}
     </ul>
   );

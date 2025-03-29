@@ -2,11 +2,14 @@ import { useState, useEffect } from "react";
 import API from "../../api/api";
 import "../css/databaseManagement.css";
 import "../css/global.css";
+import Popup from "../common/Popup";
 
 const FoodManagement = ({ searchTerm }) => {
   const [foods, setFoods] = useState([]);
   const [editingFood, setEditingFood] = useState(null);
   const [error, setError] = useState(null);
+  const [deletePopup, setDeletePopup] = useState({ isOpen: false, food: null, recipes: [], dailyEntries: [] });
+
 
   useEffect(() => {
     const fetchFoods = async () => {
@@ -23,14 +26,35 @@ const FoodManagement = ({ searchTerm }) => {
 
   const handleDelete = async (foodId) => {
     try {
-      await API.delete(`/foods/${foodId}`);
-      setFoods((prevFoods) => prevFoods.filter((food) => food.id !== foodId));
+      const response = await API.delete(`/foods/${foodId}`);
+      if (response.data.message === "Food is being used") {
+        setDeletePopup({
+          isOpen: true,
+          food: foods.find((food) => food.id === foodId),
+          recipes: response.data.recipes,
+          dailyEntries: response.data.dailyEntries,
+        });
+      } else {
+        setFoods((prevFoods) => prevFoods.filter((food) => food.id !== foodId));
+      }
     } catch (error) {
       console.error("Error deleting food:", error);
       setError("Failed to delete food.");
     }
   };
 
+  const handleForceDelete = async (foodId) => {
+    try {
+      await API.delete(`/foods/${foodId}/force`);
+      setFoods((prevFoods) => prevFoods.filter((food) => food.id !== foodId));
+      setDeletePopup({ isOpen: false, food: null, recipes: [], dailyEntries: [] });
+    } catch (error) {
+      console.error("Error force deleting food:", error);
+      setError("Failed to force delete food.");
+    }
+  };
+
+  
   const handleEdit = (food) => {
     setEditingFood(food);
   };
@@ -83,6 +107,34 @@ const FoodManagement = ({ searchTerm }) => {
           </li>
         ))}
       </ul>
+      {deletePopup.isOpen && (
+        <Popup isOpen={deletePopup.isOpen} onClose={() => setDeletePopup({ isOpen: false, food: null, recipes: [], dailyEntries: [] })}>
+          <h2>Warning: Food is being used</h2>
+          <p>The food <strong>{deletePopup.food.name}</strong> is being used in the following:</p>
+          <h3>Recipes:</h3>
+          <ul>
+            {deletePopup.recipes.map((recipe) => (
+              <li key={recipe.id}>{recipe.name}</li>
+            ))}
+          </ul>
+          <h3>Daily Entries:</h3>
+          <ul>
+            {deletePopup.dailyEntries.map((entry) => (
+              <li key={entry.id}>
+                Date: {entry.date}, Calories: {entry.total_kcal}
+              </li>
+            ))}
+          </ul>
+          <p>Are you sure you want to delete this food? This will also delete the related recipes and daily entries.</p>
+          <button className="delete-button-confirm" onClick={() => handleForceDelete(deletePopup.food.id)}>
+            Yes, Delete
+          </button>
+          <button className="delete-button-deny" onClick={() => setDeletePopup({ isOpen: false, food: null, recipes: [], dailyEntries: [] })}>
+            Cancel
+          </button>
+        </Popup>
+      )}
+
       {editingFood && (
         <EditFoodForm
           food={editingFood}

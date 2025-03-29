@@ -13,10 +13,11 @@ const fetchDailyConsumption = async (
   setCalorieProgress,
   setLoading,
   setError,
-  setTotalCalories
+  setTotalCalories,
+  selectedDate
 ) => {
   try {
-    const response = await API.get(`/daily-entries`);
+    const response = await API.get(`/daily-entries?date=${selectedDate.toISOString().split("T")[0]}`); // Use selectedDate
     setDailyData(response.data);
     setTotalCalories(response.data.totalCalories || 0);
     let cumulativeKcal = 0;
@@ -50,7 +51,7 @@ const fetchDailyConsumption = async (
   }
 };
 
-const Daily = ({ setTotalCalories }) => {
+const Daily = ({ setTotalCalories, selectedDate }) => {
   const [dailyData, setDailyData] = useState({
     totalCalories: 0,
     entries: [],
@@ -69,9 +70,10 @@ const Daily = ({ setTotalCalories }) => {
       setCalorieProgress,
       setLoading,
       setError,
-      setTotalCalories
+      setTotalCalories,
+      selectedDate
     );
-  }, [setTotalCalories]);
+  }, [setTotalCalories, selectedDate]);
 
   const onClickDelete = useCallback(
     async (entryId) => {
@@ -82,14 +84,15 @@ const Daily = ({ setTotalCalories }) => {
           setCalorieProgress,
           setLoading,
           setError,
-          setTotalCalories
+          setTotalCalories,
+          selectedDate
         );
         setPopupOpen(false);
       } catch (err) {
         setError(err.response?.data?.message || "Failed to delete entry");
       }
     },
-    [setTotalCalories]
+    [setTotalCalories, selectedDate]
   );
 
   const onClickEdit = useCallback((foodId, foodName) => {
@@ -165,7 +168,7 @@ const Daily = ({ setTotalCalories }) => {
   return (
     <div className="daily-container">
       <div className="left-section">
-        <h3>Today's Consumption</h3>
+      <h3>Consumption for {selectedDate.toISOString().split("T")[0]}</h3>
         <h4>
           Total Calories: {parseFloat(dailyData.totalCalories).toFixed(2)} kcal
         </h4>
@@ -178,7 +181,7 @@ const Daily = ({ setTotalCalories }) => {
         {loading && <p>Loading...</p>}
         {error && <p className="error">{error}</p>}
 
-        <DailyList dailyData={dailyData} onClickEdit={onClickEdit} />
+        <DailyList dailyData={dailyData} onClickEdit={onClickEdit} selectedDate={selectedDate} />
       </div>
       <Popup isOpen={isPopupOpen} onClose={() => setPopupOpen(false)}>
         <h2>Remove daily entries for {selectedEntryName}</h2>

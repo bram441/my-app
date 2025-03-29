@@ -32,12 +32,14 @@ table,
 /* General styles for food-item */
 .food-item {
   display: grid;
-  grid-template-columns: 2fr 3fr 1fr 0.5fr; /* Adjust column widths */
-  align-items: center; /* Vertically align all items */
-  gap: 10px; /* Add spacing between columns */
+  grid-template-columns: 2fr 3fr 1fr 1fr; /* Adjust column sizes as needed */
+  grid-template-rows: auto auto; /* Allow multiple rows */
+  gap: 10px; /* Add spacing between grid items */
   padding: 10px;
   border-bottom: 1px solid #ddd;
+  align-items: center;
 }
+
 
 .food-item:last-child {
   border-bottom: none;
@@ -45,34 +47,32 @@ table,
 
 /* Style for food-name */
 .food-name {
+  grid-column: 1 / span 4; /* Span across all columns */
+  font-size: 16px;
   font-weight: bold;
-  font-size: 1rem;
-  white-space: nowrap; /* Prevent text wrapping */
-  overflow: hidden;
-  text-overflow: ellipsis; /* Add ellipsis for long text */
+  margin-bottom: 5px;
 }
 
 /* Style for food-nutrients */
 .food-nutrients {
-  font-size: 0.9rem; /* Smaller font size */
-  color: #555; /* Subtle color */
-  white-space: nowrap; /* Prevent text wrapping */
-  overflow: hidden;
-  text-overflow: ellipsis; /* Add ellipsis for long text */
+  grid-column: 1 / span 2; /* Span across the first two columns */
+  font-size: 14px;
+  color: #555;
 }
 
 /* Style for food-kcal */
 .food-kcal {
-  text-align: right; /* Align kcal to the right */
-  font-size: 1rem;
-  color: #333;
-  white-space: nowrap; /* Prevent text wrapping */
+  grid-column: 3 / span 1; /* Place in the third column */
+  font-size: 14px;
+  color: #555;
+  text-align: right;
 }
 
 /* Style for food-actions */
 .food-actions {
-  display: flex;
-  justify-content: flex-end;
+  grid-column: 4 / span 1; /* Place in the fourth column */
+  text-align: right;
+  
 }
 
 .food-actions button {
@@ -182,6 +182,7 @@ button {
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
+  background-color: #d3d1d1;
   transition: background 0.3s;
 }
 
@@ -232,6 +233,27 @@ button:hover {
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+/* Style for the date picker container */
+.custom-date-picker {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  color: #333;
+  outline: none;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.custom-date-picker:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+}
+
+.custom-date-picker:hover {
+  border-color: #0056b3;
 }
 
 /* Mobile layout for smaller screens */

@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../context/AuthContext";
+
 import API from "../../api/api";
 import Popup from "../common/Popup.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,11 +13,11 @@ import DatePicker from "react-datepicker"; // Import DatePicker
 import "react-datepicker/dist/react-datepicker.css"; // Import DatePicker CSS
 
 const RecipeList = ({ recipes, onClickFoodList, userId, role, navigate }) => {
+  const { selectedDate, setSelectedDate } = useContext(AuthContext);
   const [isDeletePopupOpen, setDeletePopupOpen] = useState(false);
   const [isAddPopupOpen, setAddPopupOpen] = useState(false);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [portion, setPortion] = useState(null); // Default portion size is 1
-  const [selectedDate, setSelectedDate] = useState(new Date()); // Add state for selected date
 
   const addRecipeToDailyEntry = async () => {
     if (!selectedRecipe) return;
@@ -133,15 +135,15 @@ const RecipeList = ({ recipes, onClickFoodList, userId, role, navigate }) => {
           How many portions of {selectedRecipe?.name} would you like to add to
           your daily entries?
         </p>
-              {/* Date Picker */}
-              <div className="form-group">
-                <label>Datum:</label>
-                <DatePicker
-                  selected={selectedDate}
-                  onChange={(date) => setSelectedDate(date)}
-                  dateFormat="yyyy-MM-dd"
-                />
-              </div>
+        {/* Date Picker */}
+        <div className="form-group">
+          <label>Datum:</label>
+          <DatePicker
+            selected={selectedDate}
+            onChange={(date) => setSelectedDate(date)}
+            dateFormat="yyyy-MM-dd"
+          />
+        </div>
         <input
           type="number"
           step="0.01"
@@ -156,7 +158,9 @@ const RecipeList = ({ recipes, onClickFoodList, userId, role, navigate }) => {
         />
         <p>
           Total Kcal:{" "}
-          {selectedRecipe ? (selectedRecipe.total_kcals * (portion || 0)).toFixed(2) : 0}
+          {selectedRecipe
+            ? (selectedRecipe.total_kcals * (portion || 0)).toFixed(2)
+            : 0}
         </p>
         <button
           className="confirm-button"

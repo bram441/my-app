@@ -10,7 +10,6 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
   const [portionType, setPortionType] = useState("portion"); // "custom" or "portion"
   const [portionSize, setPortionSize] = useState(""); // Custom input (grams/ml)
   const [portionCount, setPortionCount] = useState(""); // Portion selection
-
   const [error, setError] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
@@ -18,6 +17,14 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
     e.preventDefault();
     if (!selectedFood) {
       setError("Selecteer voedsel.");
+      return;
+    }
+
+    if (
+      (portionCount == 0 && portionType == "portion") ||
+      (portionSize == 0 && portionType == "custom")
+    ) {
+      setError("Kies een geldige hoeveelheid");
       return;
     }
 
@@ -72,6 +79,7 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
       setPortionCount("");
       setPortionSize("");
       setPortionType("portion");
+      setError(null);
       setShowConfirmation(true);
       setTimeout(() => setShowConfirmation(false), 3000); // Hide after 3 seconds
     } catch (error) {
@@ -123,7 +131,8 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
                 type="number"
                 value={portionCount}
                 onChange={(e) => setPortionCount(e.target.value)}
-                min="0.01"
+                min="0"
+                step="0.01"
               />
             </div>
           ) : (
@@ -133,7 +142,8 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
                 type="number"
                 value={portionSize}
                 onChange={(e) => setPortionSize(e.target.value)}
-                min="0.01"
+                min="0"
+                step="0.01"
               />
             </div>
           )}

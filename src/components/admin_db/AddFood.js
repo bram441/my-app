@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import API from "../../api/api";
+import Fuse from "fuse.js";
+import Camera from "../scanner/Camera";
+import TextExtractor from "../scanner/TextExtractor"; // Import the TextExtractor component
 import "../css/databaseManagement.css";
 import "../css/addFood.css";
 import "../css/global.css";
@@ -20,7 +23,85 @@ const AddFood = () => {
     tags: "",
   });
   const [error, setError] = useState(null);
+  const [showCamera, setShowCamera] = useState(false); // State to toggle camera
 
+  // Automatically calculate Kcal per portion
+  useEffect(() => {
+    const { kcal_per_100, grams_per_portion } = formData;
+
+    if (kcal_per_100 && grams_per_portion) {
+      const kcalPerPortion =
+        (parseFloat(kcal_per_100) * parseFloat(grams_per_portion)) / 100;
+      setFormData((prevData) => ({
+        ...prevData,
+        kcal_per_portion: kcalPerPortion.toFixed(1), // Round to 1 decimal place
+      }));
+    }
+  }, [formData.kcal_per_100, formData.grams_per_portion]);
+
+  const preprocessText = (text) => {
+    return text
+      .toLowerCase()
+      .replace(/gn/g, "ën") // Fix common OCR typo
+      .replace(/\s+/g, " ") // Remove extra spaces
+      .trim();
+  };
+
+  const handleExtractedText = (text) => {
+    const cleanedText = preprocessText(text);
+    console.log("Cleaned Text:", cleanedText);
+
+    // Define the expected field names for fuzzy matching
+    const fields = [
+      { key: "kcal", patterns: ["Kilocalorieën", "Calorieën", "Energie"] },
+      { key: "protein", patterns: ["Eiwitten", "Proteïne"] },
+      { key: "fat", patterns: ["Vetten waarvan", "Vetten"] },
+      { key: "sugar", patterns: ["Suikers", "Koolhydraten"] },
+    ];
+
+    // Flatten the patterns for Fuse.js
+    const fuseData = fields.flatMap((field) =>
+      field.patterns.map((pattern) => ({ key: field.key, pattern }))
+    );
+
+    // Configure Fuse.js for fuzzy matching
+    const fuse = new Fuse(fuseData, {
+      keys: ["pattern"],
+      threshold: 0.4, // Adjust threshold for tolerance (lower = stricter)
+    });
+
+    // Helper function to find a match and extract the value
+    const extractValue = (label) => {
+      const match = fuse.search(label)[0]; // Find the closest match
+      if (match) {
+        const fieldPattern = match.item.pattern;
+        const valueMatch = cleanedText.match(
+          new RegExp(`${fieldPattern}\\s+<*(\\d+(\\.\\d+)?)\\s*`, "i")
+        );
+
+        if (valueMatch) {
+          const value = valueMatch[0].includes("<") ? "0" : valueMatch[1]; // Handle "<" as 0
+          return value;
+        }
+      }
+      return "";
+    };
+
+    // Extract values using fuzzy matching
+    const kcal = extractValue("Kilocalorieën");
+    const protein = extractValue("Eiwitten");
+    const fat = extractValue("Vetten waarvan");
+    const sugar = extractValue("Suikers");
+
+    // Update the form data
+    setFormData({
+      ...formData,
+      kcal_per_100: kcal,
+      proteine_per_100: protein,
+      fats_per_100: fat,
+      sugar_per_100: sugar,
+    });
+  };
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -63,6 +144,12 @@ const AddFood = () => {
   return (
     <div className="add-food-container">
       {error && <p className="error-message">{error}</p>}
+      <button onClick={() => setShowCamera(!showCamera)}>
+        {showCamera ? "Close Camera" : "Open Camera"}
+      </button>
+      {showCamera && <Camera onExtractedText={handleExtractedText} />}
+      <TextExtractor onExtractedText={handleExtractedText} />
+      <h2>Add Food Item</h2>
       <form className="add-food-form" onSubmit={handleSubmit}>
         <input
           type="text"
@@ -93,20 +180,20 @@ const AddFood = () => {
           type="number"
           step="0.1"
           min="0"
-          name="kcal_per_portion"
-          placeholder="Kcal per portion"
-          value={formData.kcal_per_portion}
+          name="grams_per_portion"
+          placeholder="Grams per portion"
+          value={formData.grams_per_portion}
           onChange={handleChange}
-          required
         />
         <input
           type="number"
           step="0.1"
           min="0"
-          name="grams_per_portion"
-          placeholder="Grams per portion"
-          value={formData.grams_per_portion}
+          name="kcal_per_portion"
+          placeholder="Kcal per portion"
+          value={formData.kcal_per_portion}
           onChange={handleChange}
+          required
         />
         <input
           type="number"

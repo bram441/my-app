@@ -272,7 +272,10 @@ const AddFood = () => {
           <TextExtractor onExtractedText={handleExtractedText} />
         )}
         {activeTab === "camera" && (
-          <Camera onExtractedText={handleExtractedText} />
+          <Camera
+            onExtractedText={handleExtractedText}
+            onClose={() => setPopupOpen(false)}
+          />
         )}
       </Popup>
     </div>

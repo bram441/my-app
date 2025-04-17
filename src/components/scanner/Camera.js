@@ -1,42 +1,27 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import Webcam from "react-webcam";
 import Tesseract from "tesseract.js";
-import CameraPhoto from "react-html5-camera-photo";
-import "react-html5-camera-photo/build/css/index.css";
+import { Camera } from "react-camera-pro";
 
 // Custom function to detect if the user is on a mobile device
 const isMobileDevice = () => {
   return /Mobi|Android/i.test(navigator.userAgent);
 };
 
-const Camera = ({ onExtractedText, onClose }) => {
+const CameraComponent = ({ onExtractedText, onClose }) => {
   const webcamRef = useRef(null);
+  const cameraRef = useRef(null); // Ref for react-camera-pro
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [screenDimensions, setScreenDimensions] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
-
-  // Update screen dimensions dynamically
-  useEffect(() => {
-    const handleResize = () => {
-      setScreenDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   const captureImageDesktop = () => {
     const capturedImage = webcamRef.current.getScreenshot();
     setImage(capturedImage);
   };
 
-  const captureImageMobile = (dataUri) => {
-    setImage(dataUri);
+  const captureImageMobile = () => {
+    const capturedImage = cameraRef.current.takePhoto();
+    setImage(capturedImage);
   };
 
   const extractText = async () => {
@@ -55,40 +40,34 @@ const Camera = ({ onExtractedText, onClose }) => {
     }
   };
 
+  const handleClose = () => {
+    setImage(null); // Reset the captured image
+    setLoading(false); // Reset the loading state
+    onClose(); // Call the parent onClose function
+  };
+
   return (
     <div
       style={{
-        width: isMobileDevice() ? screenDimensions.width : "auto",
-        height: isMobileDevice() ? screenDimensions.height : "auto",
-        position: isMobileDevice() ? "fixed" : "relative",
+        width: "100%",
+        height: "100%",
+        position: "fixed",
         top: 0,
         left: 0,
-        backgroundColor: isMobileDevice() ? "black" : "transparent",
-        zIndex: isMobileDevice() ? 1000 : "auto",
+        backgroundColor: "black",
+        zIndex: 1000,
       }}
     >
       {!image ? (
         <div>
           {isMobileDevice() ? (
-            <CameraPhoto
-              onTakePhoto={(dataUri) => captureImageMobile(dataUri)}
-              idealFacingMode="environment" // Use back camera
-              isImageMirror={false} // Prevent mirroring
-              idealResolution={{
-                width: 1920, // Full HD width
-                height: 1080, // Full HD height
-              }}
-              imageType="image/jpeg"
-              imageCompression={0.8} // Lower compression for better quality
-              onCameraError={(error) => {
-                console.error("Camera Error:", error);
-                alert("Camera not supported. Please upload an image instead.");
-              }}
-              style={{
-                width: "100%", // Full width
-                height: "100%", // Full height
-                objectFit: "cover", // Ensure the camera preview covers the screen
-              }}
+            <Camera
+              ref={cameraRef}
+              facingMode="environment" // Use back camera
+              aspectRatio="cover" // Ensure the preview fills the screen
+              numberOfCamerasCallback={(num) =>
+                console.log(`Number of cameras: ${num}`)
+              }
             />
           ) : (
             <Webcam
@@ -102,12 +81,14 @@ const Camera = ({ onExtractedText, onClose }) => {
             />
           )}
           <button
-            onClick={isMobileDevice() ? null : captureImageDesktop}
+            onClick={
+              isMobileDevice() ? captureImageMobile : captureImageDesktop
+            }
             style={{
-              position: isMobileDevice() ? "absolute" : "relative",
-              bottom: isMobileDevice() ? "20px" : "auto",
-              left: isMobileDevice() ? "50%" : "auto",
-              transform: isMobileDevice() ? "translateX(-50%)" : "none",
+              position: "absolute",
+              bottom: "20px",
+              left: "50%",
+              transform: "translateX(-50%)",
               padding: "10px 20px",
               backgroundColor: "#007bff",
               color: "white",
@@ -125,36 +106,34 @@ const Camera = ({ onExtractedText, onClose }) => {
             src={image}
             alt="Captured"
             style={{
-              maxWidth: isMobileDevice() ? "100%" : "auto",
-              maxHeight: isMobileDevice() ? "100%" : "auto",
+              maxWidth: "100%",
+              maxHeight: "100%",
             }}
           />
           <button onClick={() => setImage(null)}>Retake</button>
           <button onClick={extractText} disabled={loading}>
             {loading ? "Extracting..." : "Extract Text"}
           </button>
-          {isMobileDevice() && (
-            <button
-              onClick={onClose}
-              style={{
-                position: "absolute",
-                top: "10px",
-                right: "10px",
-                backgroundColor: "red",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                padding: "5px 10px",
-                cursor: "pointer",
-              }}
-            >
-              Close
-            </button>
-          )}
+          <button
+            onClick={handleClose}
+            style={{
+              position: "absolute",
+              top: "10px",
+              right: "10px",
+              backgroundColor: "red",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              padding: "5px 10px",
+              cursor: "pointer",
+            }}
+          >
+            Close
+          </button>
         </div>
       )}
     </div>
   );
 };
 
-export default Camera;
+export default CameraComponent;

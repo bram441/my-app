@@ -15,6 +15,14 @@ const CameraComponent = ({ onExtractedText, onClose }) => {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // Get dynamic resolution based on screen size
+  const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
+  const dynamicResolution = {
+    width: screenWidth || 1920, // Fallback to 1920 if undefined
+    height: screenHeight || 1080, // Fallback to 1080 if undefined
+  };
+
   const captureImageDesktop = () => {
     const capturedImage = webcamRef.current.getScreenshot();
     setImage(capturedImage);
@@ -62,6 +70,8 @@ const CameraComponent = ({ onExtractedText, onClose }) => {
   const extractText = async () => {
     if (!image) return;
 
+    console.log("dynamicResolution", dynamicResolution);
+
     setLoading(true);
     try {
       // Preprocess the image
@@ -103,14 +113,14 @@ const CameraComponent = ({ onExtractedText, onClose }) => {
             <Camera
               ref={cameraRef}
               facingMode="environment" // Use back camera
-              aspectRatio="contain" // Ensure the preview fills the screen
+              resolution={dynamicResolution} // Dynamic resolution              aspectRatio="cover" // Ensure the preview fills the screen
               numberOfCamerasCallback={(num) =>
                 console.log(`Number of cameras: ${num}`)
               }
               style={{
                 width: "100%",
                 height: "100%",
-                objectFit: "contain", // Ensure proper scaling
+                objectFit: "cover", // Ensure proper scaling
               }}
             />
           ) : (
@@ -120,8 +130,8 @@ const CameraComponent = ({ onExtractedText, onClose }) => {
               screenshotFormat="image/jpeg"
               width={1920} // Full HD width
               videoConstraints={{
-                width: 1920,
-                height: 1080,
+                width: dynamicResolution.width,
+                height: dynamicResolution.height,
                 facingMode: "environment", // Use back camera
               }}
               style={{

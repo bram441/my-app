@@ -103,11 +103,16 @@ const CameraComponent = ({ onExtractedText, onClose }) => {
             <Camera
               ref={cameraRef}
               facingMode="environment" // Use back camera
-              aspectRatio="cover" // Ensure the preview fills the screen
+              aspectRatio="contain" // Ensure the preview fills the screen
               numberOfCamerasCallback={(num) =>
                 console.log(`Number of cameras: ${num}`)
               }
               resolution={{ width: 1920, height: 1080 }} // Full HD resolution
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "contain", // Ensure proper scaling
+              }}
             />
           ) : (
             <Webcam
@@ -119,6 +124,11 @@ const CameraComponent = ({ onExtractedText, onClose }) => {
                 width: 1920,
                 height: 1080,
                 facingMode: "environment", // Use back camera
+              }}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "contain", // Ensure proper scaling
               }}
             />
           )}

@@ -69,7 +69,7 @@ const AddFood = () => {
     // Configure Fuse.js for fuzzy matching
     const fuse = new Fuse(fuseData, {
       keys: ["pattern"],
-      threshold: 0.4, // Adjust threshold for tolerance (lower = stricter)
+      threshold: 0.8, // Adjust threshold for tolerance (lower = stricter)
     });
 
     // Helper function to find a match and extract the value
@@ -94,6 +94,12 @@ const AddFood = () => {
     const protein = extractValue("Eiwitten");
     const fat = extractValue("Vetten waarvan");
     const sugar = extractValue("Suikers");
+    console.log("Extracted Values:", {
+      kcal,
+      protein,
+      fat,
+      sugar,
+    });
 
     // Update the form data
     setFormData({

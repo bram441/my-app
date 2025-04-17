@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Webcam from "react-webcam";
 import Tesseract from "tesseract.js";
 import CameraPhoto from "react-html5-camera-photo";
@@ -9,10 +9,26 @@ const isMobileDevice = () => {
   return /Mobi|Android/i.test(navigator.userAgent);
 };
 
-const Camera = ({ onExtractedText }) => {
+const Camera = ({ onExtractedText, onClose }) => {
   const webcamRef = useRef(null);
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [screenDimensions, setScreenDimensions] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  // Update screen dimensions dynamically
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const captureImageDesktop = () => {
     const capturedImage = webcamRef.current.getScreenshot();
@@ -40,7 +56,17 @@ const Camera = ({ onExtractedText }) => {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        width: isMobileDevice() ? screenDimensions.width : "auto",
+        height: isMobileDevice() ? screenDimensions.height : "auto",
+        position: isMobileDevice() ? "fixed" : "relative",
+        top: 0,
+        left: 0,
+        backgroundColor: isMobileDevice() ? "black" : "transparent",
+        zIndex: isMobileDevice() ? 1000 : "auto",
+      }}
+    >
       {!image ? (
         <div>
           {isMobileDevice() ? (
@@ -48,7 +74,10 @@ const Camera = ({ onExtractedText }) => {
               onTakePhoto={(dataUri) => captureImageMobile(dataUri)}
               idealFacingMode="environment" // Use back camera
               isImageMirror={false} // Prevent mirroring
-              idealResolution={{ width: 1280, height: 720 }} // Lower resolution for compatibility
+              idealResolution={{
+                width: screenDimensions.width,
+                height: screenDimensions.height,
+              }}
               imageType="image/jpeg"
               imageCompression={0.9}
               onCameraError={(error) => {
@@ -67,17 +96,56 @@ const Camera = ({ onExtractedText }) => {
               }}
             />
           )}
-          <button onClick={isMobileDevice() ? null : captureImageDesktop}>
+          <button
+            onClick={isMobileDevice() ? null : captureImageDesktop}
+            style={{
+              position: isMobileDevice() ? "absolute" : "relative",
+              bottom: isMobileDevice() ? "20px" : "auto",
+              left: isMobileDevice() ? "50%" : "auto",
+              transform: isMobileDevice() ? "translateX(-50%)" : "none",
+              padding: "10px 20px",
+              backgroundColor: "#007bff",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
             Capture Image
           </button>
         </div>
       ) : (
         <div>
-          <img src={image} alt="Captured" style={{ maxWidth: "100%" }} />
+          <img
+            src={image}
+            alt="Captured"
+            style={{
+              maxWidth: isMobileDevice() ? "100%" : "auto",
+              maxHeight: isMobileDevice() ? "100%" : "auto",
+            }}
+          />
           <button onClick={() => setImage(null)}>Retake</button>
           <button onClick={extractText} disabled={loading}>
             {loading ? "Extracting..." : "Extract Text"}
           </button>
+          {isMobileDevice() && (
+            <button
+              onClick={onClose}
+              style={{
+                position: "absolute",
+                top: "10px",
+                right: "10px",
+                backgroundColor: "red",
+                color: "white",
+                border: "none",
+                borderRadius: "5px",
+                padding: "5px 10px",
+                cursor: "pointer",
+              }}
+            >
+              Close
+            </button>
+          )}
         </div>
       )}
     </div>

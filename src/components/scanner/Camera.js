@@ -1,8 +1,13 @@
 import React, { useRef, useState } from "react";
 import Webcam from "react-webcam";
 import Tesseract from "tesseract.js";
-import CameraPhoto, { isMobile } from "react-html5-camera-photo";
+import CameraPhoto from "react-html5-camera-photo";
 import "react-html5-camera-photo/build/css/index.css";
+
+// Custom function to detect if the user is on a mobile device
+const isMobileDevice = () => {
+  return /Mobi|Android/i.test(navigator.userAgent);
+};
 
 const Camera = ({ onExtractedText }) => {
   const webcamRef = useRef(null);
@@ -38,14 +43,18 @@ const Camera = ({ onExtractedText }) => {
     <div>
       {!image ? (
         <div>
-          {isMobile() ? (
+          {isMobileDevice() ? (
             <CameraPhoto
               onTakePhoto={(dataUri) => captureImageMobile(dataUri)}
               idealFacingMode="environment" // Use back camera
               isImageMirror={false} // Prevent mirroring
-              idealResolution={{ width: 1920, height: 1080 }}
+              idealResolution={{ width: 1280, height: 720 }} // Lower resolution for compatibility
               imageType="image/jpeg"
               imageCompression={0.9}
+              onCameraError={(error) => {
+                console.error("Camera Error:", error);
+                alert("Camera not supported. Please upload an image instead.");
+              }}
             />
           ) : (
             <Webcam
@@ -58,7 +67,7 @@ const Camera = ({ onExtractedText }) => {
               }}
             />
           )}
-          <button onClick={isMobile() ? null : captureImageDesktop}>
+          <button onClick={isMobileDevice() ? null : captureImageDesktop}>
             Capture Image
           </button>
         </div>

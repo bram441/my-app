@@ -75,14 +75,19 @@ const Camera = ({ onExtractedText, onClose }) => {
               idealFacingMode="environment" // Use back camera
               isImageMirror={false} // Prevent mirroring
               idealResolution={{
-                width: screenDimensions.width,
-                height: screenDimensions.height,
+                width: 1920, // Full HD width
+                height: 1080, // Full HD height
               }}
               imageType="image/jpeg"
-              imageCompression={0.9}
+              imageCompression={0.8} // Lower compression for better quality
               onCameraError={(error) => {
                 console.error("Camera Error:", error);
                 alert("Camera not supported. Please upload an image instead.");
+              }}
+              style={{
+                width: "100%", // Full width
+                height: "100%", // Full height
+                objectFit: "cover", // Ensure the camera preview covers the screen
               }}
             />
           ) : (

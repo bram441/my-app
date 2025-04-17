@@ -7,6 +7,11 @@ const Camera = ({ onExtractedText }) => {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // Video constraints to use the back camera
+  const videoConstraints = {
+    facingMode: "environment", // Use the back camera
+  };
+
   const captureImage = () => {
     const capturedImage = webcamRef.current.getScreenshot();
     setImage(capturedImage);
@@ -37,6 +42,7 @@ const Camera = ({ onExtractedText }) => {
             ref={webcamRef}
             screenshotFormat="image/jpeg"
             width={400}
+            videoConstraints={videoConstraints} // Set video constraints
           />
           <button onClick={captureImage}>Capture Image</button>
         </div>

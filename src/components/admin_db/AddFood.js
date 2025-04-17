@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import API from "../../api/api";
 import Fuse from "fuse.js";
 import Camera from "../scanner/Camera";
+import Popup from "../common/Popup";
 import TextExtractor from "../scanner/TextExtractor"; // Import the TextExtractor component
 import "../css/databaseManagement.css";
 import "../css/addFood.css";
@@ -23,7 +24,8 @@ const AddFood = () => {
     tags: "",
   });
   const [error, setError] = useState(null);
-  const [showCamera, setShowCamera] = useState(false); // State to toggle camera
+  const [isPopupOpen, setPopupOpen] = useState(false); // State to toggle popup
+  const [activeTab, setActiveTab] = useState("upload"); // "upload" or "camera"
 
   // Automatically calculate Kcal per portion
   useEffect(() => {
@@ -144,12 +146,8 @@ const AddFood = () => {
   return (
     <div className="add-food-container">
       {error && <p className="error-message">{error}</p>}
-      <button onClick={() => setShowCamera(!showCamera)}>
-        {showCamera ? "Close Camera" : "Open Camera"}
-      </button>
-      {showCamera && <Camera onExtractedText={handleExtractedText} />}
-      <TextExtractor onExtractedText={handleExtractedText} />
       <h2>Add Food Item</h2>
+      <button onClick={() => setPopupOpen(true)}>Open Image Scanner</button>
       <form className="add-food-form" onSubmit={handleSubmit}>
         <input
           type="text"
@@ -249,6 +247,34 @@ const AddFood = () => {
         />
         <button type="submit">Add Food</button>
       </form>
+      {/* Popup for Image Scanning */}
+      <Popup
+        isOpen={isPopupOpen}
+        onClose={() => setPopupOpen(false)}
+        size="large"
+      >
+        <h2>Scan Food Information</h2>
+        <div className="tab-buttons">
+          <button
+            className={activeTab === "upload" ? "active" : ""}
+            onClick={() => setActiveTab("upload")}
+          >
+            Upload Picture
+          </button>
+          <button
+            className={activeTab === "camera" ? "active" : ""}
+            onClick={() => setActiveTab("camera")}
+          >
+            Take Picture
+          </button>
+        </div>
+        {activeTab === "upload" && (
+          <TextExtractor onExtractedText={handleExtractedText} />
+        )}
+        {activeTab === "camera" && (
+          <Camera onExtractedText={handleExtractedText} />
+        )}
+      </Popup>
     </div>
   );
 };

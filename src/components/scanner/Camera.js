@@ -107,7 +107,6 @@ const CameraComponent = ({ onExtractedText, onClose }) => {
               numberOfCamerasCallback={(num) =>
                 console.log(`Number of cameras: ${num}`)
               }
-              resolution={{ width: 1920, height: 1080 }} // Full HD resolution
               style={{
                 width: "100%",
                 height: "100%",

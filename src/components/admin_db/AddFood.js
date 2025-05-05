@@ -41,75 +41,22 @@ const AddFood = () => {
     }
   }, [formData.kcal_per_100, formData.grams_per_portion]);
 
-  const preprocessText = (text) => {
-    return text
-      .toLowerCase()
-      .replace(/gn/g, "ën") // Fix common OCR typo
-      .replace(/\s+/g, " ") // Remove extra spaces
-      .trim();
+  const handleExtractedText = (data) => {
+    setFormData((prev) => ({
+      ...prev,
+      name: data.product_name || prev.name, // Update product name
+      brand: data.brand || prev.brand, // Update brand
+      kcal_per_100: data.kcal_per_100 || prev.kcal_per_100,
+      proteine_per_100: data.proteine_per_100 || prev.proteine_per_100,
+      fats_per_100: data.fats_per_100 || prev.fats_per_100,
+      sugar_per_100: data.sugar_per_100 || prev.sugar_per_100,
+      grams_per_portion: data.grams_per_portion || prev.grams_per_portion,
+      kcal_per_portion: data.kcal_per_portion || prev.kcal_per_portion,
+      portion_description: data.portion_description || prev.portion_description, // Update portion description
+      tags: data.tags ? data.tags.join(", ") : prev.tags, // Convert tags array to comma-separated string
+    }));
   };
 
-  const handleExtractedText = (text) => {
-    const cleanedText = preprocessText(text);
-    console.log("Cleaned Text:", cleanedText);
-
-    // Define the expected field names for fuzzy matching
-    const fields = [
-      { key: "kcal", patterns: ["Kilocalorieën", "Calorieën", "Energie"] },
-      { key: "protein", patterns: ["Eiwitten", "Proteïne"] },
-      { key: "fat", patterns: ["Vetten waarvan", "Vetten"] },
-      { key: "sugar", patterns: ["Suikers", "Koolhydraten"] },
-    ];
-
-    // Flatten the patterns for Fuse.js
-    const fuseData = fields.flatMap((field) =>
-      field.patterns.map((pattern) => ({ key: field.key, pattern }))
-    );
-
-    // Configure Fuse.js for fuzzy matching
-    const fuse = new Fuse(fuseData, {
-      keys: ["pattern"],
-      threshold: 0.8, // Adjust threshold for tolerance (lower = stricter)
-    });
-
-    // Helper function to find a match and extract the value
-    const extractValue = (label) => {
-      const match = fuse.search(label)[0]; // Find the closest match
-      if (match) {
-        const fieldPattern = match.item.pattern;
-        const valueMatch = cleanedText.match(
-          new RegExp(`${fieldPattern}\\s+<*(\\d+(\\.\\d+)?)\\s*`, "i")
-        );
-
-        if (valueMatch) {
-          const value = valueMatch[0].includes("<") ? "0" : valueMatch[1]; // Handle "<" as 0
-          return value;
-        }
-      }
-      return "";
-    };
-
-    // Extract values using fuzzy matching
-    const kcal = extractValue("Kilocalorieën");
-    const protein = extractValue("Eiwitten");
-    const fat = extractValue("Vetten waarvan");
-    const sugar = extractValue("Suikers");
-    console.log("Extracted Values:", {
-      kcal,
-      protein,
-      fat,
-      sugar,
-    });
-
-    // Update the form data
-    setFormData({
-      ...formData,
-      kcal_per_100: kcal,
-      proteine_per_100: protein,
-      fats_per_100: fat,
-      sugar_per_100: sugar,
-    });
-  };
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };

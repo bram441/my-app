@@ -7,10 +7,12 @@ import ProgressBar from "../components/common/ProgressBar"; // ✅ Import Progre
 import "../components/css/dashboard.css";
 import DatePicker from "react-datepicker"; // Import DatePicker
 import "react-datepicker/dist/react-datepicker.css"; // Import DatePicker CSS
+import FoodChatInput from "../components/chatbot/FoodChatInput"; // Import FoodChatInput
 
 const Dashboard = () => {
   const { user, selectedDate, setSelectedDate } = useContext(AuthContext);
   const [totalCalories, setTotalCalories] = useState(0);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const getGreeting = () => {
     const currentHour = new Date().getHours();
@@ -60,6 +62,14 @@ const Dashboard = () => {
       <h1>
         {getGreeting()}, {user?.username}!
       </h1>
+      <button
+        className="chat-launch-button"
+        onClick={() => setIsChatOpen(true)}
+      >
+        Gebruik voedingschat
+      </button>
+
+      {isChatOpen && <FoodChatInput onClose={() => setIsChatOpen(false)} />}
 
       <div className="dashboard-container">
         {/* ✅ Daily at the top */}

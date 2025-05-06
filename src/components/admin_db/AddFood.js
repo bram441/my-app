@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import API from "../../api/api";
 import Fuse from "fuse.js";
-import Camera from "../scanner/Camera";
 import Popup from "../common/Popup";
 import TextExtractor from "../scanner/TextExtractor"; // Import the TextExtractor component
 import "../css/databaseManagement.css";
@@ -208,27 +207,12 @@ const AddFood = () => {
       >
         <h2>Scan Food Information</h2>
         <div className="tab-buttons">
-          <button
-            className={activeTab === "upload" ? "active" : ""}
-            onClick={() => setActiveTab("upload")}
-          >
+          <button className="active" onClick={() => setActiveTab("upload")}>
             Upload Picture
-          </button>
-          <button
-            className={activeTab === "camera" ? "active" : ""}
-            onClick={() => setActiveTab("camera")}
-          >
-            Take Picture
           </button>
         </div>
         {activeTab === "upload" && (
           <TextExtractor onExtractedText={handleExtractedText} />
-        )}
-        {activeTab === "camera" && (
-          <Camera
-            onExtractedText={handleExtractedText}
-            onClose={() => setPopupOpen(false)}
-          />
         )}
       </Popup>
     </div>

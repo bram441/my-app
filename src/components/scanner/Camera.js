@@ -1,15 +1,14 @@
 import React, { useRef, useState } from "react";
 import Webcam from "react-webcam";
-import Tesseract from "tesseract.js";
 import { Camera } from "react-camera-pro";
-import * as PImage from "pureimage";
+import API from "../../api/api"; // Import the API instance
 
 // Custom function to detect if the user is on a mobile device
 const isMobileDevice = () => {
   return /Mobi|Android/i.test(navigator.userAgent);
 };
 
-const CameraComponent = ({ onExtractedText, onClose }) => {
+const CameraComponent = ({ onExtractedText, onClose, switchToUpload }) => {
   const webcamRef = useRef(null);
   const cameraRef = useRef(null); // Ref for react-camera-pro
   const [image, setImage] = useState(null);
@@ -23,16 +22,19 @@ const CameraComponent = ({ onExtractedText, onClose }) => {
     height: screenHeight || 1080, // Fallback to 1080 if undefined
   };
 
+  // Capture image for desktop (Webcam)
   const captureImageDesktop = () => {
     const capturedImage = webcamRef.current.getScreenshot();
     setImage(capturedImage);
   };
 
+  // Capture image for mobile (react-camera-pro)
   const captureImageMobile = () => {
     const capturedImage = cameraRef.current.takePhoto();
     setImage(capturedImage);
   };
 
+  // Preprocess the image (convert to grayscale)
   const preprocessImage = async (imageDataUri) => {
     const img = new Image();
     img.src = imageDataUri;
@@ -67,21 +69,22 @@ const CameraComponent = ({ onExtractedText, onClose }) => {
     });
   };
 
+  // Extract text from the image
   const extractText = async () => {
     if (!image) return;
 
-    console.log("dynamicResolution", dynamicResolution);
-
     setLoading(true);
     try {
-      // Preprocess the image
       const preprocessedImage = await preprocessImage(image);
+      console.log("Preprocessed Image:", preprocessedImage); // Log the preprocessed image
 
-      const { data } = await Tesseract.recognize(preprocessedImage, "nld", {
-        logger: (info) => console.log(info), // Logs progress
+      // Use the API instance to send the request
+      const response = await API.post("/openai/extract-nutrition", {
+        image: preprocessedImage,
       });
 
-      onExtractedText(data.text); // Pass extracted text to parent
+      const data = response.data;
+      onExtractedText(data); // Pass extracted text to parent
     } catch (error) {
       console.error("Error during text extraction:", error);
     } finally {
@@ -113,10 +116,8 @@ const CameraComponent = ({ onExtractedText, onClose }) => {
             <Camera
               ref={cameraRef}
               facingMode="environment" // Use back camera
-              resolution={dynamicResolution} // Dynamic resolution              aspectRatio="cover" // Ensure the preview fills the screen
-              numberOfCamerasCallback={(num) =>
-                console.log(`Number of cameras: ${num}`)
-              }
+              aspectRatio="cover" // Ensure the preview fills the screen
+              resolution={dynamicResolution} // Dynamic resolution
               style={{
                 width: "100%",
                 height: "100%",
@@ -159,6 +160,23 @@ const CameraComponent = ({ onExtractedText, onClose }) => {
             }}
           >
             Capture Image
+          </button>
+          <button
+            onClick={switchToUpload} // Switch back to "Upload Picture"
+            style={{
+              position: "absolute",
+              bottom: "70px",
+              left: "50%",
+              transform: "translateX(-50%)",
+              padding: "10px 20px",
+              backgroundColor: "#6c757d",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            Go Back to Upload Picture
           </button>
         </div>
       ) : (

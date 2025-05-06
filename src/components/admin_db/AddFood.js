@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import API from "../../api/api";
+import Fuse from "fuse.js";
+import Popup from "../common/Popup";
+import TextExtractor from "../scanner/TextExtractor"; // Import the TextExtractor component
 import "../css/databaseManagement.css";
 import "../css/addFood.css";
 import "../css/global.css";
@@ -20,6 +23,38 @@ const AddFood = () => {
     tags: "",
   });
   const [error, setError] = useState(null);
+  const [isPopupOpen, setPopupOpen] = useState(false); // State to toggle popup
+  const [activeTab, setActiveTab] = useState("upload"); // "upload" or "camera"
+
+  // Automatically calculate Kcal per portion
+  useEffect(() => {
+    const { kcal_per_100, grams_per_portion } = formData;
+
+    if (kcal_per_100 && grams_per_portion) {
+      const kcalPerPortion =
+        (parseFloat(kcal_per_100) * parseFloat(grams_per_portion)) / 100;
+      setFormData((prevData) => ({
+        ...prevData,
+        kcal_per_portion: kcalPerPortion.toFixed(1), // Round to 1 decimal place
+      }));
+    }
+  }, [formData.kcal_per_100, formData.grams_per_portion]);
+
+  const handleExtractedText = (data) => {
+    setFormData((prev) => ({
+      ...prev,
+      name: data.product_name || prev.name, // Update product name
+      brand: data.brand || prev.brand, // Update brand
+      kcal_per_100: data.kcal_per_100 || prev.kcal_per_100,
+      proteine_per_100: data.proteine_per_100 || prev.proteine_per_100,
+      fats_per_100: data.fats_per_100 || prev.fats_per_100,
+      sugar_per_100: data.sugar_per_100 || prev.sugar_per_100,
+      grams_per_portion: data.grams_per_portion || prev.grams_per_portion,
+      kcal_per_portion: data.kcal_per_portion || prev.kcal_per_portion,
+      portion_description: data.portion_description || prev.portion_description, // Update portion description
+      tags: data.tags ? data.tags.join(", ") : prev.tags, // Convert tags array to comma-separated string
+    }));
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -63,6 +98,8 @@ const AddFood = () => {
   return (
     <div className="add-food-container">
       {error && <p className="error-message">{error}</p>}
+      <h2>Add Food Item</h2>
+      <button onClick={() => setPopupOpen(true)}>Open Image Scanner</button>
       <form className="add-food-form" onSubmit={handleSubmit}>
         <input
           type="text"
@@ -93,20 +130,20 @@ const AddFood = () => {
           type="number"
           step="0.1"
           min="0"
-          name="kcal_per_portion"
-          placeholder="Kcal per portion"
-          value={formData.kcal_per_portion}
+          name="grams_per_portion"
+          placeholder="Grams per portion"
+          value={formData.grams_per_portion}
           onChange={handleChange}
-          required
         />
         <input
           type="number"
           step="0.1"
           min="0"
-          name="grams_per_portion"
-          placeholder="Grams per portion"
-          value={formData.grams_per_portion}
+          name="kcal_per_portion"
+          placeholder="Kcal per portion"
+          value={formData.kcal_per_portion}
           onChange={handleChange}
+          required
         />
         <input
           type="number"
@@ -162,6 +199,22 @@ const AddFood = () => {
         />
         <button type="submit">Add Food</button>
       </form>
+      {/* Popup for Image Scanning */}
+      <Popup
+        isOpen={isPopupOpen}
+        onClose={() => setPopupOpen(false)}
+        size="large"
+      >
+        <h2>Scan Food Information</h2>
+        <div className="tab-buttons">
+          <button className="active" onClick={() => setActiveTab("upload")}>
+            Upload Picture
+          </button>
+        </div>
+        {activeTab === "upload" && (
+          <TextExtractor onExtractedText={handleExtractedText} />
+        )}
+      </Popup>
     </div>
   );
 };

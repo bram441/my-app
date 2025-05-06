@@ -12,13 +12,20 @@
   z-index: 1000;
 }
 
+.popup-large {
+  width: 80%; /* Larger width for the popup */
+  height: 80%; /* Larger height for the popup */
+  max-width: 800px;
+  max-height: 600px;
+  overflow-y: auto; /* Add scrolling if content overflows */
+}
+
 /* ✅ Popup content box */
 .popup-content {
   background: white;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  width: 300px;
   text-align: center;
   position: relative;
 }
@@ -32,8 +39,49 @@
   border: none;
   font-size: 20px;
   cursor: pointer;
+  color: black;
 }
 
 .popup-close:hover {
   color: red;
+  background-color: rgb(187, 252, 252);
+}
+
+.tab-buttons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.tab-buttons button {
+  padding: 10px 20px;
+  margin: 0 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.tab-buttons button.active {
+  background-color: #0056b3;
+}
+
+.tab-buttons button:hover {
+  background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+  .popup-large {
+    width: 90%; /* Adjust width for smaller screens */
+    height: 90%; /* Adjust height for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .popup-large {
+    width: 100%; /* Full width for very small screens */
+    height: 100%; /* Full height for very small screens */
+  }
 }

@@ -21,8 +21,8 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
     }
 
     if (
-      (portionCount == 0 && portionType == "portion") ||
-      (portionSize == 0 && portionType == "custom")
+      (portionCount === 0 && portionType === "portion") ||
+      (portionSize === 0 && portionType === "custom")
     ) {
       setError("Kies een geldige hoeveelheid");
       return;

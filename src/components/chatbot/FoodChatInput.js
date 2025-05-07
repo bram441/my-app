@@ -16,8 +16,8 @@ const FoodChatInput = ({ onClose }) => {
       const response = await API.post("/openai/analyze-intake", {
         message: input,
       });
-      console.log("Response from OpenAI:", response.data.candidates);
       const enriched = response.data.map((item) => {
+        console.log("Item:", item);
         const grams = item.grams;
         const calculated =
           grams != null && item.status === "matched"
@@ -110,14 +110,23 @@ const FoodChatInput = ({ onClose }) => {
     if (!isReadyToConfirm)
       return alert("Niet alle items zijn bevestigd of volledig.");
     try {
-      const formatted = suggestions.map((item) => ({
-        food_id: item.match.id,
-        date: selectedDate.toISOString().split("T")[0],
-        total_kcal: Math.round(item.calculated_kcal),
-        total_proteins: Math.round(item.calculated_proteins),
-        total_fats: Math.round(item.calculated_fats),
-        total_sugar: Math.round(item.calculated_sugar),
-      }));
+      const formatted = suggestions.map((item) => {
+        const amount =
+          item.match.kcal_per_portion && item.calculated_kcal
+            ? item.calculated_kcal / item.match.kcal_per_portion
+            : 1; // Default to 1 if kcal_per_portion is not available
+
+        return {
+          food_id: item.match.id,
+          date: selectedDate.toISOString().split("T")[0],
+          total_kcal: Math.round(item.calculated_kcal),
+          total_proteins: Math.round(item.calculated_proteins),
+          total_fats: Math.round(item.calculated_fats),
+          total_sugar: Math.round(item.calculated_sugar),
+          amount: Math.round(amount * 100) / 100, // Round to 2 decimal places
+        };
+      });
+
       await Promise.all(
         formatted.map((entry) => API.post("/daily-entries", entry))
       );
@@ -145,9 +154,12 @@ const FoodChatInput = ({ onClose }) => {
         style={{ width: "100%", minHeight: "5rem" }}
       />
       <button onClick={analyzeIntake} disabled={loading}>
-        {loading ? "Analyseren..." : "Analyseer"}
+        {loading
+          ? "Analyseren..."
+          : suggestions.length > 0
+          ? "Heranalyseer"
+          : "Analyseer"}
       </button>
-
       {suggestions.length > 0 && (
         <div className="suggestions-list">
           <h3>Voorstellen:</h3>
@@ -155,7 +167,7 @@ const FoodChatInput = ({ onClose }) => {
             <div key={i} className="suggestion-item">
               <p>
                 <strong>{item.input_name}</strong> (
-                {item.portion_description || "onbekend"}) -{" "}
+                {item.quantity || item.grams || "onbekend"}) -{" "}
                 {item.status === "matched" && item.calculated_kcal != null
                   ? `${Math.round(item.calculated_kcal)} kcal`
                   : "? kcal"}

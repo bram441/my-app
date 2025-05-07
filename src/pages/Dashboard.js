@@ -74,7 +74,7 @@ const Dashboard = () => {
         onClose={() => setIsChatOpen(false)}
         size="large"
       >
-        <FoodChatInput />
+        <FoodChatInput onClose={() => setIsChatOpen(false)} />
       </Popup>
 
       <div className="dashboard-container">

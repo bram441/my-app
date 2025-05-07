@@ -118,7 +118,7 @@ const AddFood = () => {
         </select>
         <input
           type="number"
-          step="0.1"
+          step="0.01"
           min="0"
           name="kcal_per_100"
           placeholder="Kcal per 100g/ml"
@@ -128,7 +128,7 @@ const AddFood = () => {
         />
         <input
           type="number"
-          step="0.1"
+          step="0.01"
           min="0"
           name="grams_per_portion"
           placeholder="Grams per portion"
@@ -137,7 +137,7 @@ const AddFood = () => {
         />
         <input
           type="number"
-          step="0.1"
+          step="0.01"
           min="0"
           name="kcal_per_portion"
           placeholder="Kcal per portion"
@@ -147,7 +147,7 @@ const AddFood = () => {
         />
         <input
           type="number"
-          step="0.1"
+          step="0.01"
           min="0"
           name="proteine_per_100"
           placeholder="Proteine per 100g/ml"
@@ -156,7 +156,7 @@ const AddFood = () => {
         />
         <input
           type="number"
-          step="0.1"
+          step="0.01"
           min="0"
           name="fats_per_100"
           placeholder="Fats per 100g/ml"
@@ -165,7 +165,7 @@ const AddFood = () => {
         />
         <input
           type="number"
-          step="0.1"
+          step="0.01"
           min="0"
           name="sugar_per_100"
           placeholder="Sugar per 100g/ml"

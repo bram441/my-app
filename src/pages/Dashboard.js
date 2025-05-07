@@ -8,6 +8,7 @@ import "../components/css/dashboard.css";
 import DatePicker from "react-datepicker"; // Import DatePicker
 import "react-datepicker/dist/react-datepicker.css"; // Import DatePicker CSS
 import FoodChatInput from "../components/chatbot/FoodChatInput"; // Import FoodChatInput
+import Popup from "../components/common/Popup";
 
 const Dashboard = () => {
   const { user, selectedDate, setSelectedDate } = useContext(AuthContext);
@@ -68,8 +69,13 @@ const Dashboard = () => {
       >
         Gebruik voedingschat
       </button>
-
-      {isChatOpen && <FoodChatInput onClose={() => setIsChatOpen(false)} />}
+      <Popup
+        isOpen={isChatOpen}
+        onClose={() => setIsChatOpen(false)}
+        size="large"
+      >
+        <FoodChatInput />
+      </Popup>
 
       <div className="dashboard-container">
         {/* ✅ Daily at the top */}

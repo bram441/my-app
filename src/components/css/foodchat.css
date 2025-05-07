@@ -1,0 +1,78 @@
+.foodchat-modal {
+  padding: 2rem;
+  max-height: 80vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.foodchat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+textarea {
+  resize: none;
+  font-size: 1rem;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.suggestions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.suggestion-item {
+  padding: 1rem;
+  background: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.suggestion-item p {
+  margin: 0.5rem 0;
+}
+
+.nutrition-values {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.nutrition-values li {
+  list-style: none;
+  font-size: 0.9rem;
+}
+
+.analyze-btn {
+  background: #2b74e4;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.analyze-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}

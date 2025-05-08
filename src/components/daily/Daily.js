@@ -7,8 +7,9 @@ import "../css/daily.css";
 import Popup from "../common/Popup.js";
 import DailyList from "./DailyList.js";
 import PopupList from "./PopupList.js";
+import FoodChatInput from "../chatbot/FoodChatInput"; // Import FoodChatInput
 
-const fetchDailyConsumption = async (
+export const fetchDailyConsumption = async (
   setDailyData,
   setCalorieProgress,
   setLoading,
@@ -17,7 +18,9 @@ const fetchDailyConsumption = async (
   selectedDate
 ) => {
   try {
-    const response = await API.get(`/daily-entries?date=${selectedDate.toISOString().split("T")[0]}`); // Use selectedDate
+    const response = await API.get(
+      `/daily-entries?date=${selectedDate.toISOString().split("T")[0]}`
+    ); // Use selectedDate
     setDailyData(response.data);
     setTotalCalories(response.data.totalCalories || 0);
     let cumulativeKcal = 0;
@@ -63,6 +66,7 @@ const Daily = ({ setTotalCalories, selectedDate }) => {
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState(null);
   const [selectedEntryName, setSelectedEntryName] = useState("");
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   useEffect(() => {
     fetchDailyConsumption(
@@ -168,7 +172,7 @@ const Daily = ({ setTotalCalories, selectedDate }) => {
   return (
     <div className="daily-container">
       <div className="left-section">
-      <h3>Consumption for {selectedDate.toISOString().split("T")[0]}</h3>
+        <h3>Consumption for {selectedDate.toISOString().split("T")[0]}</h3>
         <h4>
           Total Calories: {parseFloat(dailyData.totalCalories).toFixed(2)} kcal
         </h4>
@@ -181,7 +185,38 @@ const Daily = ({ setTotalCalories, selectedDate }) => {
         {loading && <p>Loading...</p>}
         {error && <p className="error">{error}</p>}
 
-        <DailyList dailyData={dailyData} onClickEdit={onClickEdit} selectedDate={selectedDate} />
+        <button
+          className="chat-launch-button"
+          onClick={() => setIsChatOpen(true)}
+          aria-label="Open voedingschat"
+        >
+          <i className="fas fa-comment-dots"></i> {/* Font Awesome chat icon */}
+        </button>
+        <Popup
+          isOpen={isChatOpen}
+          onClose={() => setIsChatOpen(false)}
+          size="large"
+        >
+          <FoodChatInput
+            onClose={() => setIsChatOpen(false)}
+            refreshDailyEntries={() =>
+              fetchDailyConsumption(
+                setDailyData,
+                setCalorieProgress,
+                setLoading,
+                setError,
+                setTotalCalories,
+                selectedDate
+              )
+            }
+          />
+        </Popup>
+
+        <DailyList
+          dailyData={dailyData}
+          onClickEdit={onClickEdit}
+          selectedDate={selectedDate}
+        />
       </div>
       <Popup isOpen={isPopupOpen} onClose={() => setPopupOpen(false)}>
         <h2>Remove daily entries for {selectedEntryName}</h2>

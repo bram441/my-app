@@ -11,6 +11,24 @@
   flex-direction: column;
   padding: 15px;
   border-right: 2px solid #ddd;
+  position: relative; /* Add relative positioning to allow absolute positioning of the button */
+}
+
+.chat-launch-button {
+  position: absolute; /* Position the button absolutely within the left-section */
+  top: 15px; /* Adjust the distance from the top */
+  right: 15px; /* Adjust the distance from the right */
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.chat-launch-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
 }
 
 .right-section {
@@ -34,6 +52,32 @@
   height: 100% !important;
 }
 
+.chat-launch-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+.chat-launch-button:hover {
+  background-color: #0056b3;
+}
+
+.chat-launch-button i {
+  font-size: 1.5rem;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .daily-container {
@@ -43,5 +87,19 @@
   .left-section {
     border-right: none;
     border-bottom: 2px solid #ddd;
+  }
+  .chat-launch-button {
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .chat-launch-button i {
+    font-size: 1.2rem;
+  }
+
+  .left-section h3 {
+    margin-right: 3rem; /* Add space for the chat button */
   }
 }

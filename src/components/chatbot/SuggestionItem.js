@@ -54,9 +54,9 @@ const SuggestionItem = ({
       <p>
         <strong>{item.input_name}</strong> (
         {item.quantity
-          ? `${item.quantity}x`
+          ? `${parseFloat(item.quantity).toFixed(2)}x`
           : item.grams
-          ? `${item.grams} gr/ml`
+          ? `${parseFloat(item.grams).toFixed(2)} gr/ml`
           : "onbekend"}
         ) -{" "}
         {item.status === "matched" && item.calculated_kcal != null
@@ -128,8 +128,8 @@ const SuggestionItem = ({
             <>
               <p>
                 {item.quantity
-                  ? `Aantal porties: ${item.quantity}`
-                  : `Hoeveel gram/ml: ${item.grams}`}
+                  ? `Aantal porties: ${parseFloat(item.quantity).toFixed(2)}`
+                  : `Hoeveel gram/ml: ${parseFloat(item.grams).toFixed(2)}`}
               </p>
             </>
           )}

@@ -156,7 +156,7 @@ const FoodChatInput = ({ onClose, refreshDailyEntries }) => {
             total_kcal: Math.round(item.calculated_kcal),
             total_proteins: Math.round(item.calculated_proteins),
             total_fats: Math.round(item.calculated_fats),
-            total_sugar: Math.round(item.calculated_sugar),
+            total_sugars: Math.round(item.calculated_sugar),
             amount: Math.round(amount * 100) / 100, // Round to 2 decimal places
           };
         });

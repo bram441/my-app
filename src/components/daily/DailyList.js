@@ -8,7 +8,7 @@ const DailyList = ({ dailyData, onClickEdit, selectedDate }) => {
     <ul className="food-list daily-list">
       {dailyData.entries.length > 0 ? (
         dailyData.entries.map((entry) => (
-          <li key={entry.id} className="food-item">
+          <li key={entry.food_id} className="food-item">
             <div className="food-name">
               {entry.amount}x <strong>{entry.name}</strong>
             </div>

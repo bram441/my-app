@@ -14,9 +14,8 @@
 
 .popup-large {
   width: 80%; /* Larger width for the popup */
-  height: 80%; /* Larger height for the popup */
+  max-height: 90%;
   max-width: 800px;
-  max-height: 600px;
   overflow-y: auto; /* Add scrolling if content overflows */
 }
 

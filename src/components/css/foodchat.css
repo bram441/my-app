@@ -1,0 +1,184 @@
+.foodchat-modal {
+  padding: 2rem;
+  max-height: 80vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.foodchat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+textarea {
+  resize: none;
+  font-size: 1rem;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.suggestions-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+.suggestion-item {
+  display: flex;
+  flex-direction: column; /* Stack content vertically */
+  justify-content: space-between; /* Ensure proper spacing */
+  padding: 1rem;
+  background: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.suggestion-item button {
+  margin-top: 1rem; /* Add spacing above the button */
+  align-self: center; /* Align the button to the left */
+}
+
+.suggestion-item p {
+  margin: 0.5rem 0;
+}
+
+.nutrition-values {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.nutrition-values li {
+  list-style: none;
+  font-size: 0.9rem;
+}
+
+.analyze-btn {
+  background: #2b74e4;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.analyze-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.suggestion-item select {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+
+.suggestion-item select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.suggestion-item input[type="number"] {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.suggestion-item input[type="number"]:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.actions {
+  display: flex;
+  justify-content: center; /* Align buttons to the left */
+  gap: 3rem; /* Add space between the buttons */
+  margin-top: 1rem; /* Add spacing above the button group */
+}
+
+.actions button {
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.actions button:first-child {
+  background-color: #28a745; /* Green for confirm */
+  color: white;
+}
+
+.actions button:first-child:hover {
+  background-color: #218838; /* Darker green on hover */
+}
+
+.actions button:last-child {
+  background-color: #dc3545; /* Red for delete */
+  color: white;
+}
+
+.actions button:last-child:hover {
+  background-color: #c82333; /* Darker red on hover */
+}
+.actions-suggestion-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.suggestion-item button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.suggestion-item button.edit-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.suggestion-item button.edit-btn:hover {
+  background-color: #023266;
+  color: white;
+}
+
+.suggestion-item button.delete-btn {
+  background-color: red;
+  color: white;
+}
+
+.suggestion-item button.delete-btn:hover {
+  background-color: rgb(110, 2, 2);
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .suggestions-list {
+    grid-template-columns: 1fr; /* Single column on smaller screens */
+  }
+}

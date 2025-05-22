@@ -2,10 +2,15 @@ import { useState, useEffect } from "react";
 import API from "../../api/api";
 import "../../components/css/toevoegenEten.css";
 
+const CATEGORIES = ["vlees", "vis", "vegetarisch"];
+
 const SearchEngine = ({ onSelectFood }) => {
   const [foods, setFoods] = useState([]);
+  const [brands, setBrands] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterTag, setFilterTag] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedBrand, setSelectedBrand] = useState("");
 
   useEffect(() => {
     const fetchFoods = async () => {
@@ -19,20 +24,44 @@ const SearchEngine = ({ onSelectFood }) => {
     fetchFoods();
   }, []);
 
+    useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        const response = await API.get("/foods/brands");
+        setBrands(response.data);
+      } catch (error) {
+        console.error("Error fetching brands:", error);
+      }
+    };
+    fetchBrands();
+  }, []);
+
+    const allTags = Array.from(
+    new Set(foods.flatMap(f => Array.isArray(f.tags) ? f.tags : []))
+  ).filter(tag => !CATEGORIES.includes(tag));
+
+
   const filteredFoods = foods.filter((food) => {
-    const nameMatch = food.name
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
+    const nameMatch = food.name.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const tagMatch =
-      filterTag.trim() === "" || // If no tag filter, return all foods
-      (Array.isArray(food.tags) &&
-        food.tags.some((tag) =>
-          tag.toLowerCase().trim().includes(filterTag.toLowerCase().trim())
-        ));
+    const categoryMatch =
+      !selectedCategory ||
+      (Array.isArray(food.tags) && food.tags.includes(selectedCategory));
 
-    return nameMatch && tagMatch;
+    const brandMatch =
+      !selectedBrand ||
+      (food.brand && food.brand === selectedBrand);
+
+  const tagMatch =
+    !filterTag ||
+    (Array.isArray(food.tags) &&
+      food.tags.some(tag =>
+        tag.toLowerCase().includes(filterTag.toLowerCase())
+      ));
+
+    return nameMatch && categoryMatch && brandMatch && tagMatch;
   });
+
 
   return (
     <div className="searchEngine">
@@ -43,12 +72,41 @@ const SearchEngine = ({ onSelectFood }) => {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
+      <div className="form-group">
+                      <label>
+          Tags:        </label>
       <input
         type="text"
         placeholder="Filter by tag..."
         value={filterTag}
         onChange={(e) => setFilterTag(e.target.value)}
       />
+        <label>
+          Categorie:        </label>
+          <select
+            value={selectedCategory}
+            onChange={e => setSelectedCategory(e.target.value)}
+          >
+            <option value="">Alle categorieën</option>
+            {CATEGORIES.map(cat => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
+
+        <label>
+          Merk:
+                  </label>
+          <select
+            value={selectedBrand}
+            onChange={e => setSelectedBrand(e.target.value)}
+          >
+            <option value="">Alle merken</option>
+            {brands.map(brand => (
+              <option key={brand} value={brand}>{brand}</option>
+            ))}
+          </select>
+
+      </div>
       <h2>resultaten</h2>
       <ul>
         {filteredFoods.length > 0 ? (

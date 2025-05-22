@@ -89,9 +89,13 @@ const AddFood = () => {
         portion_description: "",
         tags: "",
       });
+      setError(null);
     } catch (error) {
-      console.error("Error adding food:", error);
-      setError("Failed to add food item.");
+      if (error.response && error.response.status === 409) {
+        setError("Dit voedsel bestaat al in de database.");
+      } else {
+        setError("Failed to add food item.");
+      }
     }
   };
 

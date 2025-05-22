@@ -97,7 +97,7 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
       )}
       {selectedFood ? (
         <form onSubmit={handleSubmit} className="add-form">
-          <h3>Voeg Voedsel Toe</h3>
+          <h3>Voeg Voedsel Toe: {selectedFood.name}</h3>
           {error && <p className="error">{error}</p>}
           {showConfirmation && <p className="success">Voedsel toegevoegd!</p>}
 

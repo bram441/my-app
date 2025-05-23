@@ -2,7 +2,20 @@ import { useState, useEffect } from "react";
 import API from "../../api/api";
 import "../../components/css/toevoegenEten.css";
 
-const CATEGORIES = ["vlees", "vis", "vegetarisch"];
+const CATEGORIES = [ "fruit",
+        "groenten",
+        "zuivel",
+        "vlees",
+        "vis",
+        "drinken",
+        "brood & granen",
+        "maaltijd",
+        "smeersels & sauzen",
+        "Soep",
+        "Bijgerechten",
+        "snacks & zoetigheid",
+        "vegetarisch",
+        "overig"];
 
 const SearchEngine = ({ onSelectFood }) => {
   const [foods, setFoods] = useState([]);
@@ -36,17 +49,13 @@ const SearchEngine = ({ onSelectFood }) => {
     fetchBrands();
   }, []);
 
-    const allTags = Array.from(
-    new Set(foods.flatMap(f => Array.isArray(f.tags) ? f.tags : []))
-  ).filter(tag => !CATEGORIES.includes(tag));
-
-
   const filteredFoods = foods.filter((food) => {
     const nameMatch = food.name.toLowerCase().includes(searchTerm.toLowerCase());
 
     const categoryMatch =
       !selectedCategory ||
-      (Array.isArray(food.tags) && food.tags.includes(selectedCategory));
+      (food.main_category &&
+        food.main_category.toLowerCase() === selectedCategory.toLowerCase());
 
     const brandMatch =
       !selectedBrand ||

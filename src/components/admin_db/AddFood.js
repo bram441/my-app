@@ -21,6 +21,7 @@ const AddFood = () => {
     unit: "gr",
     portion_description: "",
     tags: "",
+    main_category: "",
   });
   const [error, setError] = useState(null);
   const [isPopupOpen, setPopupOpen] = useState(false); // State to toggle popup
@@ -53,6 +54,7 @@ const AddFood = () => {
       kcal_per_portion: data.kcal_per_portion || prev.kcal_per_portion,
       portion_description: data.portion_description || prev.portion_description, // Update portion description
       tags: data.tags ? data.tags.join(", ") : prev.tags, // Convert tags array to comma-separated string
+      main_category: data.main_category || prev.main_category, // Update main category
     }));
   };
 
@@ -72,6 +74,7 @@ const AddFood = () => {
         fats_per_100: parseFloat(formData.fats_per_100),
         sugar_per_100: parseFloat(formData.sugar_per_100),
         tags: formData.tags.split(",").map((tag) => tag.trim()),
+        main_category: formData.main_category,
       };
 
       await API.post("/foods", foodData);
@@ -88,10 +91,15 @@ const AddFood = () => {
         unit: "gr",
         portion_description: "",
         tags: "",
+        main_category: "",
       });
+      setError(null);
     } catch (error) {
-      console.error("Error adding food:", error);
-      setError("Failed to add food item.");
+      if (error.response && error.response.status === 409) {
+        setError("Dit voedsel bestaat al in de database.");
+      } else {
+        setError("Failed to add food item.");
+      }
     }
   };
 
@@ -197,6 +205,22 @@ const AddFood = () => {
           value={formData.tags}
           onChange={handleChange}
         />
+        <select name="main_category" value={formData.main_category} onChange={handleChange}>
+            <option value="fruit">Fruit</option>
+            <option value="groenten">Groenten</option>
+            <option value="zuivel">Zuivel</option>
+            <option value="vlees">Vlees</option>
+            <option value="vis">Vis</option>
+            <option value="vegetarisch">Vegetarisch</option>
+            <option value="drinken">Drinken</option>
+            <option value="brood & granen">Brood & granen</option>
+            <option value="maaltijd">Maaltijd</option>
+            <option value="smeersels & sauzen">Smeersels & sauzen</option>
+            <option value="soep">Soep</option>
+            <option value="bijgerechten">Bijgerechten</option>
+            <option value="snacks & zoetigheid">Snacks & zoetigheid</option>
+            <option value="overig">Overig</option>
+        </select>
         <button type="submit">Add Food</button>
       </form>
       {/* Popup for Image Scanning */}

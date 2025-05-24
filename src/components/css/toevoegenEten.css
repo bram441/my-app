@@ -14,8 +14,8 @@
 }
 
 /* ✅ Fix input fields overflow issue */
-.searchEngine input,
-.addForm input {
+.searchEngine input[type="text"],
+.addForm input[type="text"] {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
@@ -28,8 +28,8 @@
 .searchEngine ul {
   list-style: none;
   padding: 0;
-  max-height: 250px; /* ✅ Limits list height */
-  overflow-y: auto; /* ✅ Enables scrolling */
+  max-height: 500px;
+  overflow-y: auto; 
   border: 1px solid #ddd;
   border-radius: 5px;
   background: #f9f9f9;
@@ -115,6 +115,11 @@
   color: #000;
 }
 
+.dropdowns select {
+  width: auto !important;
+  min-width: 350px;
+}
+
 /* ✅ Ensure consistency across different screen sizes */
 @media (max-width: 768px) {
   .toevoegen-container {
@@ -124,5 +129,9 @@
   .searchEngine {
     width: 100%;
     max-width: none;
+  }
+
+  .searchEngine ul {
+    max-height: 300px; /* Adjusted for smaller screens */
   }
 }

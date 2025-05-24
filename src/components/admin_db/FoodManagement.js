@@ -167,7 +167,7 @@ const EditFoodForm = ({ food, onUpdate, onCancel }) => {
       proteine_per_100: parseFloat(formData.proteine_per_100),
       fats_per_100: parseFloat(formData.fats_per_100),
       sugar_per_100: parseFloat(formData.sugar_per_100),
-      // Convert tags back to an array
+      main_category: formData.main_category,
       tags: formData.tags.split(",").map((tag) => tag.trim()),
     });
   };
@@ -299,6 +299,32 @@ const EditFoodForm = ({ food, onUpdate, onCancel }) => {
         >
           <option value="gr">Gram (gr)</option>
           <option value="ml">Milliliter (ml)</option>
+        </select>
+      </div>
+            <div className="form-group">
+        <label htmlFor="main_category">
+          <strong>Main Category</strong>
+        </label>
+        <select
+          name="main_category"
+          value={formData.main_category}
+          onChange={handleChange}
+          required
+        >
+          <option value="fruit">Fruit</option>
+          <option value="groenten">Groenten</option>
+          <option value="zuivel">Zuivel</option>
+          <option value="vlees">Vlees</option>
+          <option value="vis">Vis</option>
+          <option value="vegetarisch">Vegetarisch</option>
+          <option value="drinken">Drinken</option>
+          <option value="brood & granen">Brood & granen</option>
+          <option value="maaltijd">Maaltijd</option>
+          <option value="smeersels & sauzen">Smeersels & sauzen</option>
+          <option value="soep">Soep</option>
+          <option value="bijgerechten">Bijgerechten</option>
+          <option value="snacks & zoetigheid">Snacks & zoetigheid</option>
+          <option value="overig">Overig</option>
         </select>
       </div>
       <div className="form-actions">

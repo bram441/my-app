@@ -50,7 +50,15 @@ const SearchEngine = ({ onSelectFood }) => {
   }, []);
 
   const filteredFoods = foods.filter((food) => {
-    const nameMatch = food.name.toLowerCase().includes(searchTerm.toLowerCase());
+       // Split search term into words, ignore empty strings
+  const words = searchTerm
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(Boolean);
+
+  // Check if all words are present in the food name (any order)
+  const name = food.name.toLowerCase();
+  const nameMatch = words.every(word => name.includes(word));
 
     const categoryMatch =
       !selectedCategory ||

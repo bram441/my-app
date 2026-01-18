@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import API from "../../api/api";
-import Fuse from "fuse.js";
 import Popup from "../common/Popup";
 import TextExtractor from "../scanner/TextExtractor"; // Import the TextExtractor component
 import "../css/databaseManagement.css";
@@ -39,6 +38,7 @@ const AddFood = () => {
         kcal_per_portion: kcalPerPortion.toFixed(1), // Round to 1 decimal place
       }));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData.kcal_per_100, formData.grams_per_portion]);
 
   const handleExtractedText = (data) => {

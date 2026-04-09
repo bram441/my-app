@@ -6,15 +6,24 @@ import "../components/css/auth.css";
 const ResetPassword = () => {
   const { token } = useParams();
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
     try {
       await API.post(`/users/reset-password/${token}`, {
         password,
+        confirmPassword,
       });
       setMessage("Password reset successfully. Redirecting to login page...");
       setTimeout(() => navigate("/login"), 3000); // Redirect after 3 seconds
@@ -36,6 +45,15 @@ const ResetPassword = () => {
             placeholder="New Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
+            className="input"
+          />
+          <input
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirm New Password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             required
             className="input"
           />

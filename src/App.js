@@ -15,6 +15,7 @@ import EditRecipe from "./pages/EditRecipe";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Profile from "./pages/Profile";
+import Home from "./pages/Home";
 import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
 import useAuth from "./api/useAuth";
@@ -59,6 +60,7 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route
@@ -122,7 +124,7 @@ function App() {
         <Route
           path="*"
           element={
-            user ? <Navigate to="/dashboard" /> : <Navigate to="/login" />
+            user ? <Navigate to="/dashboard" /> : <Navigate to="/" />
           }
         />
       </Routes>

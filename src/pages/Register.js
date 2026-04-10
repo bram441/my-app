@@ -3,6 +3,8 @@ import API from "../api/api";
 import { useNavigate } from "react-router-dom";
 import "../components/css/auth.css"; // Import CSS
 import Popup from "../components/common/Popup"; // Import Popup component
+import LanguageSwitcher from "../components/common/LanguageSwitcher";
+import { useLanguage } from "../context/LanguageContext";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +15,7 @@ const Register = () => {
   const [error, setError] = useState(null);
   const [isSuccessPopupOpen, setSuccessPopupOpen] = useState(false); // State for success popup
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -31,35 +34,38 @@ const Register = () => {
   return (
     <div className="register-page">
       <div className="auth-container">
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 12 }}>
+          <LanguageSwitcher compact />
+        </div>
         <img src="/salad.png" alt="App Logo" className="auth-logo" />
-        <h2 className="auth-title">Register</h2>
+        <h2 className="auth-title">{t("auth.register")}</h2>
         {error && <p className="error-message">{error}</p>}
         <form className="auth-form" onSubmit={handleSubmit}>
           <input
             type="text"
             name="username"
-            placeholder="Username"
+            placeholder={t("auth.username")}
             onChange={handleChange}
             required
           />
           <input
             type="email"
             name="email"
-            placeholder="Email"
+            placeholder={t("auth.email")}
             onChange={handleChange}
             required
           />
           <input
             type="password"
             name="password"
-            placeholder="Password"
+            placeholder={t("auth.password")}
             onChange={handleChange}
             required
           />
-          <button type="submit">Register</button>
+          <button type="submit">{t("auth.register")}</button>
         </form>
         <p className="auth-link" onClick={() => navigate("/login")}>
-          Already have an account? Login here
+          {t("auth.hasAccount")}
         </p>
 
         {/* Success Popup */}

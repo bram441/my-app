@@ -15,6 +15,7 @@ import {
 import PageShell from "../components/ui/PageShell";
 import SectionCard from "../components/ui/SectionCard";
 import AppButton from "../components/ui/AppButton";
+import { useLanguage } from "../context/LanguageContext";
 
 const AddRecipe = () => {
   const [formData, setFormData] = useState({
@@ -31,6 +32,7 @@ const AddRecipe = () => {
   const [filteredFoods, setFilteredFoods] = useState([]);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -77,7 +79,7 @@ const AddRecipe = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (Object.keys(formData.food_quantities).length === 0) {
-      setError("Please add at least one ingredient.");
+      setError(t("recipes.addIngredientFirst"));
       return;
     }
     try {
@@ -86,7 +88,7 @@ const AddRecipe = () => {
       navigate("/dashboard");
     } catch (error) {
       console.error("Error adding recipe:", error);
-      setError("Failed to add recipe.");
+      setError(t("recipes.addRecipeFailed"));
     }
   };
 
@@ -114,7 +116,7 @@ const AddRecipe = () => {
       const food = foods.find((food) => food.id === parseInt(id));
       return {
         id,
-        name: food?.name || "Unknown Food",
+        name: food?.name || t("recipes.unknownFood"),
         amount: qty,
         kcal: food ? (food.kcal_per_100 / 100) * qty : 0,
         proteins: food ? (food.proteine_per_100 / 100) * qty : 0,
@@ -130,21 +132,21 @@ const AddRecipe = () => {
         <NavigationBar />
       </header>
       <PageShell>
-        <SectionCard title="Add New Recipe">
+        <SectionCard title={t("recipes.addNewRecipe")}>
           {error && <Alert severity="error">{error}</Alert>}
           <Stack component="form" spacing={1.5} onSubmit={handleSubmit}>
             <TextField
             size="small"
             type="text"
             name="name"
-            label="Recipe Name"
+            label={t("recipes.recipeName")}
             onChange={handleChange}
             required
           />
             <TextField
             size="small"
             type="text"
-            label="Search Food"
+            label={t("recipes.searchFood")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -153,7 +155,7 @@ const AddRecipe = () => {
                 <Box key={food.id} sx={{ mb: 1.25, p: 1, borderRadius: 2, bgcolor: "rgba(15,23,42,0.03)" }}>
                   <Typography fontWeight={700}>{food.name}</Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {food.kcal_per_100} kcal per 100/{food.unit}
+                    {food.kcal_per_100} {t("recipes.kcalPer100")}/{food.unit}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     {food.portion_description}
@@ -163,7 +165,7 @@ const AddRecipe = () => {
                   sx={{ mt: 1 }}
                   type="number"
                   min="0"
-                  label="Quantity in grams"
+                  label={t("recipes.quantityInGrams")}
                   onChange={(e) =>
                     handleFoodChange(food.id, parseInt(e.target.value))
                   }
@@ -171,17 +173,17 @@ const AddRecipe = () => {
                 </Box>
             ))}
             </Box>
-            <Typography variant="h6">Recipe Totals</Typography>
-            <Typography>Total Kcal: {parseFloat(formData.total_kcals).toFixed(2)} kcal</Typography>
+            <Typography variant="h6">{t("recipes.recipeTotals")}</Typography>
+            <Typography>{t("weekly.totalKcal")}: {parseFloat(formData.total_kcals).toFixed(2)} kcal</Typography>
             <Typography>
-            Proteins: {parseFloat(formData.total_proteins).toFixed(2)} g | Fats:{" "}
-            {parseFloat(formData.total_fats).toFixed(2)} g | Sugars:{" "}
+            {t("daily.proteins")}: {parseFloat(formData.total_proteins).toFixed(2)} g | {t("daily.fats")}:{" "}
+            {parseFloat(formData.total_fats).toFixed(2)} g | {t("daily.sugars")}:{" "}
             {parseFloat(formData.total_sugars).toFixed(2)} g
             </Typography>
-            <AppButton type="submit">Add Recipe</AppButton>
+            <AppButton type="submit">{t("recipes.addRecipe")}</AppButton>
           </Stack>
         </SectionCard>
-        <SectionCard title="Added Ingredients" sx={{ mt: 2 }}>
+        <SectionCard title={t("recipes.addedIngredients")} sx={{ mt: 2 }}>
           {addedIngredients.length > 0 ? (
             <List>
               {addedIngredients.map((ingredient) => (
@@ -200,7 +202,7 @@ const AddRecipe = () => {
               ))}
             </List>
           ) : (
-            <Typography>No ingredients added yet.</Typography>
+            <Typography>{t("recipes.noIngredients")}</Typography>
           )}
         </SectionCard>
       </PageShell>

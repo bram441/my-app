@@ -15,8 +15,10 @@ import {
   Typography,
 } from "@mui/material";
 import AppButton from "../ui/AppButton";
+import { useLanguage } from "../../context/LanguageContext";
 
 const AddForm = ({ selectedFood, setSelectedFood }) => {
+  const { t } = useLanguage();
   const { selectedDate, setSelectedDate } = useContext(AuthContext);
   const [portionType, setPortionType] = useState("portion"); // "custom" or "portion"
   const [portionSize, setPortionSize] = useState(""); // Custom input (grams/ml)
@@ -27,7 +29,7 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedFood) {
-      setError("Selecteer voedsel.");
+      setError(t("addFoodEntry.selectFood"));
       return;
     }
 
@@ -35,7 +37,7 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
       (portionCount === 0 && portionType === "portion") ||
       (portionSize === 0 && portionType === "custom")
     ) {
-      setError("Kies een geldige hoeveelheid");
+      setError(t("addFoodEntry.validAmount"));
       return;
     }
 
@@ -72,7 +74,7 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
         (totalKcal / selectedFood.kcal_per_portion).toFixed(2)
       );
     } else {
-      setError("Vul een geldige hoeveelheid in.");
+      setError(t("addFoodEntry.invalidAmount"));
       return;
     }
 
@@ -95,7 +97,7 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
       setTimeout(() => setShowConfirmation(false), 3000); // Hide after 3 seconds
     } catch (error) {
       console.error("Error adding daily entry:", error);
-      setError("Fout bij het toevoegen van voedselinvoer.");
+      setError(t("addFoodEntry.addFailed"));
     }
   };
 
@@ -104,16 +106,16 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
       {error && <Alert severity="error">{error}</Alert>}
       {showConfirmation && (
         <Alert severity="success" sx={{ mb: 1 }}>
-          Voedsel succesvol toegevoegd!
+          {t("addFoodEntry.addedSuccess")}
         </Alert>
       )}
       {selectedFood ? (
         <Box component="form" onSubmit={handleSubmit}>
           <Typography variant="h6" sx={{ mb: 1 }}>
-            Voeg Voedsel Toe: {selectedFood.name}
+            {t("addFoodEntry.addFood")}: {selectedFood.name}
           </Typography>
           <Stack spacing={1.5}>
-            <Typography variant="subtitle2">Datum</Typography>
+            <Typography variant="subtitle2">{t("addFoodEntry.date")}</Typography>
             <DatePicker
               selected={selectedDate}
               onChange={(date) => setSelectedDate(date)}
@@ -121,21 +123,21 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
               className="app-date-input"
             />
             <FormControl size="small">
-              <InputLabel id="portion-type-label">Hoeveelheidstype</InputLabel>
+              <InputLabel id="portion-type-label">{t("addFoodEntry.amountType")}</InputLabel>
               <Select
               labelId="portion-type-label"
-              label="Hoeveelheidstype"
+              label={t("addFoodEntry.amountType")}
               value={portionType}
               onChange={(e) => setPortionType(e.target.value)}
               >
-                <MenuItem value="portion">Portie</MenuItem>
-                <MenuItem value="custom">Aangepast (gram/ml)</MenuItem>
+                <MenuItem value="portion">{t("addFoodEntry.portion")}</MenuItem>
+                <MenuItem value="custom">{t("addFoodEntry.custom")}</MenuItem>
               </Select>
             </FormControl>
             {portionType === "portion" ? (
               <TextField
                 size="small"
-                label="Aantal porties"
+                label={t("addFoodEntry.portionsCount")}
                 type="number"
                 value={portionCount}
                 onChange={(e) => setPortionCount(e.target.value)}
@@ -145,7 +147,7 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
             ) : (
               <TextField
                 size="small"
-                label="Hoeveelheid (gram/ml)"
+                label={t("addFoodEntry.customAmount")}
                 type="number"
                 value={portionSize}
                 onChange={(e) => setPortionSize(e.target.value)}
@@ -156,20 +158,20 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
             <Typography sx={{ color: "text.secondary" }}>
               {portionType === "portion" ? (
                 <>
-                  Een portie bevat {selectedFood.kcal_per_portion} kcal.
+                  {t("addFoodEntry.portionContains")} {selectedFood.kcal_per_portion} kcal.
                   <br />
-                  Beschrijving: {selectedFood.portion_description}.
+                  {t("addFoodEntry.description")}: {selectedFood.portion_description}.
                 </>
               ) : (
-                "Aangepaste hoeveelheid wordt berekend op basis van gram/ml."
+                t("addFoodEntry.customHelp")
               )}
             </Typography>
             <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: "rgba(79, 70, 229, 0.06)" }}>
               <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                Berekening
+                {t("addFoodEntry.calculation")}
               </Typography>
               <Typography>
-                <strong>Totaal kcal:</strong>{" "}
+                <strong>{t("addFoodEntry.totalKcal")}:</strong>{" "}
               {portionType === "portion"
                 ? parseFloat(
                     (portionCount * selectedFood.kcal_per_portion).toFixed(2)
@@ -180,7 +182,7 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
               kcal
               </Typography>
               <Typography>
-                <strong>Totaal proteïne:</strong>{" "}
+                <strong>{t("addFoodEntry.totalProteins")}:</strong>{" "}
               {portionType === "portion"
                 ? parseFloat(
                     (
@@ -199,7 +201,7 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
               g
               </Typography>
               <Typography>
-                <strong>Totaal vet:</strong>{" "}
+                <strong>{t("addFoodEntry.totalFats")}:</strong>{" "}
               {portionType === "portion"
                 ? parseFloat(
                     (
@@ -215,7 +217,7 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
               g
               </Typography>
               <Typography>
-                <strong>Totaal suiker:</strong>{" "}
+                <strong>{t("addFoodEntry.totalSugars")}:</strong>{" "}
               {portionType === "portion"
                 ? parseFloat(
                     (
@@ -233,11 +235,11 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
               g
               </Typography>
             </Box>
-            <AppButton type="submit">Voeg Toe</AppButton>
+            <AppButton type="submit">{t("addFoodEntry.add")}</AppButton>
           </Stack>
         </Box>
       ) : (
-        <Typography>Selecteer voedsel aan de linkerkant</Typography>
+        <Typography>{t("addFoodEntry.selectLeft")}</Typography>
       )}
     </Box>
   );

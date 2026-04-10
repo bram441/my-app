@@ -6,6 +6,7 @@ import { Alert, Box, Stack, TextField, Typography } from "@mui/material";
 import PageShell from "../components/ui/PageShell";
 import SectionCard from "../components/ui/SectionCard";
 import AppButton from "../components/ui/AppButton";
+import { useLanguage } from "../context/LanguageContext";
 
 const EditRecipe = () => {
   const { id } = useParams();
@@ -19,6 +20,7 @@ const EditRecipe = () => {
   });
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   useEffect(() => {
     const fetchRecipe = async () => {
@@ -108,7 +110,7 @@ const EditRecipe = () => {
       navigate("/recipes");
     } catch (error) {
       console.error("Error updating recipe:", error);
-      setError("Failed to update recipe.");
+      setError(t("recipes.updateRecipeFailed"));
     }
   };
 
@@ -118,32 +120,32 @@ const EditRecipe = () => {
         <NavigationBar />
       </header>
       <PageShell>
-        <SectionCard title="Edit Recipe">
+        <SectionCard title={t("recipes.editRecipe")}>
           {error && <Alert severity="error">{error}</Alert>}
           <Stack component="form" spacing={1.5} onSubmit={handleSubmit}>
             <TextField
             size="small"
             type="text"
             name="name"
-            label="Recipe Name"
+            label={t("recipes.recipeName")}
             value={formData.name}
             onChange={handleChange}
             required
           />
-            <Typography variant="subtitle2">Food Quantities in grams</Typography>
+            <Typography variant="subtitle2">{t("recipes.foodQuantitiesInGrams")}</Typography>
             <Box sx={{ maxHeight: 360, overflowY: "auto", pr: 0.5 }}>
             {formData.food_quantities.map((food) => (
                 <Box key={food.id} sx={{ mb: 1.25, p: 1, borderRadius: 2, bgcolor: "rgba(15,23,42,0.03)" }}>
-                  <Typography fontWeight={700}>{food.name || "Unknown Food"}</Typography>
+                  <Typography fontWeight={700}>{food.name || t("recipes.unknownFood")}</Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {food.kcal_per_100}kcal per 100/gr
+                    {food.kcal_per_100} {t("recipes.kcalPer100")}/gr
                   </Typography>
                   <TextField
                   size="small"
                   sx={{ mt: 1 }}
                   type="number"
                   min="0"
-                  label="Quantity"
+                  label={t("recipes.quantity")}
                   value={food.RecipeFood.quantity}
                   onChange={(e) =>
                     handleFoodChange(food.id, parseInt(e.target.value))
@@ -152,14 +154,14 @@ const EditRecipe = () => {
                 </Box>
             ))}
             </Box>
-            <Typography variant="h6">Recipe Totals</Typography>
-            <Typography>Total Kcal: {parseFloat(formData.total_kcals).toFixed(2)} kcal</Typography>
+            <Typography variant="h6">{t("recipes.recipeTotals")}</Typography>
+            <Typography>{t("weekly.totalKcal")}: {parseFloat(formData.total_kcals).toFixed(2)} kcal</Typography>
             <Typography>
-            Proteins: {parseFloat(formData.total_proteins).toFixed(2)} g | Fats:{" "}
-            {parseFloat(formData.total_fats).toFixed(2)} g | Sugars:{" "}
+            {t("daily.proteins")}: {parseFloat(formData.total_proteins).toFixed(2)} g | {t("daily.fats")}:{" "}
+            {parseFloat(formData.total_fats).toFixed(2)} g | {t("daily.sugars")}:{" "}
             {parseFloat(formData.total_sugars).toFixed(2)} g
             </Typography>
-            <AppButton type="submit">Update Recipe</AppButton>
+            <AppButton type="submit">{t("recipes.save")}</AppButton>
           </Stack>
         </SectionCard>
       </PageShell>

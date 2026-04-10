@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { List, ListItem, ListItemText, Stack, TextField, Typography } from "@mui/material";
 import AppButton from "../ui/AppButton";
+import { useLanguage } from "../../context/LanguageContext";
 
 const PopupList = ({
   dailyData,
@@ -9,12 +10,13 @@ const PopupList = ({
   onClickDelete,
   onClickUpdateAmount,
 }) => {
+  const { t } = useLanguage();
   const [amountById, setAmountById] = useState({});
 
   const getEntryName = (entry) =>
     entry.entry_type === "food"
-      ? entry.Food?.name || "Unknown Food"
-      : entry.Recipe?.name || "Unknown Recipe";
+      ? entry.Food?.name || t("daily.unknownFood")
+      : entry.Recipe?.name || t("daily.unknownRecipe");
 
   const matchesGroup = (entry) => {
     if (!selectedEntry) return false;
@@ -54,7 +56,7 @@ const PopupList = ({
                     }))
                   }
                   sx={{ width: 110 }}
-                  aria-label="Update amount"
+                  aria-label={t("daily.updateAmount")}
                 />
                 <AppButton
                   onClick={() =>
@@ -62,16 +64,16 @@ const PopupList = ({
                   }
                   variant="secondary"
                 >
-                  Save
+                  {t("daily.save")}
                 </AppButton>
                 <AppButton variant="danger" onClick={() => onClickDelete(entry.id)}>
-                  Delete
+                  {t("daily.delete")}
                 </AppButton>
               </Stack>
             </ListItem>
           ))
       ) : (
-        <Typography>Geen eten meer</Typography>
+        <Typography>{t("daily.noFoodLeft")}</Typography>
       )}
     </List>
   );

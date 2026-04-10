@@ -2,11 +2,24 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import API from "../api/api";
-import "../components/css/auth.css"; // Reuse existing styles
+import {
+  Alert,
+  Box,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import NavigationBar from "../components/common/NavigationBar";
+import PageShell from "../components/ui/PageShell";
+import SectionCard from "../components/ui/SectionCard";
+import AppButton from "../components/ui/AppButton";
+import Popup from "../components/common/Popup";
+import { useLanguage } from "../context/LanguageContext";
 
 const Profile = () => {
   const { user, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     username: user?.username || "",
     email: user?.email || "",
@@ -74,87 +87,80 @@ const Profile = () => {
   };
 
   return (
-    <div className="login-page">
-      <div className="auth-container">
-        <h2 className="auth-title">Your Profile</h2>
-        {message && <p className="success-message">{message}</p>}
-        {error && <p className="error-message">{error}</p>}
-        <form className="auth-form" onSubmit={handleConfirm}>
-          <input
-            type="text"
-            name="username"
-            placeholder="Username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="number"
-            name="kcal_goal"
-            placeholder="Kcal Goal"
-            value={formData.kcal_goal}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="New Password (optional)"
-            value={formData.password}
-            onChange={handleChange}
-          />
-          <input
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirm Password"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-          />
-          <button type="submit" className="button">
-            Update Profile
-          </button>
-        </form>
-        <button
-          className="button button-secondary"
-          onClick={() => navigate(-1)} // Navigate back to the previous page
-        >
-          Go Back
-        </button>
-      </div>
+    <Box>
+      <NavigationBar />
+      <PageShell maxWidth="sm">
+        <SectionCard title={t("profile.title")}>
+          <Stack component="form" spacing={2} onSubmit={handleConfirm}>
+            {message && <Alert severity="success">{message}</Alert>}
+            {error && <Alert severity="error">{error}</Alert>}
+            <TextField
+              name="username"
+              label={t("profile.username")}
+              value={formData.username}
+              onChange={handleChange}
+              required
+            />
+            <TextField
+              type="email"
+              name="email"
+              label={t("profile.email")}
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+            <TextField
+              type="number"
+              name="kcal_goal"
+              label={t("profile.kcalGoal")}
+              value={formData.kcal_goal}
+              onChange={handleChange}
+              required
+            />
+            <TextField
+              type="password"
+              name="password"
+              label={t("profile.newPassword")}
+              value={formData.password}
+              onChange={handleChange}
+            />
+            <TextField
+              type="password"
+              name="confirmPassword"
+              label={t("profile.confirmPassword")}
+              value={formData.confirmPassword}
+              onChange={handleChange}
+            />
+            <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5}>
+              <AppButton type="submit">{t("profile.update")}</AppButton>
+              <AppButton variant="ghost" onClick={() => navigate(-1)}>
+                {t("profile.back")}
+              </AppButton>
+            </Stack>
+          </Stack>
+        </SectionCard>
+      </PageShell>
 
-      {/* Confirmation Pop-Up */}
-      {showConfirmation && (
-        <div className="popup-overlay">
-          <div className="popup">
-            <h3>Confirm Changes</h3>
-            <p>Are you sure you want to update your profile?</p>
-            <button
-              className="confirm"
+      <Popup isOpen={showConfirmation} onClose={() => setShowConfirmation(false)}>
+        <Stack spacing={2}>
+          <Typography variant="h6">{t("profile.confirmTitle")}</Typography>
+          <Typography color="text.secondary">{t("profile.confirmText")}</Typography>
+          <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5}>
+            <AppButton
               onClick={() => {
                 setShowConfirmation(false);
                 handleSubmit();
               }}
             >
-              Yes, Update
-            </button>
-            <button
-              className="button button-secondary"
-              onClick={() => setShowConfirmation(false)}
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+              {t("profile.confirmYes")}
+            </AppButton>
+            <AppButton variant="ghost" onClick={() => setShowConfirmation(false)}>
+              {t("profile.cancel")}
+            </AppButton>
+          </Stack>
+        </Stack>
+      </Popup>
+    </Box>
   );
 };
 

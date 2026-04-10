@@ -2,8 +2,10 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { IconButton, List, ListItem, ListItemText, Typography } from "@mui/material";
+import { useLanguage } from "../../context/LanguageContext";
 
 const DailyList = ({ dailyData, onClickEdit, selectedDate }) => {
+  const { t } = useLanguage();
   return (
     <List
       sx={{
@@ -45,18 +47,18 @@ const DailyList = ({ dailyData, onClickEdit, selectedDate }) => {
                   {entry.amount}x {entry.name}
                 </Typography>
               }
-              secondary={`Proteins: ${parseFloat(entry.total_proteins).toFixed(
+              secondary={`${t("daily.proteins")}: ${parseFloat(entry.total_proteins).toFixed(
                 2
-              )} g | Fats: ${parseFloat(entry.total_fats).toFixed(
+              )} g | ${t("daily.fats")}: ${parseFloat(entry.total_fats).toFixed(
                 2
-              )} g | Sugars: ${parseFloat(entry.total_sugars).toFixed(
+              )} g | ${t("daily.sugars")}: ${parseFloat(entry.total_sugars).toFixed(
                 2
               )} g | ${parseFloat(entry.total_kcal.toFixed(1))} kcal`}
             />
           </ListItem>
         ))
       ) : (
-        <Typography>No food logged for {selectedDate.toISOString().split("T")[0]}</Typography>
+        <Typography>{t("daily.noFoodLoggedFor")} {selectedDate.toISOString().split("T")[0]}</Typography>
       )}
     </List>
   );

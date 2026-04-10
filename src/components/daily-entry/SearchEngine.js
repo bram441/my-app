@@ -14,6 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import AppButton from "../ui/AppButton";
+import { useLanguage } from "../../context/LanguageContext";
 
 const CATEGORIES = [ "fruit",
         "groenten",
@@ -31,6 +32,7 @@ const CATEGORIES = [ "fruit",
         "overig"];
 
 const SearchEngine = ({ onSelectFood }) => {
+  const { t } = useLanguage();
   const [foods, setFoods] = useState([]);
   const [brands, setBrands] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -87,14 +89,14 @@ const SearchEngine = ({ onSelectFood }) => {
         setHasNextPage(false);
         setTotalItems(0);
         setTotalPages(1);
-        setError("Kon voedselresultaten niet ophalen.");
+        setError(t("search.fetchFailed"));
       } finally {
         setLoading(false);
       }
     }, 250);
 
     return () => clearTimeout(timer);
-  }, [searchTerm, filterTag, selectedCategory, selectedBrand, sortMode, page]);
+  }, [searchTerm, filterTag, selectedCategory, selectedBrand, sortMode, page, t]);
 
   useEffect(() => {
     setPage(1);
@@ -126,7 +128,7 @@ const SearchEngine = ({ onSelectFood }) => {
       });
     } catch (favoriteError) {
       console.error("Error toggling favorite:", favoriteError);
-      setError("Favoriet aanpassen is mislukt.");
+      setError(t("search.favoriteToggleFailed"));
     }
   };
 
@@ -140,25 +142,25 @@ const SearchEngine = ({ onSelectFood }) => {
       <Stack spacing={1.5}>
         <TextField
           size="small"
-          label="Zoek voedsel"
+          label={t("search.searchFood")}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <TextField
           size="small"
-          label="Filter op tag"
+          label={t("search.filterTag")}
           value={filterTag}
           onChange={(e) => setFilterTag(e.target.value)}
         />
         <FormControl size="small">
-          <InputLabel id="category-label">Categorie</InputLabel>
+          <InputLabel id="category-label">{t("search.category")}</InputLabel>
           <Select
             labelId="category-label"
-            label="Categorie"
+            label={t("search.category")}
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
           >
-            <MenuItem value="">Alle categorieën</MenuItem>
+            <MenuItem value="">{t("search.allCategories")}</MenuItem>
             {CATEGORIES.map((cat) => (
               <MenuItem key={cat} value={cat}>
                 {cat}
@@ -168,19 +170,19 @@ const SearchEngine = ({ onSelectFood }) => {
         </FormControl>
         <TextField
           size="small"
-          label="Zoek merk"
+          label={t("search.searchBrand")}
           value={brandSearchTerm}
           onChange={(e) => setBrandSearchTerm(e.target.value)}
         />
         <FormControl size="small">
-          <InputLabel id="brand-label">Merk</InputLabel>
+          <InputLabel id="brand-label">{t("search.brand")}</InputLabel>
           <Select
             labelId="brand-label"
-            label="Merk"
+            label={t("search.brand")}
             value={selectedBrand}
             onChange={(e) => setSelectedBrand(e.target.value)}
           >
-            <MenuItem value="">Alle merken</MenuItem>
+            <MenuItem value="">{t("search.allBrands")}</MenuItem>
             {filteredBrands.map((brand) => (
               <MenuItem key={brand} value={brand}>
                 {brand}
@@ -189,28 +191,28 @@ const SearchEngine = ({ onSelectFood }) => {
           </Select>
         </FormControl>
         <FormControl size="small">
-          <InputLabel id="sort-label">Sortering</InputLabel>
+          <InputLabel id="sort-label">{t("search.sorting")}</InputLabel>
           <Select
             labelId="sort-label"
-            label="Sortering"
+            label={t("search.sorting")}
             value={sortMode}
             onChange={(e) => setSortMode(e.target.value)}
           >
-            <MenuItem value="name">Naam (A-Z)</MenuItem>
-            <MenuItem value="favorites">Alleen favorieten</MenuItem>
-            <MenuItem value="frequent">Meest gekozen</MenuItem>
-            <MenuItem value="recent">Recent gekozen</MenuItem>
+            <MenuItem value="name">{t("search.nameAz")}</MenuItem>
+            <MenuItem value="favorites">{t("search.onlyFavorites")}</MenuItem>
+            <MenuItem value="frequent">{t("search.mostChosen")}</MenuItem>
+            <MenuItem value="recent">{t("search.recentlyChosen")}</MenuItem>
           </Select>
         </FormControl>
       </Stack>
       <Typography variant="subtitle2" sx={{ mt: 2, color: "text.secondary" }}>
-        Resultaten
+        {t("search.results")}
       </Typography>
       {error && <Typography color="error">{error}</Typography>}
-      {loading && <Typography>Laden...</Typography>}
+      {loading && <Typography>{t("search.loading")}</Typography>}
       {!error && (
         <Typography sx={{ fontSize: 13, color: "text.secondary", my: 1 }}>
-          {totalItems} resultaten - pagina {page} van {totalPages}
+          {totalItems} {t("search.resultStats")} {page} {t("search.of")} {totalPages}
         </Typography>
       )}
       <List sx={{ maxHeight: 460, overflowY: "auto", borderRadius: 2 }}>
@@ -241,7 +243,7 @@ const SearchEngine = ({ onSelectFood }) => {
                   }}
                       variant="ghost"
                       sx={{ minWidth: 40, p: 0.5 }}
-                      title="Toggle favoriet"
+                      title={t("search.toggleFavorite")}
                     >
                       {food.is_favorite ? "★" : "☆"}
                     </AppButton>
@@ -257,34 +259,34 @@ const SearchEngine = ({ onSelectFood }) => {
                     food.proteine_per_100 !== undefined
                       ? food.proteine_per_100
                       : "?"}{" "}
-                    proteine/100,{" "}
+                    {t("search.proteinShort")}/100,{" "}
                     {food.fats_per_100 !== null && food.fats_per_100 !== undefined
                       ? food.fats_per_100
                       : "?"}{" "}
-                    vet/100,{" "}
+                    {t("search.fatShort")}/100,{" "}
                     {food.sugar_per_100 !== null && food.sugar_per_100 !== undefined
                       ? food.sugar_per_100
                       : "?"}{" "}
-                    koolhydraten/100 {food.unit || "?"}
+                    {t("search.carbsShort")}/100 {food.unit || "?"}
                     <Typography
                       component="div"
                       sx={{ fontSize: 13, color: "text.secondary", mt: 0.5 }}
                     >
-                      {food.brand ? `Merk: ${food.brand}` : "Merk: Onbekend"}
+                      {food.brand ? `${t("search.brandPrefix")}: ${food.brand}` : `${t("search.brandPrefix")}: ${t("search.unknownBrand")}`}
                     </Typography>
                     <Typography
                       component="div"
                       sx={{ fontSize: 12, color: "text.secondary" }}
                     >
                       {food.tags && food.tags.length > 0
-                        ? `Tags: ${food.tags.join(", ")}`
-                        : "Geen tags beschikbaar"}
+                        ? `${t("search.tagsPrefix")}: ${food.tags.join(", ")}`
+                        : t("search.noTags")}
                     </Typography>
                     <Typography
                       component="div"
                       sx={{ fontSize: 12, color: "text.secondary" }}
                     >
-                      Gekozen: {food.selection_count || 0} keer
+                      {t("search.chosenCount")}: {food.selection_count || 0} {t("search.times")}
                     </Typography>
                   </>
                 }
@@ -292,7 +294,7 @@ const SearchEngine = ({ onSelectFood }) => {
             </ListItemButton>
           ))
         ) : (
-          !loading && <Typography>Geen resultaten gevonden</Typography>
+          !loading && <Typography>{t("search.noResults")}</Typography>
         )}
       </List>
       <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 1 }}>
@@ -301,15 +303,15 @@ const SearchEngine = ({ onSelectFood }) => {
           disabled={page <= 1 || loading}
           variant="secondary"
         >
-          Vorige
+          {t("search.previous")}
         </AppButton>
-        <Typography sx={{ minWidth: 80 }}>Pagina {page}</Typography>
+        <Typography sx={{ minWidth: 80 }}>{t("search.page")} {page}</Typography>
         <AppButton
           onClick={() => setPage((current) => current + 1)}
           disabled={!hasNextPage || loading}
           variant="secondary"
         >
-          Volgende
+          {t("search.next")}
         </AppButton>
       </Stack>
     </Box>

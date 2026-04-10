@@ -93,13 +93,24 @@ const SearchEngine = ({ onSelectFood }) => {
         is_favorite: !food.is_favorite,
       });
 
-      setFoods((currentFoods) =>
-        currentFoods.map((item) =>
-          item.id === food.id
-            ? { ...item, is_favorite: response.data.is_favorite }
-            : item
-        )
-      );
+      const nextFavoriteState = response.data.is_favorite;
+
+      setFoods((currentFoods) => {
+        if (sortMode === "favorites" && !nextFavoriteState) {
+          return currentFoods.filter((item) => item.id !== food.id);
+        }
+
+        return currentFoods.map((item) =>
+          item.id === food.id ? { ...item, is_favorite: nextFavoriteState } : item
+        );
+      });
+
+      setTotalItems((current) => {
+        if (sortMode === "favorites" && !nextFavoriteState) {
+          return Math.max(0, current - 1);
+        }
+        return current;
+      });
     } catch (favoriteError) {
       console.error("Error toggling favorite:", favoriteError);
       setError("Favoriet aanpassen is mislukt.");

@@ -4,9 +4,11 @@ import NavigationBar from "../components/common/NavigationBar";
 import Daily from "../components/daily/Daily";
 import WeeklyStats from "../components/charts/WeeklyStats";
 import ProgressBar from "../components/common/ProgressBar"; // ✅ Import ProgressBar
-import "../components/css/dashboard.css";
 import DatePicker from "react-datepicker"; // Import DatePicker
 import "react-datepicker/dist/react-datepicker.css"; // Import DatePicker CSS
+import { Box, Stack, Typography } from "@mui/material";
+import SectionCard from "../components/ui/SectionCard";
+import PageShell from "../components/ui/PageShell";
 
 const Dashboard = () => {
   const { user, selectedDate, setSelectedDate } = useContext(AuthContext);
@@ -29,53 +31,47 @@ const Dashboard = () => {
   };
 
   return (
-    <div>
+    <Box>
       <header>
         <NavigationBar />
       </header>
-
-      {/* Add Date Picker */}
-      <div
-        style={{
-          marginBottom: "20px",
-          display: "flex",
-          alignItems: "center",
-          gap: "10px",
-          padding: "10px",
-        }}
-      >
-        <label style={{ fontWeight: "bold", fontSize: "16px" }}>
-          Select Date:
-        </label>
-        <DatePicker
-          selected={selectedDate}
-          onChange={(date) => setSelectedDate(date)}
-          dateFormat="yyyy-MM-dd"
-          className="custom-date-picker" // Add a custom class for styling
-        />
-      </div>
-
-      {/* ✅ Progress Bar at the Top */}
-      <ProgressBar totalCalories={totalCalories} goal={user?.kcal_goal} />
-      <h1>
-        {getGreeting()}, {user?.username}!
-      </h1>
-
-      <div className="dashboard-container">
-        {/* ✅ Daily at the top */}
-        <div className="full-width-panel">
-          <Daily
-            setTotalCalories={setTotalCalories}
-            selectedDate={selectedDate}
-          />
-        </div>
-
-        {/* ✅ Weekly Stats below Daily */}
-        <div className="full-width-panel">
-          <WeeklyStats />
-        </div>
-      </div>
-    </div>
+      <PageShell>
+        <SectionCard sx={{ mb: 2 }}>
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            alignItems={{ xs: "flex-start", sm: "center" }}
+            spacing={1.5}
+          >
+            <Typography variant="subtitle1" fontWeight={700}>
+              Select Date:
+            </Typography>
+            <DatePicker
+              selected={selectedDate}
+              onChange={(date) => setSelectedDate(date)}
+              dateFormat="yyyy-MM-dd"
+              className="app-date-input"
+            />
+          </Stack>
+        </SectionCard>
+        <SectionCard sx={{ mb: 2 }} contentSx={{ pb: 1.5 }}>
+          <ProgressBar totalCalories={totalCalories} goal={user?.kcal_goal} />
+          <Typography variant="h4" sx={{ mt: 2 }}>
+            {getGreeting()}, {user?.username}!
+          </Typography>
+        </SectionCard>
+        <Stack spacing={2}>
+          <SectionCard>
+            <Daily
+              setTotalCalories={setTotalCalories}
+              selectedDate={selectedDate}
+            />
+          </SectionCard>
+          <SectionCard>
+            <WeeklyStats />
+          </SectionCard>
+        </Stack>
+      </PageShell>
+    </Box>
   );
 };
 

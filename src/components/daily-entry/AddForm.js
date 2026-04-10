@@ -1,9 +1,20 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import API from "../../api/api";
-import "../../components/css/toevoegenEten.css";
 import DatePicker from "react-datepicker"; // Import DatePicker
 import "react-datepicker/dist/react-datepicker.css"; // Import DatePicker CSS
+import {
+  Alert,
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import AppButton from "../ui/AppButton";
 
 const AddForm = ({ selectedFood, setSelectedFood }) => {
   const { selectedDate, setSelectedDate } = useContext(AuthContext);
@@ -89,68 +100,60 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
   };
 
   return (
-    <div style={{ flex: 1, padding: "20px" }}>
-      <h2>Voedsel Toevoegen</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+    <Box sx={{ flex: 1 }}>
+      {error && <Alert severity="error">{error}</Alert>}
       {showConfirmation && (
-        <p className="popup-message-success">Voedsel succesvol toegevoegd!</p>
+        <Alert severity="success" sx={{ mb: 1 }}>
+          Voedsel succesvol toegevoegd!
+        </Alert>
       )}
       {selectedFood ? (
-        <form onSubmit={handleSubmit} className="add-form">
-          <h3>Voeg Voedsel Toe: {selectedFood.name}</h3>
-          {error && <p className="error">{error}</p>}
-          {showConfirmation && <p className="success">Voedsel toegevoegd!</p>}
-
-          {/* Date Picker */}
-          <div className="form-group">
-            <label>Datum:</label>
+        <Box component="form" onSubmit={handleSubmit}>
+          <Typography variant="h6" sx={{ mb: 1 }}>
+            Voeg Voedsel Toe: {selectedFood.name}
+          </Typography>
+          <Stack spacing={1.5}>
+            <Typography variant="subtitle2">Datum</Typography>
             <DatePicker
               selected={selectedDate}
               onChange={(date) => setSelectedDate(date)}
               dateFormat="yyyy-MM-dd"
+              className="app-date-input"
             />
-          </div>
-
-          {/* Portion Type Selection */}
-          <div className="form-group">
-            <label>Hoeveelheidstype:</label>
-            <select
+            <FormControl size="small">
+              <InputLabel id="portion-type-label">Hoeveelheidstype</InputLabel>
+              <Select
+              labelId="portion-type-label"
+              label="Hoeveelheidstype"
               value={portionType}
               onChange={(e) => setPortionType(e.target.value)}
-            >
-              <option value="portion">Portie</option>
-              <option value="custom">Aangepast (gram/ml)</option>
-            </select>
-          </div>
-
-          {/* Portion Count or Custom Size */}
-          {portionType === "portion" ? (
-            <div className="form-group">
-              <label>Aantal porties:</label>
-              <input
+              >
+                <MenuItem value="portion">Portie</MenuItem>
+                <MenuItem value="custom">Aangepast (gram/ml)</MenuItem>
+              </Select>
+            </FormControl>
+            {portionType === "portion" ? (
+              <TextField
+                size="small"
+                label="Aantal porties"
                 type="number"
                 value={portionCount}
                 onChange={(e) => setPortionCount(e.target.value)}
                 min="0"
                 step="0.01"
               />
-            </div>
-          ) : (
-            <div className="form-group">
-              <label>Hoeveelheid (gram/ml):</label>
-              <input
+            ) : (
+              <TextField
+                size="small"
+                label="Hoeveelheid (gram/ml)"
                 type="number"
                 value={portionSize}
                 onChange={(e) => setPortionSize(e.target.value)}
                 min="0"
                 step="0.01"
               />
-            </div>
-          )}
-
-          {/* Portion Description */}
-          <div className="portion-description">
-            <p>
+            )}
+            <Typography sx={{ color: "text.secondary" }}>
               {portionType === "portion" ? (
                 <>
                   Een portie bevat {selectedFood.kcal_per_portion} kcal.
@@ -160,14 +163,13 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
               ) : (
                 "Aangepaste hoeveelheid wordt berekend op basis van gram/ml."
               )}
-            </p>
-          </div>
-
-          {/* Styled container for calculated totals */}
-          <div className="calculated-totals">
-            <h4>Berekening:</h4>
-            <p>
-              <strong>Totaal kcal:</strong>{" "}
+            </Typography>
+            <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: "rgba(79, 70, 229, 0.06)" }}>
+              <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+                Berekening
+              </Typography>
+              <Typography>
+                <strong>Totaal kcal:</strong>{" "}
               {portionType === "portion"
                 ? parseFloat(
                     (portionCount * selectedFood.kcal_per_portion).toFixed(2)
@@ -176,9 +178,9 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
                     ((portionSize / 100) * selectedFood.kcal_per_100).toFixed(2)
                   ) || 0}{" "}
               kcal
-            </p>
-            <p>
-              <strong>Totaal proteïne:</strong>{" "}
+              </Typography>
+              <Typography>
+                <strong>Totaal proteïne:</strong>{" "}
               {portionType === "portion"
                 ? parseFloat(
                     (
@@ -195,9 +197,9 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
                     ).toFixed(2)
                   ) || 0}{" "}
               g
-            </p>
-            <p>
-              <strong>Totaal vet:</strong>{" "}
+              </Typography>
+              <Typography>
+                <strong>Totaal vet:</strong>{" "}
               {portionType === "portion"
                 ? parseFloat(
                     (
@@ -211,9 +213,9 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
                     ((portionSize / 100) * selectedFood.fats_per_100).toFixed(2)
                   ) || 0}{" "}
               g
-            </p>
-            <p>
-              <strong>Totaal suiker:</strong>{" "}
+              </Typography>
+              <Typography>
+                <strong>Totaal suiker:</strong>{" "}
               {portionType === "portion"
                 ? parseFloat(
                     (
@@ -229,19 +231,15 @@ const AddForm = ({ selectedFood, setSelectedFood }) => {
                     )
                   ) || 0}{" "}
               g
-            </p>
-          </div>
-
-          {/* Submit Button */}
-          <br />
-          <button type="submit" className="btn btn-primary">
-            Voeg Toe
-          </button>
-        </form>
+              </Typography>
+            </Box>
+            <AppButton type="submit">Voeg Toe</AppButton>
+          </Stack>
+        </Box>
       ) : (
-        <p>Selecteer voedsel aan de linkerkant</p>
+        <Typography>Selecteer voedsel aan de linkerkant</Typography>
       )}
-    </div>
+    </Box>
   );
 };
 

@@ -4,11 +4,21 @@ import RecipeSearch from "../components/recipes/RecipeSearch";
 import RecipeList from "../components/recipes/RecipeList";
 import { useNavigate } from "react-router-dom";
 import API from "../api/api";
-import "../components/css/global.css";
-import "../components/css/recipes.css"; // Create this CSS file for styling
 import Popup from "../components/common/Popup";
 import FoodList from "../components/recipes/RecipeFoodList";
 import { AuthContext } from "../context/AuthContext";
+import {
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  Typography,
+} from "@mui/material";
+import PageShell from "../components/ui/PageShell";
+import SectionCard from "../components/ui/SectionCard";
+import AppButton from "../components/ui/AppButton";
 
 const Recipes = () => {
   const [recipes, setRecipes] = useState([]);
@@ -69,41 +79,54 @@ const Recipes = () => {
   }, []);
 
   return (
-    <div>
+    <>
       <header>
         <NavigationBar />
       </header>
-      <div className="recipes-container">
-        <div className="filter-container">
-          <label htmlFor="recipe-filter">Filter Recipes: </label>
-          <select
-            id="recipe-filter"
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-          >
-            <option value="all">All Recipes</option>
-            <option value="user">User Recipes</option>
-            <option value="shared">Shared Recipes</option>
-            <option value="userShared">User Shared Recipes</option>
-          </select>
-          <button onClick={() => navigate("/add-recipe")}>Add Recipe</button>
-        </div>
-        <RecipeSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-        <RecipeList
-          recipes={filteredRecipes}
-          onClickFoodList={onClickFoodList}
-          userId={user?.id}
-          role={user?.role}
-          navigate={navigate}
-        />
-      </div>
-      <div>
+      <PageShell>
+        <SectionCard title="Recipes">
+          <Stack spacing={2}>
+            <Grid container spacing={2} alignItems="center">
+              <Grid item xs={12} sm={8}>
+                <FormControl fullWidth size="small">
+                  <InputLabel id="recipe-filter">Filter Recipes</InputLabel>
+                  <Select
+                    labelId="recipe-filter"
+                    label="Filter Recipes"
+                    value={filter}
+                    onChange={(e) => setFilter(e.target.value)}
+                  >
+                    <MenuItem value="all">All Recipes</MenuItem>
+                    <MenuItem value="user">User Recipes</MenuItem>
+                    <MenuItem value="shared">Shared Recipes</MenuItem>
+                    <MenuItem value="userShared">User Shared Recipes</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <AppButton fullWidth onClick={() => navigate("/add-recipe")}>
+                  Add Recipe
+                </AppButton>
+              </Grid>
+            </Grid>
+            <RecipeSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+            <RecipeList
+              recipes={filteredRecipes}
+              onClickFoodList={onClickFoodList}
+              userId={user?.id}
+              role={user?.role}
+              navigate={navigate}
+            />
+          </Stack>
+        </SectionCard>
         <Popup isOpen={isPopupOpen} onClose={() => setPopupOpen(false)}>
-          <h2>Food items in recipe: {selectedRecipe.name}</h2>
+          <Typography variant="h6" sx={{ mb: 1 }}>
+            Food items in recipe: {selectedRecipe.name}
+          </Typography>
           <FoodList foods={selectedRecipe.foods} />
         </Popup>
-      </div>
-    </div>
+      </PageShell>
+    </>
   );
 };
 

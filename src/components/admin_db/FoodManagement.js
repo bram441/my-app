@@ -1,8 +1,21 @@
 import { useState, useEffect } from "react";
 import API from "../../api/api";
-import "../css/databaseManagement.css";
-import "../css/global.css";
 import Popup from "../common/Popup";
+import {
+  Alert,
+  FormControl,
+  InputLabel,
+  Box,
+  List,
+  ListItem,
+  ListItemText,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import AppButton from "../ui/AppButton";
 
 const FoodManagement = ({ searchTerm }) => {
   const [foods, setFoods] = useState([]);
@@ -80,68 +93,75 @@ const FoodManagement = ({ searchTerm }) => {
 
   return (
     <div>
-      {error && <p className="error-message">{error}</p>}
-      <ul className="food-list">
+      {error && <Alert severity="error">{error}</Alert>}
+      <Box sx={{ maxHeight: "62vh", overflowY: "auto", pr: 0.5 }}>
+      <List>
         {filteredFoods.map((food) => (
-          <li key={food.id} className="food-item">
-            <div className="food-name">{food.name}</div>
-            <div className="food-nutrients">
-              Proteins: {parseFloat(food.proteine_per_100).toFixed(2)} g | Fats:{" "}
-              {parseFloat(food.fats_per_100).toFixed(2)} g | Sugars:{" "}
-              {parseFloat(food.sugar_per_100).toFixed(2)} g
-            </div>
-            <div className="food-kcal">
-              {food.kcal_per_100} kcal/100 {food.unit}
-            </div>
-            <div className="food-actions">
-              <button className="edit-button" onClick={() => handleEdit(food)}>
+          <ListItem key={food.id} divider>
+            <ListItemText
+              primary={food.name}
+              secondary={`Proteins: ${parseFloat(food.proteine_per_100).toFixed(
+                2
+              )} g | Fats: ${parseFloat(food.fats_per_100).toFixed(
+                2
+              )} g | Sugars: ${parseFloat(food.sugar_per_100).toFixed(
+                2
+              )} g | ${food.kcal_per_100} kcal/100 ${food.unit}`}
+            />
+            <Stack direction="row" spacing={1}>
+              <AppButton variant="secondary" onClick={() => handleEdit(food)}>
                 Edit
-              </button>
-              <button
-                className="delete-button"
-                onClick={() => handleDelete(food.id)}
-              >
+              </AppButton>
+              <AppButton variant="danger" onClick={() => handleDelete(food.id)}>
                 Delete
-              </button>
-            </div>
-          </li>
+              </AppButton>
+            </Stack>
+          </ListItem>
         ))}
-      </ul>
+      </List>
+      </Box>
       {deletePopup.isOpen && (
         <Popup isOpen={deletePopup.isOpen} onClose={() => setDeletePopup({ isOpen: false, food: null, recipes: [], dailyEntries: [] })}>
-          <h2>Warning: Food is being used</h2>
-          <p>The food <strong>{deletePopup.food.name}</strong> is being used in the following:</p>
-          <h3>Recipes:</h3>
-          <ul>
+          <Typography variant="h6">Warning: Food is being used</Typography>
+          <Typography sx={{ mt: 1 }}>The food <strong>{deletePopup.food.name}</strong> is being used in the following:</Typography>
+          <Typography variant="subtitle1" sx={{ mt: 1 }}>Recipes:</Typography>
+          <List>
             {deletePopup.recipes.map((recipe) => (
-              <li key={recipe.id}>{recipe.name}</li>
+              <ListItem key={recipe.id}><ListItemText primary={recipe.name} /></ListItem>
             ))}
-          </ul>
-          <h3>Daily Entries:</h3>
-          <ul>
+          </List>
+          <Typography variant="subtitle1">Daily Entries:</Typography>
+          <List>
             {deletePopup.dailyEntries.map((entry) => (
-              <li key={entry.id}>
-                Date: {entry.date}, Calories: {entry.total_kcal}
-              </li>
+              <ListItem key={entry.id}>
+                <ListItemText primary={`Date: ${entry.date}, Calories: ${entry.total_kcal}`} />
+              </ListItem>
             ))}
-          </ul>
-          <p>Are you sure you want to delete this food? This will also delete the related recipes and daily entries.</p>
-          <button className="delete-button-confirm" onClick={() => handleForceDelete(deletePopup.food.id)}>
+          </List>
+          <Typography sx={{ mb: 1 }}>Are you sure you want to delete this food? This will also delete the related recipes and daily entries.</Typography>
+          <AppButton variant="danger" onClick={() => handleForceDelete(deletePopup.food.id)}>
             Yes, Delete
-          </button>
-          <button className="delete-button-deny" onClick={() => setDeletePopup({ isOpen: false, food: null, recipes: [], dailyEntries: [] })}>
+          </AppButton>
+          <AppButton variant="secondary" sx={{ ml: 1 }} onClick={() => setDeletePopup({ isOpen: false, food: null, recipes: [], dailyEntries: [] })}>
             Cancel
-          </button>
+          </AppButton>
         </Popup>
       )}
 
-      {editingFood && (
-        <EditFoodForm
-          food={editingFood}
-          onUpdate={handleUpdate}
-          onCancel={() => setEditingFood(null)}
-        />
-      )}
+      <Popup isOpen={Boolean(editingFood)} onClose={() => setEditingFood(null)}>
+        {editingFood ? (
+          <>
+            <Typography variant="h6" sx={{ mb: 1 }}>
+              Edit Food: {editingFood.name}
+            </Typography>
+            <EditFoodForm
+              food={editingFood}
+              onUpdate={handleUpdate}
+              onCancel={() => setEditingFood(null)}
+            />
+          </>
+        ) : null}
+      </Popup>
     </div>
   );
 };
@@ -173,167 +193,137 @@ const EditFoodForm = ({ food, onUpdate, onCancel }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="form-group">
-        <label htmlFor="name">
-          <strong>Name</strong>
-        </label>
-        <input
+    <Stack component="form" spacing={1} onSubmit={handleSubmit} sx={{ mt: 1.5 }}>
+        <TextField
+          size="small"
           type="text"
           name="name"
+          label="Name"
           value={formData.name}
           onChange={handleChange}
           required
         />
-      </div>
-      <div className="form-group">
-        <label htmlFor="kcal_per_100">
-          <strong>Kcal per 100</strong>
-        </label>
-        <input
+        <TextField
+          size="small"
           type="number"
           name="kcal_per_100"
+          label="Kcal per 100"
           value={formData.kcal_per_100}
           onChange={handleChange}
           required
         />
-      </div>
-      <div className="form-group">
-        <label htmlFor="kcal_per_portion">
-          <strong>Kcal per portion</strong>
-        </label>
-        <input
+        <TextField
+          size="small"
           type="number"
           name="kcal_per_portion"
+          label="Kcal per portion"
           value={formData.kcal_per_portion}
           onChange={handleChange}
           required
         />
-      </div>
-      <div className="form-group">
-        <label htmlFor="grams_per_portion">
-          <strong>Grams per portion</strong>
-        </label>
-        <input
+        <TextField
+          size="small"
           type="number"
           name="grams_per_portion"
+          label="Grams per portion"
           value={formData.grams_per_portion}
           onChange={handleChange}
         />
-      </div>
-      <div className="form-group">
-        <label htmlFor="proteine_per_100">
-          <strong>Proteine per 100</strong>
-        </label>
-        <input
+        <TextField
+          size="small"
           type="number"
           name="proteine_per_100"
+          label="Proteine per 100"
           value={formData.proteine_per_100}
           onChange={handleChange}
         />
-      </div>
-      <div className="form-group">
-        <label htmlFor="fats_per_100">
-          <strong>Fats per 100</strong>
-        </label>
-        <input
+        <TextField
+          size="small"
           type="number"
           name="fats_per_100"
+          label="Fats per 100"
           value={formData.fats_per_100}
           onChange={handleChange}
         />
-      </div>
-      <div className="form-group">
-        <label htmlFor="sugar_per_100">
-          <strong>Sugar per 100</strong>
-        </label>
-        <input
+        <TextField
+          size="small"
           type="number"
           name="sugar_per_100"
+          label="Sugar per 100"
           value={formData.sugar_per_100}
           onChange={handleChange}
         />
-      </div>
-      <div className="form-group">
-        <label htmlFor="portion_description">
-          <strong>Portion description</strong>
-        </label>
-        <input
+        <TextField
+          size="small"
           type="text"
           name="portion_description"
+          label="Portion description"
           value={formData.portion_description}
           onChange={handleChange}
         />
-      </div>
-      <div className="form-group">
-        <label htmlFor="tags">
-          <strong>Tags</strong>
-        </label>
-        <input
+        <TextField
+          size="small"
           type="text"
           name="tags"
+          label="Tags"
           value={formData.tags}
           onChange={handleChange}
         />
-      </div>
-      <div className="form-group">
-        <label htmlFor="brand">
-          <strong>Brand</strong>
-        </label>
-        <input
+        <TextField
+          size="small"
           type="text"
           name="brand"
+          label="Brand"
           value={formData.brand}
           onChange={handleChange}
         />
-      </div>
-      <div className="form-group">
-        <label htmlFor="unit">
-          <strong>Unit</strong>
-        </label>
-        <select
+        <FormControl size="small">
+          <InputLabel id="unit-label">Unit</InputLabel>
+          <Select
+          labelId="unit-label"
+          label="Unit"
           name="unit"
           value={formData.unit}
           onChange={handleChange}
           required
         >
-          <option value="gr">Gram (gr)</option>
-          <option value="ml">Milliliter (ml)</option>
-        </select>
-      </div>
-            <div className="form-group">
-        <label htmlFor="main_category">
-          <strong>Main Category</strong>
-        </label>
-        <select
+            <MenuItem value="gr">Gram (gr)</MenuItem>
+            <MenuItem value="ml">Milliliter (ml)</MenuItem>
+          </Select>
+        </FormControl>
+        <FormControl size="small">
+          <InputLabel id="main-category-label">Main Category</InputLabel>
+          <Select
+          labelId="main-category-label"
+          label="Main Category"
           name="main_category"
           value={formData.main_category}
           onChange={handleChange}
           required
         >
-          <option value="fruit">Fruit</option>
-          <option value="groenten">Groenten</option>
-          <option value="zuivel">Zuivel</option>
-          <option value="vlees">Vlees</option>
-          <option value="vis">Vis</option>
-          <option value="vegetarisch">Vegetarisch</option>
-          <option value="drinken">Drinken</option>
-          <option value="brood & granen">Brood & granen</option>
-          <option value="maaltijd">Maaltijd</option>
-          <option value="smeersels & sauzen">Smeersels & sauzen</option>
-          <option value="soep">Soep</option>
-          <option value="bijgerechten">Bijgerechten</option>
-          <option value="snacks & zoetigheid">Snacks & zoetigheid</option>
-          <option value="overig">Overig</option>
-        </select>
-      </div>
-      <div className="form-actions">
-        <button type="submit">Save</button>
-        <button type="button" onClick={onCancel}>
+            <MenuItem value="fruit">Fruit</MenuItem>
+            <MenuItem value="groenten">Groenten</MenuItem>
+            <MenuItem value="zuivel">Zuivel</MenuItem>
+            <MenuItem value="vlees">Vlees</MenuItem>
+            <MenuItem value="vis">Vis</MenuItem>
+            <MenuItem value="vegetarisch">Vegetarisch</MenuItem>
+            <MenuItem value="drinken">Drinken</MenuItem>
+            <MenuItem value="brood & granen">Brood & granen</MenuItem>
+            <MenuItem value="maaltijd">Maaltijd</MenuItem>
+            <MenuItem value="smeersels & sauzen">Smeersels & sauzen</MenuItem>
+            <MenuItem value="soep">Soep</MenuItem>
+            <MenuItem value="bijgerechten">Bijgerechten</MenuItem>
+            <MenuItem value="snacks & zoetigheid">Snacks & zoetigheid</MenuItem>
+            <MenuItem value="overig">Overig</MenuItem>
+          </Select>
+        </FormControl>
+      <Stack direction="row" spacing={1}>
+        <AppButton type="submit">Save</AppButton>
+        <AppButton type="button" variant="secondary" onClick={onCancel}>
           Cancel
-        </button>
-      </div>
-    </form>
+        </AppButton>
+      </Stack>
+    </Stack>
   );
 };
 

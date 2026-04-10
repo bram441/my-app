@@ -24,6 +24,7 @@ const SearchEngine = ({ onSelectFood }) => {
   const [filterTag, setFilterTag] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedBrand, setSelectedBrand] = useState("");
+  const [sortMode, setSortMode] = useState("name");
   const [brandSearchTerm, setBrandSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -57,6 +58,7 @@ const SearchEngine = ({ onSelectFood }) => {
             tag: filterTag,
             category: selectedCategory,
             brand: selectedBrand,
+            sort_mode: sortMode,
             page,
             limit: PAGE_SIZE,
           },
@@ -79,11 +81,41 @@ const SearchEngine = ({ onSelectFood }) => {
     }, 250);
 
     return () => clearTimeout(timer);
-  }, [searchTerm, filterTag, selectedCategory, selectedBrand, page]);
+  }, [searchTerm, filterTag, selectedCategory, selectedBrand, sortMode, page]);
 
   useEffect(() => {
     setPage(1);
-  }, [searchTerm, filterTag, selectedCategory, selectedBrand]);
+  }, [searchTerm, filterTag, selectedCategory, selectedBrand, sortMode]);
+
+  const toggleFavorite = async (food) => {
+    try {
+      const response = await API.post(`/foods/${food.id}/favorite`, {
+        is_favorite: !food.is_favorite,
+      });
+
+      const nextFavoriteState = response.data.is_favorite;
+
+      setFoods((currentFoods) => {
+        if (sortMode === "favorites" && !nextFavoriteState) {
+          return currentFoods.filter((item) => item.id !== food.id);
+        }
+
+        return currentFoods.map((item) =>
+          item.id === food.id ? { ...item, is_favorite: nextFavoriteState } : item
+        );
+      });
+
+      setTotalItems((current) => {
+        if (sortMode === "favorites" && !nextFavoriteState) {
+          return Math.max(0, current - 1);
+        }
+        return current;
+      });
+    } catch (favoriteError) {
+      console.error("Error toggling favorite:", favoriteError);
+      setError("Favoriet aanpassen is mislukt.");
+    }
+  };
 
   const filteredBrands = brands.filter((brand) =>
     brand.toLowerCase().includes(brandSearchTerm.toLowerCase())
@@ -138,6 +170,13 @@ const SearchEngine = ({ onSelectFood }) => {
               <option key={brand} value={brand}>{brand}</option>
             ))}
           </select>
+        <label>Sortering:</label>
+        <select value={sortMode} onChange={(e) => setSortMode(e.target.value)}>
+          <option value="name">Naam (A-Z)</option>
+          <option value="favorites">Alleen favorieten</option>
+          <option value="frequent">Meest gekozen</option>
+          <option value="recent">Recent gekozen</option>
+        </select>
 
       </div>
       <h2>resultaten</h2>
@@ -160,7 +199,21 @@ const SearchEngine = ({ onSelectFood }) => {
               }}
               onClick={() => onSelectFood(food)}
             >
-              <strong>{food.name}</strong> -{"   "}
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <strong>{food.name}</strong>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleFavorite(food);
+                  }}
+                  style={{ minWidth: 40 }}
+                  title="Toggle favoriet"
+                >
+                  {food.is_favorite ? "★" : "☆"}
+                </button>
+              </div>
+              {" - "}
               {food.kcal_per_100 !== null && food.kcal_per_100 !== undefined
                 ? food.kcal_per_100
                 : "?"}{" "}
@@ -190,6 +243,9 @@ const SearchEngine = ({ onSelectFood }) => {
                 {food.tags && food.tags.length > 0
                   ? `Tags: ${food.tags.join(", ")}`
                   : "Geen tags beschikbaar"}
+              </p>
+              <p style={{ fontSize: "12px", color: "gray", margin: "2px 0 0 0" }}>
+                Gekozen: {food.selection_count || 0} keer
               </p>
             </li>
           ))

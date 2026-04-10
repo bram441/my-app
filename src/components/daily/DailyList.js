@@ -1,30 +1,31 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
-import "../css/global.css";
+import { IconButton, List, ListItem, ListItemText, Typography } from "@mui/material";
 
 const DailyList = ({ dailyData, onClickEdit, selectedDate }) => {
   return (
-    <ul className="food-list daily-list">
+    <List
+      sx={{
+        mt: 1,
+        maxHeight: { xs: 300, lg: 360 },
+        overflowY: "auto",
+        borderRadius: 2,
+        border: "1px solid rgba(15,23,42,0.08)",
+        bgcolor: "rgba(255,255,255,0.7)",
+      }}
+    >
       {dailyData.entries.length > 0 ? (
         dailyData.entries.map((entry) => (
-          <li
+          <ListItem
             key={`${entry.entry_type}:${entry.entry_type === "food" ? entry.food_id : entry.recipe_id}`}
-            className="food-item"
-          >
-            <div className="food-name">
-              {entry.amount}x <strong>{entry.name}</strong>
-            </div>
-            <div className="food-nutrients">
-              Proteins: {parseFloat(entry.total_proteins).toFixed(2)} g | Fats:{" "}
-              {parseFloat(entry.total_fats).toFixed(2)} g | Sugars:{" "}
-              {parseFloat(entry.total_sugars).toFixed(2)} g
-            </div>
-            <div className="food-kcal">
-              {parseFloat(entry.total_kcal.toFixed(1))} kcal
-            </div>
-            <div className="food-actions">
-              <button
+            divider
+            secondaryAction={
+              <IconButton
+                sx={{
+                  color: "text.secondary",
+                  "&:hover": { color: "text.primary", bgcolor: "rgba(15,23,42,0.08)" },
+                }}
                 onClick={() =>
                   onClickEdit({
                     entry_type: entry.entry_type,
@@ -35,14 +36,29 @@ const DailyList = ({ dailyData, onClickEdit, selectedDate }) => {
                 }
               >
                 <FontAwesomeIcon icon={faEdit} />
-              </button>
-            </div>
-          </li>
+              </IconButton>
+            }
+          >
+            <ListItemText
+              primary={
+                <Typography fontWeight={700}>
+                  {entry.amount}x {entry.name}
+                </Typography>
+              }
+              secondary={`Proteins: ${parseFloat(entry.total_proteins).toFixed(
+                2
+              )} g | Fats: ${parseFloat(entry.total_fats).toFixed(
+                2
+              )} g | Sugars: ${parseFloat(entry.total_sugars).toFixed(
+                2
+              )} g | ${parseFloat(entry.total_kcal.toFixed(1))} kcal`}
+            />
+          </ListItem>
         ))
       ) : (
-        <p>No food logged for {selectedDate.toISOString().split("T")[0]}</p>
+        <Typography>No food logged for {selectedDate.toISOString().split("T")[0]}</Typography>
       )}
-    </ul>
+    </List>
   );
 };
 

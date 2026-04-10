@@ -3,11 +3,12 @@ import API from "../../api/api.js";
 import { Line } from "react-chartjs-2";
 import "chart.js/auto"; // Import for charts
 import moment from "moment"; // Import moment.js for formatting timestamps
-import "../css/daily.css";
 import Popup from "../common/Popup.js";
 import DailyList from "./DailyList.js";
 import PopupList from "./PopupList.js";
 import FoodChatInput from "../chatbot/FoodChatInput"; // Import FoodChatInput
+import { Box, IconButton, Typography } from "@mui/material";
+import ChatIcon from "@mui/icons-material/Chat";
 
 export const fetchDailyConsumption = async (
   setDailyData,
@@ -153,6 +154,7 @@ const Daily = ({ setTotalCalories, selectedDate }) => {
   // Graph Options
   const chartOptions = {
     responsive: true,
+    maintainAspectRatio: false,
     scales: {
       x: {
         type: "linear",
@@ -189,28 +191,40 @@ const Daily = ({ setTotalCalories, selectedDate }) => {
   };
 
   return (
-    <div className="daily-container">
-      <div className="left-section">
-        <h3>Consumption for {selectedDate.toISOString().split("T")[0]}</h3>
-        <h4>
+    <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", lg: "1fr 1fr" }, gap: 2 }}>
+      <Box sx={{ minWidth: 0, display: "flex", flexDirection: "column" }}>
+        <Typography variant="h6">
+          Consumption for {selectedDate.toISOString().split("T")[0]}
+        </Typography>
+        <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
           Total Calories: {parseFloat(dailyData.totalCalories).toFixed(2)} kcal
-        </h4>
-        {/* Add smaller totals for proteins, fats, and sugars */}
-        <p className="totals-small">
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
           Proteins: {parseFloat(dailyData.totalProteins).toFixed(2)} g | Fats:{" "}
           {parseFloat(dailyData.totalFats).toFixed(2)} g | Sugars:{" "}
           {parseFloat(dailyData.totalSugars).toFixed(2)} g
-        </p>
-        {loading && <p>Loading...</p>}
-        {error && <p className="error">{error}</p>}
-
-        <button
-          className="chat-launch-button"
+        </Typography>
+        {loading && <Typography>Loading...</Typography>}
+        {error && <Typography color="error">{error}</Typography>}
+        <IconButton
+          color="primary"
           onClick={() => setIsChatOpen(true)}
           aria-label="Open voedingschat"
+          sx={{
+            mt: 0.5,
+            alignSelf: "flex-start",
+            width: 36,
+            height: 36,
+            border: "1px solid rgba(79, 70, 229, 0.35)",
+            borderRadius: 1.5,
+            "&:hover": {
+              borderColor: "primary.main",
+              bgcolor: "rgba(79,70,229,0.08)",
+            },
+          }}
         >
-          <i className="fas fa-comment-dots"></i> {/* Font Awesome chat icon */}
-        </button>
+          <ChatIcon />
+        </IconButton>
         <Popup
           isOpen={isChatOpen}
           onClose={() => setIsChatOpen(false)}
@@ -236,9 +250,9 @@ const Daily = ({ setTotalCalories, selectedDate }) => {
           onClickEdit={onClickEdit}
           selectedDate={selectedDate}
         />
-      </div>
+      </Box>
       <Popup isOpen={isPopupOpen} onClose={() => setPopupOpen(false)}>
-        <h2>Manage entries for {selectedEntryName}</h2>
+        <Typography variant="h6">Manage entries for {selectedEntryName}</Typography>
         <PopupList
           dailyData={dailyData}
           selectedEntry={selectedEntry}
@@ -246,14 +260,23 @@ const Daily = ({ setTotalCalories, selectedDate }) => {
           onClickUpdateAmount={onClickUpdateAmount}
         />
       </Popup>
-
-      <div className="right-section">
-        <h3>Kcal Progress Over the Day</h3>
-        <div className="chart-container">
+      <Box sx={{ minWidth: 0 }}>
+        <Typography variant="h6" sx={{ mb: 1 }}>
+          Kcal Progress Over the Day
+        </Typography>
+        <Box
+          sx={{
+            p: 1.5,
+            borderRadius: 2,
+            bgcolor: "rgba(79, 70, 229, 0.04)",
+            height: { xs: 260, sm: 320, lg: 420 },
+            overflow: "hidden",
+          }}
+        >
           <Line data={chartData} options={chartOptions} />
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

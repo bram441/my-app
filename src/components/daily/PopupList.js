@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
-import "../css/global.css";
+import { List, ListItem, ListItemText, Stack, TextField, Typography } from "@mui/material";
+import AppButton from "../ui/AppButton";
 
 const PopupList = ({
   dailyData,
@@ -27,18 +28,17 @@ const PopupList = ({
   const entries = dailyData.entriesSeperate.filter(matchesGroup);
 
   return (
-    <ul className="food-list popup-list">
+    <List>
       {entries.length > 0 ? (
         entries.map((entry) => (
-            <li key={entry.id} className="food-item">
-              <div className="food-name">
-                {entry.amount}x <strong>{getEntryName(entry)}</strong>
-              </div>
-              <div className="food-kcal">
-                {parseFloat(entry.total_kcal.toFixed(1))} kcal
-              </div>
-              <div className="food-actions" style={{ gap: 8, display: "flex" }}>
-                <input
+            <ListItem key={entry.id} divider>
+              <ListItemText
+                primary={`${entry.amount}x ${getEntryName(entry)}`}
+                secondary={`${parseFloat(entry.total_kcal.toFixed(1))} kcal`}
+              />
+              <Stack direction="row" spacing={1} alignItems="center">
+                <TextField
+                  size="small"
                   type="number"
                   min="0.01"
                   step="0.01"
@@ -53,24 +53,27 @@ const PopupList = ({
                       [entry.id]: e.target.value,
                     }))
                   }
-                  style={{ width: 110 }}
+                  sx={{ width: 110 }}
                   aria-label="Update amount"
                 />
-                <button
+                <AppButton
                   onClick={() =>
                     onClickUpdateAmount(entry.id, amountById[entry.id] ?? entry.amount)
                   }
+                  variant="secondary"
                 >
                   Save
-                </button>
-                <button onClick={() => onClickDelete(entry.id)}>Delete</button>
-              </div>
-            </li>
+                </AppButton>
+                <AppButton variant="danger" onClick={() => onClickDelete(entry.id)}>
+                  Delete
+                </AppButton>
+              </Stack>
+            </ListItem>
           ))
       ) : (
-        <p>Geen eten meer</p>
+        <Typography>Geen eten meer</Typography>
       )}
-    </ul>
+    </List>
   );
 };
 

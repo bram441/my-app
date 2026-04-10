@@ -1,8 +1,20 @@
 import { useState, useEffect } from "react";
 import API from "../api/api";
 import NavigationBar from "../components/common/NavigationBar";
-import "../components/css/addRecipe.css"; // Create this CSS file for styling
 import { useNavigate } from "react-router-dom";
+import {
+  Alert,
+  Box,
+  List,
+  ListItem,
+  ListItemText,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import PageShell from "../components/ui/PageShell";
+import SectionCard from "../components/ui/SectionCard";
+import AppButton from "../components/ui/AppButton";
 
 const AddRecipe = () => {
   const [formData, setFormData] = useState({
@@ -113,91 +125,86 @@ const AddRecipe = () => {
   );
 
   return (
-    <div>
+    <>
       <header>
         <NavigationBar />
       </header>
-      <div className="add-recipe-container">
-        <h2>Add New Recipe</h2>
-        {error && <p className="error-message">{error}</p>}
-        <form className="add-recipe-form" onSubmit={handleSubmit}>
-          <input
+      <PageShell>
+        <SectionCard title="Add New Recipe">
+          {error && <Alert severity="error">{error}</Alert>}
+          <Stack component="form" spacing={1.5} onSubmit={handleSubmit}>
+            <TextField
+            size="small"
             type="text"
             name="name"
-            placeholder="Recipe Name"
+            label="Recipe Name"
             onChange={handleChange}
             required
           />
-          <input
+            <TextField
+            size="small"
             type="text"
-            placeholder="Search Food..."
+            label="Search Food"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <div className="food-quantities">
+            <Box sx={{ maxHeight: 360, overflowY: "auto", pr: 0.5 }}>
             {filteredFoods.map((food) => (
-              <div key={food.id} className="food-quantity">
-                <label>
-                  {food.name}
-                  <p
-                    style={{
-                      fontSize: "14px",
-                      color: "gray",
-                      margin: "5px 0 0 0",
-                    }}
-                  >
+                <Box key={food.id} sx={{ mb: 1.25, p: 1, borderRadius: 2, bgcolor: "rgba(15,23,42,0.03)" }}>
+                  <Typography fontWeight={700}>{food.name}</Typography>
+                  <Typography variant="body2" color="text.secondary">
                     {food.kcal_per_100} kcal per 100/{food.unit}
-                  </p>
-                  <p
-                    style={{
-                      fontSize: "14px",
-                      color: "gray",
-                      margin: "5px 0 0 0",
-                    }}
-                  >
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
                     {food.portion_description}
-                  </p>
-                </label>
-                <input
+                  </Typography>
+                  <TextField
+                  size="small"
+                  sx={{ mt: 1 }}
                   type="number"
                   min="0"
-                  placeholder="Quantity in grams"
+                  label="Quantity in grams"
                   onChange={(e) =>
                     handleFoodChange(food.id, parseInt(e.target.value))
                   }
                 />
-              </div>
+                </Box>
             ))}
-          </div>
-          <h3>Recipe Totals:</h3>
-          <p>Total Kcal: {parseFloat(formData.total_kcals).toFixed(2)} kcal</p>
-          <p>
+            </Box>
+            <Typography variant="h6">Recipe Totals</Typography>
+            <Typography>Total Kcal: {parseFloat(formData.total_kcals).toFixed(2)} kcal</Typography>
+            <Typography>
             Proteins: {parseFloat(formData.total_proteins).toFixed(2)} g | Fats:{" "}
             {parseFloat(formData.total_fats).toFixed(2)} g | Sugars:{" "}
             {parseFloat(formData.total_sugars).toFixed(2)} g
-          </p>
-          <button type="submit">Add Recipe</button>
-        </form>
-        <div className="added-ingredients">
-          <h3>Added Ingredients:</h3>
+            </Typography>
+            <AppButton type="submit">Add Recipe</AppButton>
+          </Stack>
+        </SectionCard>
+        <SectionCard title="Added Ingredients" sx={{ mt: 2 }}>
           {addedIngredients.length > 0 ? (
-            <ul>
+            <List>
               {addedIngredients.map((ingredient) => (
-                <li key={ingredient.id}>
-                  {ingredient.name} - {ingredient.amount}g -{" "}
-                  {ingredient.kcal.toFixed(2)} kcal | Proteins:{" "}
-                  {ingredient.proteins.toFixed(2)} g | Fats:{" "}
-                  {ingredient.fats.toFixed(2)} g | Sugars:{" "}
-                  {ingredient.sugars.toFixed(2)} g
-                </li>
+                <ListItem key={ingredient.id} divider>
+                  <ListItemText
+                    primary={`${ingredient.name} - ${ingredient.amount}g`}
+                    secondary={`${ingredient.kcal.toFixed(
+                      2
+                    )} kcal | Proteins: ${ingredient.proteins.toFixed(
+                      2
+                    )} g | Fats: ${ingredient.fats.toFixed(
+                      2
+                    )} g | Sugars: ${ingredient.sugars.toFixed(2)} g`}
+                  />
+                </ListItem>
               ))}
-            </ul>
+            </List>
           ) : (
-            <p>No ingredients added yet.</p>
+            <Typography>No ingredients added yet.</Typography>
           )}
-        </div>
-      </div>
-    </div>
+        </SectionCard>
+      </PageShell>
+    </>
   );
 };
 

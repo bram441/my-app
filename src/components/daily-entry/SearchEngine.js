@@ -1,6 +1,19 @@
 import { useState, useEffect } from "react";
 import API from "../../api/api";
-import "../../components/css/toevoegenEten.css";
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  List,
+  ListItemButton,
+  ListItemText,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import AppButton from "../ui/AppButton";
 
 const CATEGORIES = [ "fruit",
         "groenten",
@@ -123,152 +136,183 @@ const SearchEngine = ({ onSelectFood }) => {
 
 
   return (
-    <div className="searchEngine">
-      <h2>Zoek Voedsel</h2>
-      <input
-        type="text"
-        placeholder="Zoek voedsel..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-      <div className="form-group">
-                      <label>
-          Tags:        </label>
-      <input
-        type="text"
-        placeholder="Filter by tag..."
-        value={filterTag}
-        onChange={(e) => setFilterTag(e.target.value)}
-      />
-        <label>
-          Categorie:        </label>
-          <select
+    <Box>
+      <Stack spacing={1.5}>
+        <TextField
+          size="small"
+          label="Zoek voedsel"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <TextField
+          size="small"
+          label="Filter op tag"
+          value={filterTag}
+          onChange={(e) => setFilterTag(e.target.value)}
+        />
+        <FormControl size="small">
+          <InputLabel id="category-label">Categorie</InputLabel>
+          <Select
+            labelId="category-label"
+            label="Categorie"
             value={selectedCategory}
-            onChange={e => setSelectedCategory(e.target.value)}
+            onChange={(e) => setSelectedCategory(e.target.value)}
           >
-            <option value="">Alle categorieën</option>
-            {CATEGORIES.map(cat => (
-              <option key={cat} value={cat}>{cat}</option>
+            <MenuItem value="">Alle categorieën</MenuItem>
+            {CATEGORIES.map((cat) => (
+              <MenuItem key={cat} value={cat}>
+                {cat}
+              </MenuItem>
             ))}
-          </select>
-
-        <label>
-          Merk:
-        </label>
-        <input
-          type="text"
-          placeholder="Zoek merk..."
+          </Select>
+        </FormControl>
+        <TextField
+          size="small"
+          label="Zoek merk"
           value={brandSearchTerm}
           onChange={(e) => setBrandSearchTerm(e.target.value)}
         />
-          <select
+        <FormControl size="small">
+          <InputLabel id="brand-label">Merk</InputLabel>
+          <Select
+            labelId="brand-label"
+            label="Merk"
             value={selectedBrand}
-            onChange={e => setSelectedBrand(e.target.value)}
+            onChange={(e) => setSelectedBrand(e.target.value)}
           >
-            <option value="">Alle merken</option>
-            {filteredBrands.map(brand => (
-              <option key={brand} value={brand}>{brand}</option>
+            <MenuItem value="">Alle merken</MenuItem>
+            {filteredBrands.map((brand) => (
+              <MenuItem key={brand} value={brand}>
+                {brand}
+              </MenuItem>
             ))}
-          </select>
-        <label>Sortering:</label>
-        <select value={sortMode} onChange={(e) => setSortMode(e.target.value)}>
-          <option value="name">Naam (A-Z)</option>
-          <option value="favorites">Alleen favorieten</option>
-          <option value="frequent">Meest gekozen</option>
-          <option value="recent">Recent gekozen</option>
-        </select>
-
-      </div>
-      <h2>resultaten</h2>
-      {error && <p className="error">{error}</p>}
-      {loading && <p>Laden...</p>}
+          </Select>
+        </FormControl>
+        <FormControl size="small">
+          <InputLabel id="sort-label">Sortering</InputLabel>
+          <Select
+            labelId="sort-label"
+            label="Sortering"
+            value={sortMode}
+            onChange={(e) => setSortMode(e.target.value)}
+          >
+            <MenuItem value="name">Naam (A-Z)</MenuItem>
+            <MenuItem value="favorites">Alleen favorieten</MenuItem>
+            <MenuItem value="frequent">Meest gekozen</MenuItem>
+            <MenuItem value="recent">Recent gekozen</MenuItem>
+          </Select>
+        </FormControl>
+      </Stack>
+      <Typography variant="subtitle2" sx={{ mt: 2, color: "text.secondary" }}>
+        Resultaten
+      </Typography>
+      {error && <Typography color="error">{error}</Typography>}
+      {loading && <Typography>Laden...</Typography>}
       {!error && (
-        <p style={{ fontSize: "13px", color: "gray", margin: "6px 0 10px 0" }}>
+        <Typography sx={{ fontSize: 13, color: "text.secondary", my: 1 }}>
           {totalItems} resultaten - pagina {page} van {totalPages}
-        </p>
+        </Typography>
       )}
-      <ul>
+      <List sx={{ maxHeight: 460, overflowY: "auto", borderRadius: 2 }}>
         {foods.length > 0 ? (
           foods.map((food) => (
-            <li
+            <ListItemButton
               key={food.id}
-              style={{
-                cursor: "pointer",
-                padding: "10px",
-                borderBottom: "1px solid #ddd",
-              }}
+              divider
+              alignItems="flex-start"
               onClick={() => onSelectFood(food)}
             >
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <strong>{food.name}</strong>
-                <button
+              <ListItemText
+                primary={
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      gap: 1,
+                    }}
+                  >
+                    <Typography fontWeight={700}>{food.name}</Typography>
+                    <AppButton
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
                     toggleFavorite(food);
                   }}
-                  style={{ minWidth: 40 }}
-                  title="Toggle favoriet"
-                >
-                  {food.is_favorite ? "★" : "☆"}
-                </button>
-              </div>
-              {" - "}
-              {food.kcal_per_100 !== null && food.kcal_per_100 !== undefined
-                ? food.kcal_per_100
-                : "?"}{" "}
-              kcal/100,{"   "}
-              {food.proteine_per_100 !== null &&
-              food.proteine_per_100 !== undefined
-                ? food.proteine_per_100
-                : "?"}{" "}
-              proteine/100,{"   "}
-              {food.fats_per_100 !== null && food.fats_per_100 !== undefined
-                ? food.fats_per_100
-                : "?"}{" "}
-              vet/100,{"   "}
-              {food.sugar_per_100 !== null && food.sugar_per_100 !== undefined
-                ? food.sugar_per_100
-                : "?"}{" "}
-              koolhydraten/100 {"   "}
-              {food.unit || "?"}
-              <p
-                style={{ fontSize: "14px", color: "gray", margin: "5px 0 0 0" }}
-              >
-                {food.brand ? `Merk: ${food.brand}` : "Merk: Onbekend"}
-              </p>
-              <p
-                style={{ fontSize: "12px", color: "gray", margin: "2px 0 0 0" }}
-              >
-                {food.tags && food.tags.length > 0
-                  ? `Tags: ${food.tags.join(", ")}`
-                  : "Geen tags beschikbaar"}
-              </p>
-              <p style={{ fontSize: "12px", color: "gray", margin: "2px 0 0 0" }}>
-                Gekozen: {food.selection_count || 0} keer
-              </p>
-            </li>
+                      variant="ghost"
+                      sx={{ minWidth: 40, p: 0.5 }}
+                      title="Toggle favoriet"
+                    >
+                      {food.is_favorite ? "★" : "☆"}
+                    </AppButton>
+                  </Box>
+                }
+                secondary={
+                  <>
+                    {food.kcal_per_100 !== null && food.kcal_per_100 !== undefined
+                      ? food.kcal_per_100
+                      : "?"}{" "}
+                    kcal/100,{" "}
+                    {food.proteine_per_100 !== null &&
+                    food.proteine_per_100 !== undefined
+                      ? food.proteine_per_100
+                      : "?"}{" "}
+                    proteine/100,{" "}
+                    {food.fats_per_100 !== null && food.fats_per_100 !== undefined
+                      ? food.fats_per_100
+                      : "?"}{" "}
+                    vet/100,{" "}
+                    {food.sugar_per_100 !== null && food.sugar_per_100 !== undefined
+                      ? food.sugar_per_100
+                      : "?"}{" "}
+                    koolhydraten/100 {food.unit || "?"}
+                    <Typography
+                      component="div"
+                      sx={{ fontSize: 13, color: "text.secondary", mt: 0.5 }}
+                    >
+                      {food.brand ? `Merk: ${food.brand}` : "Merk: Onbekend"}
+                    </Typography>
+                    <Typography
+                      component="div"
+                      sx={{ fontSize: 12, color: "text.secondary" }}
+                    >
+                      {food.tags && food.tags.length > 0
+                        ? `Tags: ${food.tags.join(", ")}`
+                        : "Geen tags beschikbaar"}
+                    </Typography>
+                    <Typography
+                      component="div"
+                      sx={{ fontSize: 12, color: "text.secondary" }}
+                    >
+                      Gekozen: {food.selection_count || 0} keer
+                    </Typography>
+                  </>
+                }
+              />
+            </ListItemButton>
           ))
         ) : (
-          !loading && <p>Geen resultaten gevonden</p>
+          !loading && <Typography>Geen resultaten gevonden</Typography>
         )}
-      </ul>
-      <div className="food-actions" style={{ display: "flex", gap: 8 }}>
-        <button
+      </List>
+      <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 1 }}>
+        <AppButton
           onClick={() => setPage((current) => Math.max(current - 1, 1))}
           disabled={page <= 1 || loading}
+          variant="secondary"
         >
           Vorige
-        </button>
-        <span>Pagina {page}</span>
-        <button
+        </AppButton>
+        <Typography sx={{ minWidth: 80 }}>Pagina {page}</Typography>
+        <AppButton
           onClick={() => setPage((current) => current + 1)}
           disabled={!hasNextPage || loading}
+          variant="secondary"
         >
           Volgende
-        </button>
-      </div>
-    </div>
+        </AppButton>
+      </Stack>
+    </Box>
   );
 };
 

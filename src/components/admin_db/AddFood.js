@@ -2,9 +2,17 @@ import { useEffect, useState } from "react";
 import API from "../../api/api";
 import Popup from "../common/Popup";
 import TextExtractor from "../scanner/TextExtractor"; // Import the TextExtractor component
-import "../css/databaseManagement.css";
-import "../css/addFood.css";
-import "../css/global.css";
+import {
+  Alert,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import AppButton from "../ui/AppButton";
 
 const AddFood = () => {
   const [formData, setFormData] = useState({
@@ -104,142 +112,188 @@ const AddFood = () => {
   };
 
   return (
-    <div className="add-food-container">
-      {error && <p className="error-message">{error}</p>}
-      <h2>Add Food Item</h2>
-      <button onClick={() => setPopupOpen(true)}>Open Image Scanner</button>
-      <form className="add-food-form" onSubmit={handleSubmit}>
-        <input
+    <Stack sx={{ height: "100%", minHeight: 0 }}>
+      {error && <Alert severity="error">{error}</Alert>}
+      <AppButton
+        sx={{ mb: 1.5, alignSelf: "flex-start", whiteSpace: "nowrap" }}
+        onClick={() => setPopupOpen(true)}
+      >
+        Open Image Scanner
+      </AppButton>
+      <Stack
+        component="form"
+        spacing={1.25}
+        onSubmit={handleSubmit}
+        sx={{ height: "100%", minHeight: 0, overflowY: "auto", pr: 0.5, pb: 0.5 }}
+      >
+        <TextField
+          size="small"
           type="text"
           name="name"
-          placeholder="Food Name"
+          label="Food Name"
           value={formData.name}
           onChange={handleChange}
           required
         />
-        <select name="type" value={formData.type} onChange={handleChange}>
-          <option value="ochtend">Ochtend</option>
-          <option value="middag">Middag</option>
-          <option value="avond">Avond</option>
-          <option value="snack">Snack</option>
-          <option value="drinken">Drinken</option>
-        </select>
-        <input
+        <FormControl size="small">
+          <InputLabel id="food-type-label">Type</InputLabel>
+          <Select labelId="food-type-label" label="Type" name="type" value={formData.type} onChange={handleChange}>
+            <MenuItem value="ochtend">Ochtend</MenuItem>
+            <MenuItem value="middag">Middag</MenuItem>
+            <MenuItem value="avond">Avond</MenuItem>
+            <MenuItem value="snack">Snack</MenuItem>
+            <MenuItem value="drinken">Drinken</MenuItem>
+          </Select>
+        </FormControl>
+        <TextField
+          size="small"
           type="number"
           step="0.01"
           min="0"
           name="kcal_per_100"
-          placeholder="Kcal per 100g/ml"
+          label="Kcal per 100g/ml"
           value={formData.kcal_per_100}
           onChange={handleChange}
           required
         />
-        <input
+        <TextField
+          size="small"
           type="number"
           step="0.01"
           min="0"
           name="grams_per_portion"
-          placeholder="Grams per portion"
+          label="Grams per portion"
           value={formData.grams_per_portion}
           onChange={handleChange}
         />
-        <input
+        <TextField
+          size="small"
           type="number"
           step="0.01"
           min="0"
           name="kcal_per_portion"
-          placeholder="Kcal per portion"
+          label="Kcal per portion"
           value={formData.kcal_per_portion}
           onChange={handleChange}
           required
         />
-        <input
+        <TextField
+          size="small"
           type="number"
           step="0.01"
           min="0"
           name="proteine_per_100"
-          placeholder="Proteine per 100g/ml"
+          label="Proteine per 100g/ml"
           value={formData.proteine_per_100}
           onChange={handleChange}
         />
-        <input
+        <TextField
+          size="small"
           type="number"
           step="0.01"
           min="0"
           name="fats_per_100"
-          placeholder="Fats per 100g/ml"
+          label="Fats per 100g/ml"
           value={formData.fats_per_100}
           onChange={handleChange}
         />
-        <input
+        <TextField
+          size="small"
           type="number"
           step="0.01"
           min="0"
           name="sugar_per_100"
-          placeholder="Sugar per 100g/ml"
+          label="Sugar per 100g/ml"
           value={formData.sugar_per_100}
           onChange={handleChange}
         />
-        <input
+        <TextField
+          size="small"
           type="text"
           name="brand"
-          placeholder="Brand (optional)"
+          label="Brand (optional)"
           value={formData.brand}
           onChange={handleChange}
         />
-        <select name="unit" value={formData.unit} onChange={handleChange}>
-          <option value="gr">Gram (gr)</option>
-          <option value="ml">Milliliter (ml)</option>
-        </select>
-        <input
+        <FormControl size="small">
+          <InputLabel id="food-unit-label">Unit</InputLabel>
+          <Select labelId="food-unit-label" label="Unit" name="unit" value={formData.unit} onChange={handleChange}>
+            <MenuItem value="gr">Gram (gr)</MenuItem>
+            <MenuItem value="ml">Milliliter (ml)</MenuItem>
+          </Select>
+        </FormControl>
+        <TextField
+          size="small"
           type="text"
           name="portion_description"
-          placeholder="Portion Description (e.g., 1 slice, 1 bottle)"
+          label="Portion Description"
           value={formData.portion_description}
           onChange={handleChange}
         />
-        <input
+        <TextField
+          size="small"
           type="text"
           name="tags"
-          placeholder="Tags (comma-separated)"
+          label="Tags (comma-separated)"
           value={formData.tags}
           onChange={handleChange}
         />
-        <select name="main_category" value={formData.main_category} onChange={handleChange}>
-            <option value="fruit">Fruit</option>
-            <option value="groenten">Groenten</option>
-            <option value="zuivel">Zuivel</option>
-            <option value="vlees">Vlees</option>
-            <option value="vis">Vis</option>
-            <option value="vegetarisch">Vegetarisch</option>
-            <option value="drinken">Drinken</option>
-            <option value="brood & granen">Brood & granen</option>
-            <option value="maaltijd">Maaltijd</option>
-            <option value="smeersels & sauzen">Smeersels & sauzen</option>
-            <option value="soep">Soep</option>
-            <option value="bijgerechten">Bijgerechten</option>
-            <option value="snacks & zoetigheid">Snacks & zoetigheid</option>
-            <option value="overig">Overig</option>
-        </select>
-        <button type="submit">Add Food</button>
-      </form>
+        <FormControl size="small">
+          <InputLabel id="main-category-label">Main Category</InputLabel>
+          <Select
+            labelId="main-category-label"
+            label="Main Category"
+            name="main_category"
+            value={formData.main_category}
+            onChange={handleChange}
+          >
+              <MenuItem value="fruit">Fruit</MenuItem>
+              <MenuItem value="groenten">Groenten</MenuItem>
+              <MenuItem value="zuivel">Zuivel</MenuItem>
+              <MenuItem value="vlees">Vlees</MenuItem>
+              <MenuItem value="vis">Vis</MenuItem>
+              <MenuItem value="vegetarisch">Vegetarisch</MenuItem>
+              <MenuItem value="drinken">Drinken</MenuItem>
+              <MenuItem value="brood & granen">Brood & granen</MenuItem>
+              <MenuItem value="maaltijd">Maaltijd</MenuItem>
+              <MenuItem value="smeersels & sauzen">Smeersels & sauzen</MenuItem>
+              <MenuItem value="soep">Soep</MenuItem>
+              <MenuItem value="bijgerechten">Bijgerechten</MenuItem>
+              <MenuItem value="snacks & zoetigheid">Snacks & zoetigheid</MenuItem>
+              <MenuItem value="overig">Overig</MenuItem>
+          </Select>
+        </FormControl>
+        <AppButton
+          type="submit"
+          sx={{
+            mt: 0.5,
+            position: "sticky",
+            bottom: 0,
+            zIndex: 1,
+          }}
+        >
+          Add Food
+        </AppButton>
+      </Stack>
       {/* Popup for Image Scanning */}
       <Popup
         isOpen={isPopupOpen}
         onClose={() => setPopupOpen(false)}
         size="large"
       >
-        <h2>Scan Food Information</h2>
-        <div className="tab-buttons">
-          <button className="active" onClick={() => setActiveTab("upload")}>
+        <Typography variant="h6" sx={{ mb: 1 }}>
+          Scan Food Information
+        </Typography>
+        <div>
+          <AppButton variant="secondary" onClick={() => setActiveTab("upload")}>
             Upload Picture
-          </button>
+          </AppButton>
         </div>
         {activeTab === "upload" && (
           <TextExtractor onExtractedText={handleExtractedText} />
         )}
       </Popup>
-    </div>
+    </Stack>
   );
 };
 

@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import API from "../api/api";
 import NavigationBar from "../components/common/NavigationBar";
-import "../components/css/addRecipe.css"; // Reuse the same CSS as AddRecipe
 import { useParams, useNavigate } from "react-router-dom";
+import { Alert, Box, Stack, TextField, Typography } from "@mui/material";
+import PageShell from "../components/ui/PageShell";
+import SectionCard from "../components/ui/SectionCard";
+import AppButton from "../components/ui/AppButton";
 
 const EditRecipe = () => {
   const { id } = useParams();
@@ -110,76 +113,57 @@ const EditRecipe = () => {
   };
 
   return (
-    <div>
+    <>
       <header>
         <NavigationBar />
       </header>
-      <div className="add-recipe-container">
-        <h2>Edit Recipe</h2>
-        {error && <p className="error-message">{error}</p>}
-        <form className="add-recipe-form" onSubmit={handleSubmit}>
-          <label
-            htmlFor="name"
-            style={{
-              fontSize: "16px",
-              margin: "10px 0",
-            }}
-          >
-            Recipe Name
-          </label>
-          <input
+      <PageShell>
+        <SectionCard title="Edit Recipe">
+          {error && <Alert severity="error">{error}</Alert>}
+          <Stack component="form" spacing={1.5} onSubmit={handleSubmit}>
+            <TextField
+            size="small"
             type="text"
             name="name"
-            placeholder="Recipe Name"
+            label="Recipe Name"
             value={formData.name}
             onChange={handleChange}
             required
           />
-          <label
-            style={{
-              fontSize: "16px",
-              margin: "10px 0",
-            }}
-          >
-            Food Quantities in grams
-          </label>
-          <div className="food-quantities">
+            <Typography variant="subtitle2">Food Quantities in grams</Typography>
+            <Box sx={{ maxHeight: 360, overflowY: "auto", pr: 0.5 }}>
             {formData.food_quantities.map((food) => (
-              <div key={food.id} className="food-quantity">
-                <label>
-                  {food.name || "Unknown Food"}
-                  <p
-                    style={{
-                      fontSize: "14px",
-                      color: "gray",
-                      margin: "5px 0 0 0",
-                    }}
-                  >
+                <Box key={food.id} sx={{ mb: 1.25, p: 1, borderRadius: 2, bgcolor: "rgba(15,23,42,0.03)" }}>
+                  <Typography fontWeight={700}>{food.name || "Unknown Food"}</Typography>
+                  <Typography variant="body2" color="text.secondary">
                     {food.kcal_per_100}kcal per 100/gr
-                  </p>
-                </label>
-                <input
+                  </Typography>
+                  <TextField
+                  size="small"
+                  sx={{ mt: 1 }}
                   type="number"
                   min="0"
+                  label="Quantity"
                   value={food.RecipeFood.quantity}
                   onChange={(e) =>
                     handleFoodChange(food.id, parseInt(e.target.value))
                   }
                 />
-              </div>
+                </Box>
             ))}
-          </div>
-          <h3>Recipe Totals:</h3>
-          <p>Total Kcal: {parseFloat(formData.total_kcals).toFixed(2)} kcal</p>
-          <p>
+            </Box>
+            <Typography variant="h6">Recipe Totals</Typography>
+            <Typography>Total Kcal: {parseFloat(formData.total_kcals).toFixed(2)} kcal</Typography>
+            <Typography>
             Proteins: {parseFloat(formData.total_proteins).toFixed(2)} g | Fats:{" "}
             {parseFloat(formData.total_fats).toFixed(2)} g | Sugars:{" "}
             {parseFloat(formData.total_sugars).toFixed(2)} g
-          </p>
-          <button type="submit">Update Recipe</button>
-        </form>
-      </div>
-    </div>
+            </Typography>
+            <AppButton type="submit">Update Recipe</AppButton>
+          </Stack>
+        </SectionCard>
+      </PageShell>
+    </>
   );
 };
 

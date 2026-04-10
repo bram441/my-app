@@ -28,6 +28,8 @@ const SearchEngine = ({ onSelectFood }) => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(false);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
   const [error, setError] = useState("");
 
   const PAGE_SIZE = 25;
@@ -60,11 +62,16 @@ const SearchEngine = ({ onSelectFood }) => {
           },
         });
         setFoods(response.data.items || []);
-        setHasNextPage(Boolean(response.data.pagination?.hasNextPage));
+        const pagination = response.data.pagination || {};
+        setHasNextPage(Boolean(pagination.hasNextPage));
+        setTotalItems(pagination.totalItems || 0);
+        setTotalPages(pagination.totalPages || 1);
       } catch (fetchError) {
         console.error("Error fetching foods:", fetchError);
         setFoods([]);
         setHasNextPage(false);
+        setTotalItems(0);
+        setTotalPages(1);
         setError("Kon voedselresultaten niet ophalen.");
       } finally {
         setLoading(false);
@@ -136,6 +143,11 @@ const SearchEngine = ({ onSelectFood }) => {
       <h2>resultaten</h2>
       {error && <p className="error">{error}</p>}
       {loading && <p>Laden...</p>}
+      {!error && (
+        <p style={{ fontSize: "13px", color: "gray", margin: "6px 0 10px 0" }}>
+          {totalItems} resultaten - pagina {page} van {totalPages}
+        </p>
+      )}
       <ul>
         {foods.length > 0 ? (
           foods.map((food) => (
@@ -186,11 +198,17 @@ const SearchEngine = ({ onSelectFood }) => {
         )}
       </ul>
       <div className="food-actions" style={{ display: "flex", gap: 8 }}>
-        <button onClick={() => setPage((current) => Math.max(current - 1, 1))} disabled={page <= 1}>
+        <button
+          onClick={() => setPage((current) => Math.max(current - 1, 1))}
+          disabled={page <= 1 || loading}
+        >
           Vorige
         </button>
         <span>Pagina {page}</span>
-        <button onClick={() => setPage((current) => current + 1)} disabled={!hasNextPage}>
+        <button
+          onClick={() => setPage((current) => current + 1)}
+          disabled={!hasNextPage || loading}
+        >
           Volgende
         </button>
       </div>

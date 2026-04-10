@@ -162,7 +162,7 @@ const SearchEngine = ({ onSelectFood }) => {
         <label>Sortering:</label>
         <select value={sortMode} onChange={(e) => setSortMode(e.target.value)}>
           <option value="name">Naam (A-Z)</option>
-          <option value="favorites">Favorieten eerst</option>
+          <option value="favorites">Alleen favorieten</option>
           <option value="frequent">Meest gekozen</option>
           <option value="recent">Recent gekozen</option>
         </select>

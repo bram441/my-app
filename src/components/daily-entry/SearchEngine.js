@@ -24,20 +24,17 @@ const SearchEngine = ({ onSelectFood }) => {
   const [filterTag, setFilterTag] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedBrand, setSelectedBrand] = useState("");
+  const [brandSearchTerm, setBrandSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasNextPage, setHasNextPage] = useState(false);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [error, setError] = useState("");
+
+  const PAGE_SIZE = 25;
 
   useEffect(() => {
-    const fetchFoods = async () => {
-      try {
-        const response = await API.get("/foods");
-        setFoods(response.data);
-      } catch (error) {
-        console.error("Error fetching foods:", error);
-      }
-    };
-    fetchFoods();
-  }, []);
-
-    useEffect(() => {
     const fetchBrands = async () => {
       try {
         const response = await API.get("/foods/brands");
@@ -49,35 +46,48 @@ const SearchEngine = ({ onSelectFood }) => {
     fetchBrands();
   }, []);
 
-  const filteredFoods = foods.filter((food) => {
-       // Split search term into words, ignore empty strings
-  const words = searchTerm
-    .toLowerCase()
-    .split(/\s+/)
-    .filter(Boolean);
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      try {
+        setLoading(true);
+        setError("");
+        const response = await API.get("/foods/search", {
+          params: {
+            q: searchTerm,
+            tag: filterTag,
+            category: selectedCategory,
+            brand: selectedBrand,
+            page,
+            limit: PAGE_SIZE,
+          },
+        });
+        setFoods(response.data.items || []);
+        const pagination = response.data.pagination || {};
+        setHasNextPage(Boolean(pagination.hasNextPage));
+        setTotalItems(pagination.totalItems || 0);
+        setTotalPages(pagination.totalPages || 1);
+      } catch (fetchError) {
+        console.error("Error fetching foods:", fetchError);
+        setFoods([]);
+        setHasNextPage(false);
+        setTotalItems(0);
+        setTotalPages(1);
+        setError("Kon voedselresultaten niet ophalen.");
+      } finally {
+        setLoading(false);
+      }
+    }, 250);
 
-  // Check if all words are present in the food name (any order)
-  const name = food.name.toLowerCase();
-  const nameMatch = words.every(word => name.includes(word));
+    return () => clearTimeout(timer);
+  }, [searchTerm, filterTag, selectedCategory, selectedBrand, page]);
 
-    const categoryMatch =
-      !selectedCategory ||
-      (food.main_category &&
-        food.main_category.toLowerCase() === selectedCategory.toLowerCase());
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm, filterTag, selectedCategory, selectedBrand]);
 
-    const brandMatch =
-      !selectedBrand ||
-      (food.brand && food.brand === selectedBrand);
-
-  const tagMatch =
-    !filterTag ||
-    (Array.isArray(food.tags) &&
-      food.tags.some(tag =>
-        tag.toLowerCase().includes(filterTag.toLowerCase())
-      ));
-
-    return nameMatch && categoryMatch && brandMatch && tagMatch;
-  });
+  const filteredBrands = brands.filter((brand) =>
+    brand.toLowerCase().includes(brandSearchTerm.toLowerCase())
+  );
 
 
   return (
@@ -112,22 +122,35 @@ const SearchEngine = ({ onSelectFood }) => {
 
         <label>
           Merk:
-                  </label>
+        </label>
+        <input
+          type="text"
+          placeholder="Zoek merk..."
+          value={brandSearchTerm}
+          onChange={(e) => setBrandSearchTerm(e.target.value)}
+        />
           <select
             value={selectedBrand}
             onChange={e => setSelectedBrand(e.target.value)}
           >
             <option value="">Alle merken</option>
-            {brands.map(brand => (
+            {filteredBrands.map(brand => (
               <option key={brand} value={brand}>{brand}</option>
             ))}
           </select>
 
       </div>
       <h2>resultaten</h2>
+      {error && <p className="error">{error}</p>}
+      {loading && <p>Laden...</p>}
+      {!error && (
+        <p style={{ fontSize: "13px", color: "gray", margin: "6px 0 10px 0" }}>
+          {totalItems} resultaten - pagina {page} van {totalPages}
+        </p>
+      )}
       <ul>
-        {filteredFoods.length > 0 ? (
-          filteredFoods.map((food) => (
+        {foods.length > 0 ? (
+          foods.map((food) => (
             <li
               key={food.id}
               style={{
@@ -171,9 +194,24 @@ const SearchEngine = ({ onSelectFood }) => {
             </li>
           ))
         ) : (
-          <p>Geen resultaten gevonden</p>
+          !loading && <p>Geen resultaten gevonden</p>
         )}
       </ul>
+      <div className="food-actions" style={{ display: "flex", gap: 8 }}>
+        <button
+          onClick={() => setPage((current) => Math.max(current - 1, 1))}
+          disabled={page <= 1 || loading}
+        >
+          Vorige
+        </button>
+        <span>Pagina {page}</span>
+        <button
+          onClick={() => setPage((current) => current + 1)}
+          disabled={!hasNextPage || loading}
+        >
+          Volgende
+        </button>
+      </div>
     </div>
   );
 };

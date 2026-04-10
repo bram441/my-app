@@ -8,7 +8,10 @@ const DailyList = ({ dailyData, onClickEdit, selectedDate }) => {
     <ul className="food-list daily-list">
       {dailyData.entries.length > 0 ? (
         dailyData.entries.map((entry) => (
-          <li key={entry.food_id} className="food-item">
+          <li
+            key={`${entry.entry_type}:${entry.entry_type === "food" ? entry.food_id : entry.recipe_id}`}
+            className="food-item"
+          >
             <div className="food-name">
               {entry.amount}x <strong>{entry.name}</strong>
             </div>
@@ -21,7 +24,16 @@ const DailyList = ({ dailyData, onClickEdit, selectedDate }) => {
               {parseFloat(entry.total_kcal.toFixed(1))} kcal
             </div>
             <div className="food-actions">
-              <button onClick={() => onClickEdit(entry.food_id, entry.name)}>
+              <button
+                onClick={() =>
+                  onClickEdit({
+                    entry_type: entry.entry_type,
+                    food_id: entry.food_id,
+                    recipe_id: entry.recipe_id,
+                    name: entry.name,
+                  })
+                }
+              >
                 <FontAwesomeIcon icon={faEdit} />
               </button>
             </div>

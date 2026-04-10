@@ -99,9 +99,28 @@ const Daily = ({ setTotalCalories, selectedDate }) => {
     [setTotalCalories, selectedDate]
   );
 
-  const onClickEdit = useCallback((foodId, foodName) => {
-    setSelectedEntry(foodId);
-    setSelectedEntryName(foodName);
+  const onClickUpdateAmount = useCallback(
+    async (entryId, amount) => {
+      try {
+        await API.put(`/daily-entries/${entryId}`, { amount });
+        await fetchDailyConsumption(
+          setDailyData,
+          setCalorieProgress,
+          setLoading,
+          setError,
+          setTotalCalories,
+          selectedDate
+        );
+      } catch (err) {
+        setError(err.response?.data?.message || "Failed to update entry");
+      }
+    },
+    [setTotalCalories, selectedDate]
+  );
+
+  const onClickEdit = useCallback((group) => {
+    setSelectedEntry(group);
+    setSelectedEntryName(group?.name || "");
     setPopupOpen(true);
   }, []);
 
@@ -219,11 +238,12 @@ const Daily = ({ setTotalCalories, selectedDate }) => {
         />
       </div>
       <Popup isOpen={isPopupOpen} onClose={() => setPopupOpen(false)}>
-        <h2>Remove daily entries for {selectedEntryName}</h2>
+        <h2>Manage entries for {selectedEntryName}</h2>
         <PopupList
           dailyData={dailyData}
           selectedEntry={selectedEntry}
           onClickDelete={onClickDelete}
+          onClickUpdateAmount={onClickUpdateAmount}
         />
       </Popup>
 

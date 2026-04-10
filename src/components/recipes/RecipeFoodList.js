@@ -1,8 +1,10 @@
 import React from "react";
 import "../css/global.css";
 import "../css/recipes.css";
+import { useLanguage } from "../../context/LanguageContext";
 
 const RecipeFoodList = ({ foods }) => {
+  const { t } = useLanguage();
   return (
     <div className="food-list recipe-food-list">
       {foods.length > 0 ? (
@@ -15,7 +17,7 @@ const RecipeFoodList = ({ foods }) => {
           </div>
         ))
       ) : (
-        <p>No foods found</p>
+        <p>{t("recipes.noFoodsFound")}</p>
       )}
     </div>
   );

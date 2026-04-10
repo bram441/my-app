@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import AuthProvider from "./context/AuthContext";
+import { LanguageProvider } from "./context/LanguageContext";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import appTheme from "./theme/appTheme";
 
@@ -13,7 +14,9 @@ root.render(
     <ThemeProvider theme={appTheme}>
       <CssBaseline />
       <AuthProvider>
-        <App />
+        <LanguageProvider>
+          <App />
+        </LanguageProvider>
       </AuthProvider>
     </ThemeProvider>
   </React.StrictMode>

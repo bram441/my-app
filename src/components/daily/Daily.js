@@ -9,6 +9,7 @@ import PopupList from "./PopupList.js";
 import FoodChatInput from "../chatbot/FoodChatInput"; // Import FoodChatInput
 import { Box, IconButton, Typography } from "@mui/material";
 import ChatIcon from "@mui/icons-material/Chat";
+import { useLanguage } from "../../context/LanguageContext";
 
 export const fetchDailyConsumption = async (
   setDailyData,
@@ -56,6 +57,7 @@ export const fetchDailyConsumption = async (
 };
 
 const Daily = ({ setTotalCalories, selectedDate }) => {
+  const { t } = useLanguage();
   const [dailyData, setDailyData] = useState({
     totalCalories: 0,
     entries: [],
@@ -94,10 +96,10 @@ const Daily = ({ setTotalCalories, selectedDate }) => {
         );
         setPopupOpen(false);
       } catch (err) {
-        setError(err.response?.data?.message || "Failed to delete entry");
+        setError(err.response?.data?.message || t("daily.deleteFailed"));
       }
     },
-    [setTotalCalories, selectedDate]
+    [setTotalCalories, selectedDate, t]
   );
 
   const onClickUpdateAmount = useCallback(
@@ -113,10 +115,10 @@ const Daily = ({ setTotalCalories, selectedDate }) => {
           selectedDate
         );
       } catch (err) {
-        setError(err.response?.data?.message || "Failed to update entry");
+        setError(err.response?.data?.message || t("daily.updateFailed"));
       }
     },
-    [setTotalCalories, selectedDate]
+    [setTotalCalories, selectedDate, t]
   );
 
   const onClickEdit = useCallback((group) => {
@@ -136,7 +138,7 @@ const Daily = ({ setTotalCalories, selectedDate }) => {
     labels: timeLabels, // X-Axis in 2-hour intervals
     datasets: [
       {
-        label: "Cumulative Kcal",
+        label: t("daily.cumulativeKcal"),
         data: calorieProgress.map((data) => ({
           x: data.time,
           y: data.kcal,
@@ -171,7 +173,7 @@ const Daily = ({ setTotalCalories, selectedDate }) => {
         beginAtZero: true,
         title: {
           display: true,
-          text: "Calories",
+          text: t("daily.caloriesAxis"),
         },
       },
     },
@@ -194,22 +196,22 @@ const Daily = ({ setTotalCalories, selectedDate }) => {
     <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", lg: "1fr 1fr" }, gap: 2 }}>
       <Box sx={{ minWidth: 0, display: "flex", flexDirection: "column" }}>
         <Typography variant="h6">
-          Consumption for {selectedDate.toISOString().split("T")[0]}
+          {t("daily.consumptionFor")} {selectedDate.toISOString().split("T")[0]}
         </Typography>
         <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
-          Total Calories: {parseFloat(dailyData.totalCalories).toFixed(2)} kcal
+          {t("daily.totalCalories")}: {parseFloat(dailyData.totalCalories).toFixed(2)} kcal
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Proteins: {parseFloat(dailyData.totalProteins).toFixed(2)} g | Fats:{" "}
-          {parseFloat(dailyData.totalFats).toFixed(2)} g | Sugars:{" "}
+          {t("daily.proteins")}: {parseFloat(dailyData.totalProteins).toFixed(2)} g | {t("daily.fats")}:{" "}
+          {parseFloat(dailyData.totalFats).toFixed(2)} g | {t("daily.sugars")}:{" "}
           {parseFloat(dailyData.totalSugars).toFixed(2)} g
         </Typography>
-        {loading && <Typography>Loading...</Typography>}
+        {loading && <Typography>{t("daily.loading")}</Typography>}
         {error && <Typography color="error">{error}</Typography>}
         <IconButton
           color="primary"
           onClick={() => setIsChatOpen(true)}
-          aria-label="Open voedingschat"
+          aria-label={t("daily.openFoodChat")}
           sx={{
             mt: 0.5,
             alignSelf: "flex-start",
@@ -252,7 +254,7 @@ const Daily = ({ setTotalCalories, selectedDate }) => {
         />
       </Box>
       <Popup isOpen={isPopupOpen} onClose={() => setPopupOpen(false)}>
-        <Typography variant="h6">Manage entries for {selectedEntryName}</Typography>
+        <Typography variant="h6">{t("daily.manageEntriesFor")} {selectedEntryName}</Typography>
         <PopupList
           dailyData={dailyData}
           selectedEntry={selectedEntry}
@@ -262,7 +264,7 @@ const Daily = ({ setTotalCalories, selectedDate }) => {
       </Popup>
       <Box sx={{ minWidth: 0 }}>
         <Typography variant="h6" sx={{ mb: 1 }}>
-          Kcal Progress Over the Day
+          {t("daily.kcalProgressDay")}
         </Typography>
         <Box
           sx={{

@@ -11,9 +11,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "react-datepicker"; // Import DatePicker
 import "react-datepicker/dist/react-datepicker.css"; // Import DatePicker CSS
+import { useLanguage } from "../../context/LanguageContext";
 
 const RecipeList = ({ recipes, onClickFoodList, userId, role, navigate }) => {
   const { selectedDate, setSelectedDate } = useContext(AuthContext);
+  const { t } = useLanguage();
   const [isDeletePopupOpen, setDeletePopupOpen] = useState(false);
   const [isAddPopupOpen, setAddPopupOpen] = useState(false);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
@@ -40,7 +42,7 @@ const RecipeList = ({ recipes, onClickFoodList, userId, role, navigate }) => {
         entry_type: "recipe",
       });
 
-      alert("Recipe added to daily entries!");
+      alert(t("recipes.addedToDailySuccess"));
       setAddPopupOpen(false); // Close the popup after adding
     } catch (error) {
       console.error("Error adding recipe to daily entries:", error);
@@ -57,10 +59,11 @@ const RecipeList = ({ recipes, onClickFoodList, userId, role, navigate }) => {
         recipes.map((recipe) => (
           <div key={recipe.id} className="recipe-item">
             <h3>{recipe.name}</h3>
-            <p>Total Kcal: {recipe.total_kcals.toFixed(2)}</p>
+            <p>{t("weekly.totalKcal")}: {recipe.total_kcals.toFixed(2)}</p>
             <p>
-              Proteins: {(recipe.total_proteins ?? 0).toFixed(2)} g | Fats:{" "}
+              {t("daily.proteins")}: {(recipe.total_proteins ?? 0).toFixed(2)} g | {t("daily.fats")}:{" "}
               {(recipe.total_fats ?? 0).toFixed(2)} g | Sugars:{" "}
+              {t("daily.sugars")}:{" "}
               {(recipe.total_sugars ?? 0).toFixed(2)} g
             </p>
             <button
@@ -69,7 +72,7 @@ const RecipeList = ({ recipes, onClickFoodList, userId, role, navigate }) => {
                 setAddPopupOpen(true);
               }}
             >
-              Add to Daily Entries
+              {t("recipes.addToDailyEntries")}
             </button>
             <FontAwesomeIcon
               icon={faInfoCircle}
@@ -93,7 +96,7 @@ const RecipeList = ({ recipes, onClickFoodList, userId, role, navigate }) => {
           </div>
         ))
       ) : (
-        <p className="non-found">No recipes found</p>
+        <p className="non-found">{t("recipes.noRecipesFound")}</p>
       )}
 
       {/* Delete Recipe Popup */}
@@ -102,7 +105,7 @@ const RecipeList = ({ recipes, onClickFoodList, userId, role, navigate }) => {
         onClose={() => setDeletePopupOpen(false)}
       >
         <h2 style={{ paddingTop: "20px" }}>
-          Are you sure you want to delete this recipe?
+          {t("recipes.deleteRecipeQuestion")}
         </h2>
         <button
           onClick={async () => {
@@ -116,28 +119,27 @@ const RecipeList = ({ recipes, onClickFoodList, userId, role, navigate }) => {
           }}
           className="delete-button-confirm"
         >
-          Yes
+          {t("recipes.yes")}
         </button>
         <button
           className="delete-button-deny"
           onClick={() => setDeletePopupOpen(false)}
         >
-          No
+          {t("recipes.no")}
         </button>
       </Popup>
 
       {/* Add to Daily Entries Popup */}
       <Popup isOpen={isAddPopupOpen} onClose={() => setAddPopupOpen(false)}>
         <h2 style={{ paddingTop: "20px" }}>
-          Add {selectedRecipe?.name} to Daily Entries
+          {t("recipes.addRecipePopupTitle")}: {selectedRecipe?.name}
         </h2>
         <p>
-          How many portions of {selectedRecipe?.name} would you like to add to
-          your daily entries?
+          {t("recipes.portionsQuestion")}
         </p>
         {/* Date Picker */}
         <div className="form-group">
-          <label>Datum:</label>
+          <label>{t("recipes.date")}:</label>
           <DatePicker
             selected={selectedDate}
             onChange={(date) => setSelectedDate(date)}
@@ -157,7 +159,7 @@ const RecipeList = ({ recipes, onClickFoodList, userId, role, navigate }) => {
           className="portion-input"
         />
         <p>
-          Total Kcal:{" "}
+          {t("weekly.totalKcal")}:{" "}
           {selectedRecipe
             ? (selectedRecipe.total_kcals * (portion || 0)).toFixed(2)
             : 0}
@@ -168,14 +170,14 @@ const RecipeList = ({ recipes, onClickFoodList, userId, role, navigate }) => {
             if (portion && portion > 0) {
               addRecipeToDailyEntry();
             } else {
-              alert("Please enter a valid portion size.");
+              alert(t("recipes.validPortion"));
             }
           }}
         >
-          Add
+          {t("recipes.add")}
         </button>
         <button className="close-button" onClick={() => setAddPopupOpen(false)}>
-          Cancel
+          {t("recipes.cancel")}
         </button>
       </Popup>
     </div>

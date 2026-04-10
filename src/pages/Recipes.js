@@ -19,6 +19,7 @@ import {
 import PageShell from "../components/ui/PageShell";
 import SectionCard from "../components/ui/SectionCard";
 import AppButton from "../components/ui/AppButton";
+import { useLanguage } from "../context/LanguageContext";
 
 const Recipes = () => {
   const [recipes, setRecipes] = useState([]);
@@ -32,6 +33,7 @@ const Recipes = () => {
   const [selectedRecipe, setSelectedRecipe] = useState({});
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -84,28 +86,28 @@ const Recipes = () => {
         <NavigationBar />
       </header>
       <PageShell>
-        <SectionCard title="Recipes">
+        <SectionCard title={t("recipes.title")}>
           <Stack spacing={2}>
             <Grid container spacing={2} alignItems="center">
               <Grid item xs={12} sm={8}>
                 <FormControl fullWidth size="small">
-                  <InputLabel id="recipe-filter">Filter Recipes</InputLabel>
+                  <InputLabel id="recipe-filter">{t("recipes.filterRecipes")}</InputLabel>
                   <Select
                     labelId="recipe-filter"
-                    label="Filter Recipes"
+                    label={t("recipes.filterRecipes")}
                     value={filter}
                     onChange={(e) => setFilter(e.target.value)}
                   >
-                    <MenuItem value="all">All Recipes</MenuItem>
-                    <MenuItem value="user">User Recipes</MenuItem>
-                    <MenuItem value="shared">Shared Recipes</MenuItem>
-                    <MenuItem value="userShared">User Shared Recipes</MenuItem>
+                    <MenuItem value="all">{t("recipes.allRecipes")}</MenuItem>
+                    <MenuItem value="user">{t("recipes.userRecipes")}</MenuItem>
+                    <MenuItem value="shared">{t("recipes.sharedRecipes")}</MenuItem>
+                    <MenuItem value="userShared">{t("recipes.userSharedRecipes")}</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={12} sm={4}>
                 <AppButton fullWidth onClick={() => navigate("/add-recipe")}>
-                  Add Recipe
+                  {t("recipes.addRecipe")}
                 </AppButton>
               </Grid>
             </Grid>
@@ -121,7 +123,7 @@ const Recipes = () => {
         </SectionCard>
         <Popup isOpen={isPopupOpen} onClose={() => setPopupOpen(false)}>
           <Typography variant="h6" sx={{ mb: 1 }}>
-            Food items in recipe: {selectedRecipe.name}
+            {t("recipes.foodItemsInRecipe")}: {selectedRecipe.name}
           </Typography>
           <FoodList foods={selectedRecipe.foods} />
         </Popup>

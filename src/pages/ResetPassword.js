@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import API from "../api/api";
 import "../components/css/auth.css";
+import LanguageSwitcher from "../components/common/LanguageSwitcher";
+import { useLanguage } from "../context/LanguageContext";
 
 const ResetPassword = () => {
   const { token } = useParams();
@@ -10,13 +12,14 @@ const ResetPassword = () => {
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setError(t("authExtra.passwordsMismatch"));
       return;
     }
 
@@ -25,24 +28,27 @@ const ResetPassword = () => {
         password,
         confirmPassword,
       });
-      setMessage("Password reset successfully. Redirecting to login page...");
+      setMessage(t("authExtra.resetSuccess"));
       setTimeout(() => navigate("/login"), 3000); // Redirect after 3 seconds
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to reset password");
+      setError(err.response?.data?.message || t("authExtra.resetFailed"));
     }
   };
 
   return (
     <div className="login-page">
       <div className="auth-container">
-        <h2 className="auth-title">Reset Your Password</h2>
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 12 }}>
+          <LanguageSwitcher compact />
+        </div>
+        <h2 className="auth-title">{t("authExtra.resetTitle")}</h2>
         {message && <p className="success-message">{message}</p>}
         {error && <p className="error-message">{error}</p>}
         <form className="auth-form" onSubmit={handleSubmit}>
           <input
             type="password"
             name="password"
-            placeholder="New Password"
+            placeholder={t("authExtra.newPassword")}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -51,14 +57,14 @@ const ResetPassword = () => {
           <input
             type="password"
             name="confirmPassword"
-            placeholder="Confirm New Password"
+            placeholder={t("authExtra.confirmNewPassword")}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
             className="input"
           />
           <button type="submit" className="button">
-            Reset Password
+            {t("authExtra.resetPassword")}
           </button>
         </form>
       </div>
